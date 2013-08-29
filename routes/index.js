@@ -4,13 +4,12 @@ var rdb = db.rdb;
 var rdbLogger = db.rdbLogger;
 
 exports.index = function(req, res) {
+  console.log(req.session);
+  req.session.nickname = 's1na';
+  if (req.session.loggedIn) {
+    res.redirect('/chat');
+  }
   res.render('index');
-  rdb.set('test:test', 'sina', rdbLogger);
-  rdb.get('test:test', function(err, res) {
-    if (!err) {
-      console.log(res);
-    }
-  });
 };
 
 exports.partials = function(req, res) {
@@ -19,8 +18,19 @@ exports.partials = function(req, res) {
 };
 
 exports.auth = function(req, res) {
+  if (req.session.loggedIn) {
+    res.redirect('/chat');
+  }
+
   var nickname = req.body.nickname;
-  req.session.loggedIn = true;
   req.session.nickname = nickname;
+  req.session.loggedIn = true;
+  req.session.save();
+  console.log(req.session);
   res.redirect('/chat');
+};
+
+exports.exit = function(req, res) {
+  req.session.destroy();
+  res.redirect('/');
 }

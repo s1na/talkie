@@ -4,16 +4,17 @@
 /* Controllers */
 
 angular.module('talkie.controllers', []).
-  controller('IndexCtrl', function ($scope, socket) {
-    socket.on('send:name', function (data) {
+  controller('ChatCtrl', function ($scope, $http, socket) {
+    $scope.nickname = '';
+
+    function getData($http) {
+      $http.get('/api/user-data').success(function(data) {
+        $scope.nickname = data.nickname;
+      }).error(function(data) {
+      });
+    }
+
+    /*socket.on('send:name', function (data) {
       $scope.name = data.name;
-    });
-  }).
-  controller('MyCtrl1', function ($scope, socket) {
-    socket.on('send:time', function (data) {
-      $scope.time = data.time;
-    });
-  }).
-  controller('MyCtrl2', function ($scope) {
-    // write Ctrl here
+    });*/
   });

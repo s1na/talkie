@@ -7,3 +7,10 @@ exports.version = function (req, res) {
     version: '1'
   });
 };
+
+module.exports.userData = function(req, res) {
+  res.json({
+    nickname: req.session.nickname
+  });
+};
+

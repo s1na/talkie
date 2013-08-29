@@ -37,6 +37,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(authorization());
 app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
 
@@ -58,11 +59,13 @@ if (app.get('env') === 'production') {
 // serve index and view partials
 app.get('/', routes.index);
 app.post('/auth', routes.auth);
+app.get('/exit', routes.exit);
 app.get('/chat', routesChat.chat);
 app.get('/partials/:name', routes.partials);
 
 // JSON API
 app.get('/api/version', routesApi.version);
+app.get('/api/user-data', routesApi.userData);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
@@ -77,3 +80,14 @@ io.sockets.on('connection', require('./routes/socket'));
 server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+function authorization() {
+  return function(req, res, next) {
+    if (req.path != '/') {
+      if (!req.session.loggedIn) {
+        res.redirect('/');
+      }
+    }
+    next();
+  }
+}

@@ -3,18 +3,23 @@ extends layout
 block append css
   link(rel='stylesheet', type='text/css', href='/css/chat.css')
 block body
-  #main
+  #main(data-ng-controller='ChatCtrl')
     .container.fill
       .row.fill
         .col-md-12.fill
           .row.fill
             .col-md-3.actions
-              a(href='/next')
+              a(href='/next' data-ng-click='next()')
                 .action
                   بعدی
+              a(href='/exit')
+                .action
+                  خروج
             .col-md-9.chat-box
               .row.messages
                 .col-md-12
+                  .message
+                    | سلام چطوری؟
               .row.fill.input
                 .col-md-2.fill
                   button.btn.btn-info بفرست
