@@ -1,20 +1,22 @@
-'use strict';
+/* jshint globalstrict: true */
+"use strict";
 
 // Declare app level module which depends on filters, and services
 
-angular.module('myApp', [
-  'myApp.controllers',
-  'myApp.filters',
-  'myApp.services',
-  'myApp.directives',
+var app = angular.module('talkie', [
+  'talkie.controllers',
+  'talkie.filters',
+  'talkie.services',
+  'talkie.directives',
 
   // 3rd party dependencies
   'btford.socket-io'
-]).
-config(function ($routeProvider, $locationProvider) {
+]);
+
+app.config(function ($routeProvider, $locationProvider) {
   $routeProvider.
-    when('/view1', {
-      templateUrl: 'partials/partial1',
+    when('/', {
+      templateUrl: 'partials/landing-page',
       controller: 'MyCtrl1'
     }).
     when('/view2', {

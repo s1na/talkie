@@ -1,9 +1,10 @@
-'use strict';
+/* jshint globalstrict: true */
+"use strict";
 
 /* Services */
 
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('myApp.services', []).
+angular.module('talkie.services', []).
   value('version', '0.1');

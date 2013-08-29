@@ -1,9 +1,14 @@
-!!!
-html(ng-app="myApp")
+doctype 5
+html(ng-app='talkie', lang='fa')
   head
-    meta(charset='utf8')
+    meta(http-equiv='content-type', content='text/html', charset='utf-8')
     base(href='/')
-    title Angular Socket.io Seed App
-    link(rel='stylesheet', href='/css/app.css')
-  body
+    title Talkie
+    link(rel='stylesheet', type='text/css', href='/lib/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', type='text/css', href='/css/app.css')
+    link(rel='stylesheet', type='text/css', href='/css/font.css')
+  body(dir='rtl')
     block body
+
+    block bottom-js
+      include bottom-js.jade

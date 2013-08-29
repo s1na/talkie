@@ -1,9 +1,10 @@
-'use strict';
+/* jshint globalstrict: true */
+"use strict";
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
-  controller('AppCtrl', function ($scope, socket) {
+angular.module('talkie.controllers', []).
+  controller('IndexCtrl', function ($scope, socket) {
     socket.on('send:name', function (data) {
       $scope.name = data.name;
     });
