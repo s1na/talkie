@@ -12,3 +12,13 @@ logs
 results
 
 npm-debug.log
+
+node_modules/
+public/lib
+
+.nodemonignore
+
+*.swo
+*.swp
+
+css/*.css

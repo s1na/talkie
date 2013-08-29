@@ -21,6 +21,7 @@ var io = require('socket.io').listen(server);
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -35,7 +36,7 @@ if (app.get('env') === 'development') {
 // production only
 if (app.get('env') === 'production') {
   // TODO
-};
+}
 
 
 /**
@@ -47,7 +48,7 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
 // JSON API
-app.get('/api/name', api.name);
+app.get('/api/version', api.version);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

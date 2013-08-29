@@ -1,6 +1,7 @@
 {
-  "name": "application-name",
-  "version": "0.0.0",
+  "name": "talkie",
+  "version": "0.0.1",
+  "directory": "public/lib",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -8,6 +9,7 @@
   ],
   "dependencies": {
     "angular": "~1.0.7",
-    "angular-socket-io": "~0.0.2"
+    "angular-socket-io": "~0.2.0",
+    "bootstrap": "~3.0.0"
   }
 }
