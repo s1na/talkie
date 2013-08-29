@@ -21,4 +21,4 @@ public/lib
 *.swo
 *.swp
 
-css/*.css
+*.css

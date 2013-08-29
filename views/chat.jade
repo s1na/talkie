@@ -1,0 +1,22 @@
+extends layout
+
+block append css
+  link(rel='stylesheet', type='text/css', href='/css/chat.css')
+block body
+  #main
+    .container.fill
+      .row.fill
+        .col-md-12.fill
+          .row.fill
+            .col-md-3.actions
+              a(href='/next')
+                .action
+                  بعدی
+            .col-md-9.chat-box
+              .row.messages
+                .col-md-12
+              .row.fill.input
+                .col-md-2.fill
+                  button.btn.btn-info بفرست
+                .col-md-10.fill
+                  textarea
