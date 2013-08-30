@@ -22,6 +22,15 @@ angular.module('talkie.directives', []).
               });
             }
           }
-        })
+        });
       }};
+  }).
+  directive('scrollBtm', function () {
+    return {
+      link: function(scope, elem, attr) {
+        scope.$watch('msgs', function() {
+          elem[0].scrollTop = elem[0].scrollHeight;
+        }, true);
+      }
+    };
   });

@@ -41,16 +41,16 @@ angular.module('talkie.controllers', []).
     });
 
     socket.on('error', function (data) {
-      notify.set(
-        msg='مشکلی در ارتباط با سرور پیش آمده.',
-        type='err'
+      notifS.set(
+        'مشکلی در ارتباط با سرور پیش آمده.',
+        'err'
       );
     });
 
     socket.on('stranger:err', function (data) {
-      notify.set(
-        msg='مشکلی در پیدا کردن فردی برای شما پیش آمده.',
-        type='err'
+      notifS.set(
+        'مشکلی در پیدا کردن فردی برای شما پیش آمده.',
+        'err'
       );
     });
   }).
@@ -63,13 +63,13 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.sendMsg = function () {
-      var msg = $scope.curMsg
+      var msg = $scope.curMsg;
       socket.emit('msg:send', {msg: msg});
       $scope.msgs.push({text: msg, from: 'me'});
       $scope.curMsg = '';
     };
 
     socket.on('msg:recv', function (data) {
-      $scope.msgs.push({text: data['msg'], from: userS.stranger});
+      $scope.msgs.push({text: data.msg, from: userS.stranger});
     });
   });

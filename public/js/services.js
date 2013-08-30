@@ -10,7 +10,7 @@ angular.module('talkie.services', []).
   value('version', '0.1').
   service('userS', function ($http, $q) {
     var user;
-    this.stranger;
+    this.stranger = '';
 
     this.fetchUserData = function () {
       var defer = $q.defer();
@@ -23,7 +23,7 @@ angular.module('talkie.services', []).
 
     this.getUser = function () {
       var defer = $q.defer();
-      if (typeof user === 'undefined' || _isEmpty(user)) {
+      if (typeof user === 'undefined') {
         return this.fetchUserData().then(function (data) {
           user = data;
           defer.resolve(user);
@@ -46,13 +46,13 @@ angular.module('talkie.services', []).
       this.msg = msg;
       this.type = type;
       this.show = true;
-    }
+    };
 
     this.clear = function () {
       this.show = false;
       this.msg = null;
       this.type = null;
-    }
+    };
   }).
   service('loadingS', function () {
     this.enable = false;

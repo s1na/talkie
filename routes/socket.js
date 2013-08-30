@@ -53,7 +53,7 @@ module.exports = function (socket) {
         strangerSocket = io.sockets.socket(sid);
       }
     });
-    strangerSocket.emit('msg:recv', {msg: data['msg']});
+    strangerSocket.emit('msg:recv', {msg: data.msg});
   });
 
   // Socket disconnected.

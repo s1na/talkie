@@ -20,7 +20,7 @@ block body
                 .action
                   خروج
             .col-md-9.chat-box(data-ng-controller='MsgController')
-              .row.messages
+              .row.messages(data-scroll-btm)
                 .col-md-12(ng-repeat='msg in msgs')
                   .message
                     .author(ng-class='{me: msg.from == "me", stranger: msg.from != "me"}')
