@@ -143,8 +143,26 @@ a:hover {
 .message {
   margin-top: .5em;
   margin-bottom: .5em;
-  color: #2980b9;
   overflow: hidden;
+
+  .author {
+    color: #7f8c8d;
+    font-size: 1em;
+
+    .me {
+    }
+
+    .stranger {
+    }
+  }
+
+  .text {
+    pre {
+      font-family: @main-font-family;
+      font-size: (@main-font-size - .2em);
+      color: #2980b9;
+    }
+  }
 }
 
 .input {

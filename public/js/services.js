@@ -10,6 +10,7 @@ angular.module('talkie.services', []).
   value('version', '0.1').
   service('userS', function ($http, $q) {
     var user;
+    this.stranger;
 
     this.fetchUserData = function () {
       var defer = $q.defer();
@@ -30,6 +31,10 @@ angular.module('talkie.services', []).
         });
       }
       return user;
+    };
+
+    this.setStranger = function (name) {
+      this.stranger = name;
     };
   }).
   service('notifS', function () {

@@ -18,7 +18,6 @@ exports.partials = function(req, res) {
 
 exports.auth = function(req, res) {
   if (req.session.loggedIn) {
-    rdb.sadd('chat:online', req.session.fullName, rdbLogger);
     res.redirect('/chat');
   }
 

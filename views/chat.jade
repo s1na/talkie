@@ -4,7 +4,7 @@ block append css
   link(rel='stylesheet', type='text/css', href='/css/chat.css')
 block body
   #main(data-ng-controller='ChatCtrl')
-    .container.fill(data-ng-init='getData(); introduceSelf();')
+    .container.fill(data-ng-init='init();')
       .loading(data-ng-show='loading.enable', style='display: none;')
         h3 در حال پیدا کردن یک غریبه‌ایم!
         img(src='img/sync.png')
@@ -19,16 +19,21 @@ block body
               a(href='/exit')
                 .action
                   خروج
-            .col-md-9.chat-box
+            .col-md-9.chat-box(data-ng-controller='MsgController')
               .row.messages
-                .col-md-12
+                .col-md-12(ng-repeat='msg in msgs')
                   .message
-                    | سلام چطوری؟ {{ user.fullName }}
+                    .author(ng-class='{me: msg.from == "me", stranger: msg.from != "me"}')
+                      | {{ msg.from }}
+                    .text
+                      pre.
+                        {{ msg.text }}
               .row.fill.input
                 .col-md-2.fill
-                  button.btn.btn-info.btn-disabled(data-ng-click='sendMessage()', disabled) بفرست
+                  button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
                 .col-md-10.fill
-                  textarea.form-control(disabled)
+                  textarea.form-control(data-ng-model='curMsg', data-ng-disabled='loading.enable',
+                                        data-ret-pressed='sendMsg();')
     div.notif(data-ng-show='notif.show', style='display: none;')
       span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
       p {{ notif.msg }}

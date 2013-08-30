@@ -11,6 +11,13 @@ angular.module('talkie.controllers', []).
     $scope.user = {};
     $scope.notif = notifS;
     $scope.loading = loadingS;
+    $scope.strangerName = '';
+
+    $scope.init = function () {
+      $scope.getData();
+
+      $scope.findStranger();
+    };
 
     $scope.getData = function () {
       var res = userS.getUser();
@@ -23,19 +30,15 @@ angular.module('talkie.controllers', []).
       }
     };
 
-    $scope.introduceSelf = function () {
-      socket.emit('set:session');
-    };
-
     $scope.findStranger = function () {
       loadingS.on();
       socket.emit('stranger:req');
-
-      socket.on('stranger:res', function (data) {
-        console.log('stranger respone came!');
-        console.log(data);
-      });
     };
+
+    socket.on('stranger:res', function(data) {
+      userS.setStranger(data.fullName);
+      loadingS.trigger();
+    });
 
     socket.on('error', function (data) {
       notify.set(
@@ -49,5 +52,24 @@ angular.module('talkie.controllers', []).
         msg='مشکلی در پیدا کردن فردی برای شما پیش آمده.',
         type='err'
       );
+    });
+  }).
+  controller('MsgController', function($scope, socket, userS, notifS) {
+    $scope.msgs = [];
+    $scope.curMsg = '';
+
+    $scope.filter = function () {
+      console.log('here');
+    };
+
+    $scope.sendMsg = function () {
+      var msg = $scope.curMsg
+      socket.emit('msg:send', {msg: msg});
+      $scope.msgs.push({text: msg, from: 'me'});
+      $scope.curMsg = '';
+    };
+
+    socket.on('msg:recv', function (data) {
+      $scope.msgs.push({text: data['msg'], from: userS.stranger});
     });
   });
