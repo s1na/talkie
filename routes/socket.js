@@ -25,6 +25,7 @@ module.exports = function (socket) {
   });
 
   socket.on('disconnect', function() {
+    rdb.srem('chat:online', socket.handshake.session.fullName, rdbLogger);
   });
 //  setInterval(function () {
 //    socket.emit('send:time', {

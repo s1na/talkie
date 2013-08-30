@@ -8,22 +8,22 @@
 // In this case it is a simple value service.
 angular.module('talkie.services', []).
   value('version', '0.1').
-  service('userS', function($http, $q) {
+  service('userS', function ($http, $q) {
     var user;
 
-    this.fetchUserData = function() {
+    this.fetchUserData = function () {
       var defer = $q.defer();
-      $http.get('/api/user-data').success(function(data) {
+      $http.get('/api/user-data').success(function (data) {
         defer.resolve(data);
-      }).error(function(data) {
+      }).error(function (data) {
       });
       return defer.promise;
     };
 
-    this.getUser = function() {
+    this.getUser = function () {
       var defer = $q.defer();
       if (typeof user === 'undefined' || _isEmpty(user)) {
-        return this.fetchUserData().then(function(data) {
+        return this.fetchUserData().then(function (data) {
           user = data;
           defer.resolve(user);
           return defer.promise;
@@ -32,20 +32,35 @@ angular.module('talkie.services', []).
       return user;
     };
   }).
-  service('notifS', function() {
+  service('notifS', function () {
     this.msg = null;
     this.type = 'err';
     this.show = false;
 
-  this.set = function(msg, type) {
-    this.msg = msg;
-    this.type = type;
-    this.show = true;
-  }
+    this.set = function (msg, type) {
+      this.msg = msg;
+      this.type = type;
+      this.show = true;
+    }
 
-  this.clear = function() {
-    this.show = false;
-    this.msg = null;
-    this.type = null;
-  }
-});
+    this.clear = function () {
+      this.show = false;
+      this.msg = null;
+      this.type = null;
+    }
+  }).
+  service('loadingS', function () {
+    this.enable = false;
+
+    this.on = function () {
+      this.enable = true;
+    };
+
+    this.off = function () {
+      this.enable = false;
+    };
+
+    this.trigger = function () {
+      this.enable = !this.enable;
+    };
+  });

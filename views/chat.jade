@@ -5,6 +5,10 @@ block append css
 block body
   #main(data-ng-controller='ChatCtrl')
     .container.fill(data-ng-init='getData(); introduceSelf();')
+      .loading(data-ng-show='loading.enable', style='display: none;')
+        h3 در حال پیدا کردن یک غریبه‌ایم!
+        img(src='img/sync.png')
+        span.glyphicon.glyphicon-remove(data-ng-click='loading.trigger()')
       .row.fill
         .col-md-12.fill
           .row.fill

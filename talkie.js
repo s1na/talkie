@@ -79,7 +79,7 @@ server.listen(app.get('port'), function () {
 });
 
 function authenticate() {
-  return function(req, res, next) {
+  return function (req, res, next) {
     if (req.path != '/') {
       if (!req.session.loggedIn) {
         res.redirect('/');

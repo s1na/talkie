@@ -13,7 +13,7 @@ var parseCookie = express.cookieParser(secretKey);
 
 // Redis and session configuration
 rdb.select(3, redis.print);
-rdb.on('error', function(err) {
+rdb.on('error', function (err) {
   console.log('[Redis](Error) ' + err);
 });
 
@@ -27,14 +27,14 @@ function rdbLogger(err, res) {
 }
 
 // Websocket authorization
-io.set('authorization', function(hs, accept) {
+io.set('authorization', function (hs, accept) {
   if (hs.headers.cookie) {
     var sessionID;
-    parseCookie(hs, null, function(data) {
+    parseCookie(hs, null, function (data) {
       sessionID = hs.signedCookies['connect.sid'];
     });
     hs.sessionStore = redisStore;
-    redisStore.get(sessionID, function(err, session) {
+    redisStore.get(sessionID, function (err, session) {
       if (err || !session) {
         console.log('Handshake error, ' + session + ', ' + err);
         accept('Error while handshaking.', false);

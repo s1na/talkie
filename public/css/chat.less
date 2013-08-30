@@ -18,6 +18,12 @@ body {
   color: @main-font-color;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: @main-font-family;
+  font-size: @main-font-size;
+  color: @main-font-color;
+}
+
 a:hover {
   text-decoration: none;
 }
@@ -34,7 +40,16 @@ a:hover {
   height: 100%;
 }
 
+.close-button(@margin: .2em, @font-size: 1.3em) {
+  .glyphicon-remove {
+    margin: @margin;
+    font-size: @font-size;
+    cursor: pointer;
+  }
+}
+
 .notif {
+  .close-button;
   width: 30%;
   height: 18%;
   background-color: #c0392b;
@@ -49,12 +64,49 @@ a:hover {
     text-align: center;
     margin: 1em;
   }
+}
 
-  .glyphicon {
-    margin: .2em;
-    cursor: pointer;
+.loading {
+  .close-button(.9em, 2.5em);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 0.3;
+  display: block;
+  z-index: 9999;
+
+  h3 {
+    position: fixed;
+    top: 30%;
+    right: 40%;
   }
 
+  img {
+    position: fixed;
+    top: 40%;
+    bottom: 50%;
+    right: 45%;
+    left: 50%;
+    animation: rotate .8s infinite linear;
+    -webkit-animation: rotate .8s infinite linear;
+    font-size: 3em;
+  }
+}
+
+@-moz-keyframes rotate {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes rotate {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes rotate {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
 }
 
 .actions {
