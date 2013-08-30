@@ -3,20 +3,17 @@
  * Module dependencies
  */
 
-var express = require('express'),
-  routes = require('./routes'),
+var routes = require('./routes'),
   routesApi = require('./routes/api'),
   routesChat = require('./routes/chat'),
   http = require('http'),
   path = require('path');
 
-var app = module.exports = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-var RedisStore = require('connect-redis')(express);
-var db = require('./db');
-var rdb = db.rdb;
-var rdbLogger = db.rdbLogger;
+var config = require('./config');
+var express = config.express;
+var app = config.app;
+var server = config.server;
+var io = config.io;
 
 /**
  * Configuration
@@ -27,17 +24,17 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
-app.use(express.cookieParser());
+app.use(express.cookieParser(config.secretKey));
 app.use(express.session({
-  store: new RedisStore({
-    client: rdb,
-  }),
-  secret: 'This4is$highly4secure.'}));
+  store: config.redisStore,
+  secret: config.secretKey,
+  prefix: config.sessionPrefix,
+}));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(authorization());
+app.use(authenticate());
 app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
 
@@ -81,7 +78,7 @@ server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-function authorization() {
+function authenticate() {
   return function(req, res, next) {
     if (req.path != '/') {
       if (!req.session.loggedIn) {
@@ -89,5 +86,5 @@ function authorization() {
       }
     }
     next();
-  }
+  };
 }

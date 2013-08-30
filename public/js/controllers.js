@@ -4,17 +4,30 @@
 /* Controllers */
 
 angular.module('talkie.controllers', []).
-  controller('ChatCtrl', function ($scope, $http, socket) {
-    $scope.nickname = '';
+  controller('ChatCtrl', function ($scope, $http, socket, userS) {
+    $scope.user = {};
 
-    function getData($http) {
-      $http.get('/api/user-data').success(function(data) {
-        $scope.nickname = data.nickname;
-      }).error(function(data) {
+    $scope.getData = function() {
+      var res = userS.getUser();
+      if (typeof res.then === 'function') {
+        res.then(function(data) {
+          $scope.user = data;
+        });
+      } else {
+        $scope.user = res;
+      }
+    };
+
+    $scope.introduceSelf = function() {
+      socket.emit('set:session');
+    };
+
+    $scope.findStranger = function() {
+      socket.emit('stranger:req');
+
+      socket.on('stranger:res', function(data) {
+        console.log('stranger respone came!');
+        console.log(data);
       });
-    }
-
-    /*socket.on('send:name', function (data) {
-      $scope.name = data.name;
-    });*/
+    };
   });

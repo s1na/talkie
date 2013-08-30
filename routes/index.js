@@ -1,12 +1,12 @@
 
-var db = require('../db');
-var rdb = db.rdb;
-var rdbLogger = db.rdbLogger;
+var config = require('../config');
+var rdb = config.rdb;
+var rdbLogger = config.rdbLogger;
 
 exports.index = function(req, res) {
-  console.log(req.session);
-  req.session.nickname = 's1na';
+  console.log(req.sessionId);
   if (req.session.loggedIn) {
+    req.session.touch();
     res.redirect('/chat');
   }
   res.render('index');
@@ -22,8 +22,8 @@ exports.auth = function(req, res) {
     res.redirect('/chat');
   }
 
-  var nickname = req.body.nickname;
-  req.session.nickname = nickname;
+  var fullName = req.body.fullName;
+  req.session.fullName = fullName;
   req.session.loggedIn = true;
   req.session.save();
   console.log(req.session);
@@ -33,4 +33,4 @@ exports.auth = function(req, res) {
 exports.exit = function(req, res) {
   req.session.destroy();
   res.redirect('/');
-}
+};

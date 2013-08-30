@@ -2,6 +2,8 @@
  * Serve JSON to our AngularJS client
  */
 
+var parseCookie = require('express').cookieParser();
+
 exports.version = function (req, res) {
   res.json({
     version: '1'
@@ -10,7 +12,8 @@ exports.version = function (req, res) {
 
 module.exports.userData = function(req, res) {
   res.json({
-    nickname: req.session.nickname
+    fullName: req.session.fullName,
+    sessionToken: req.session
   });
 };
 

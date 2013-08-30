@@ -4,12 +4,12 @@ block append css
   link(rel='stylesheet', type='text/css', href='/css/chat.css')
 block body
   #main(data-ng-controller='ChatCtrl')
-    .container.fill
+    .container.fill(data-ng-init='getData(); introduceSelf();')
       .row.fill
         .col-md-12.fill
           .row.fill
             .col-md-3.actions
-              a(href='/next' data-ng-click='next()')
+              a(href='/next')
                 .action
                   بعدی
               a(href='/exit')
@@ -19,9 +19,9 @@ block body
               .row.messages
                 .col-md-12
                   .message
-                    | سلام چطوری؟
+                    | سلام چطوری؟ {{ user.fullName }}
               .row.fill.input
                 .col-md-2.fill
-                  button.btn.btn-info بفرست
+                  button.btn.btn-info(data-ng-click='sendMessage()') بفرست
                 .col-md-10.fill
                   textarea

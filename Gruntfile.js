@@ -9,6 +9,8 @@ module.exports = function(grunt) {
       options: {
         globals: {
           'angular': true,
+          '_': true,
+          'console': true
         }
       }
     },
