@@ -4,8 +4,10 @@
 /* Controllers */
 
 angular.module('talkie.controllers', []).
-  controller('ChatCtrl', function ($scope, $http, socket, userS) {
+  controller('ChatCtrl', function ($scope, $http, socket, userS, notifS) {
     $scope.user = {};
+    $scope.notif = notifS;
+    console.log($scope.notif.show);
 
     $scope.getData = function() {
       var res = userS.getUser();

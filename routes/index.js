@@ -4,7 +4,6 @@ var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
 
 exports.index = function(req, res) {
-  console.log(req.sessionId);
   if (req.session.loggedIn) {
     req.session.touch();
     res.redirect('/chat');
@@ -19,6 +18,7 @@ exports.partials = function(req, res) {
 
 exports.auth = function(req, res) {
   if (req.session.loggedIn) {
+    rdb.sadd('chat:online', req.session.fullName, rdbLogger);
     res.redirect('/chat');
   }
 
@@ -26,7 +26,6 @@ exports.auth = function(req, res) {
   req.session.fullName = fullName;
   req.session.loggedIn = true;
   req.session.save();
-  console.log(req.session);
   res.redirect('/chat');
 };
 

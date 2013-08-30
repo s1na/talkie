@@ -31,4 +31,21 @@ angular.module('talkie.services', []).
       }
       return user;
     };
+  }).
+  service('notifS', function() {
+    this.msg = null;
+    this.type = 'err';
+    this.show = false;
+
+  this.set = function(msg, type) {
+    this.msg = msg;
+    this.type = type;
+    this.show = true;
+  }
+
+  this.clear = function() {
+    this.show = false;
+    this.msg = null;
+    this.type = null;
+  }
 });

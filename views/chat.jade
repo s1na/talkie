@@ -22,6 +22,9 @@ block body
                     | سلام چطوری؟ {{ user.fullName }}
               .row.fill.input
                 .col-md-2.fill
-                  button.btn.btn-info(data-ng-click='sendMessage()') بفرست
+                  button.btn.btn-info.btn-disabled(data-ng-click='sendMessage()', disabled) بفرست
                 .col-md-10.fill
-                  textarea
+                  textarea.form-control(disabled)
+    div.notif(data-ng-show='notif.show', style='display: none;')
+      span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
+      p {{ notif.msg }}
