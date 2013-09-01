@@ -40,6 +40,12 @@ angular.module('talkie.controllers', []).
       loadingS.trigger();
     });
 
+    socket.on('stranger:disconnected', function(data) {
+      userS.setStranger('');
+      loadingS.trigger();
+      $scope.findStranger();
+    });
+
     socket.on('error', function (data) {
       notifS.set(
         'مشکلی در ارتباط با سرور پیش آمده.',
@@ -57,6 +63,7 @@ angular.module('talkie.controllers', []).
   controller('MsgController', function($scope, socket, userS, notifS) {
     $scope.msgs = [];
     $scope.curMsg = '';
+    $scope.strangerTyping = false;
 
     $scope.filter = function () {
       console.log('here');
@@ -69,7 +76,25 @@ angular.module('talkie.controllers', []).
       $scope.curMsg = '';
     };
 
+    $scope.typing = function () {
+      var status = 'typing';
+      if (!$scope.curMsg) {
+        status = 'cleared';
+      };
+
+      socket.emit('msg:typing', status);
+    };
+
     socket.on('msg:recv', function (data) {
       $scope.msgs.push({text: data.msg, from: userS.stranger});
+      $scope.strangerTyping = false;
+    });
+
+    socket.on('msg:strangerTyping', function (data) {
+      if (data == 'typing') {
+        $scope.strangerTyping = true;
+      } else if (data == 'cleared') {
+        $scope.strangerTyping = false;
+      }
     });
   });

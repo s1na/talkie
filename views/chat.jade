@@ -28,12 +28,14 @@ block body
                     .text
                       pre.
                         {{ msg.text }}
+                .stranger-typing(data-ng-show='strangerTyping')
+                  در حال نوشتن
               .row.fill.input
                 .col-md-2.fill
                   button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
                 .col-md-10.fill
                   textarea.form-control(data-ng-model='curMsg', data-ng-disabled='loading.enable',
-                                        data-ret-pressed='sendMsg();')
+                                        data-ret-pressed='sendMsg();', data-ng-change='typing()')
     div.notif(data-ng-show='notif.show', style='display: none;')
       span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
       p {{ notif.msg }}

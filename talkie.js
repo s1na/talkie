@@ -35,7 +35,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(authenticate());
-app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
+//app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
 
 // development only
