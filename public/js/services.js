@@ -37,6 +37,10 @@ angular.module('talkie.services', []).
       this.stranger = name;
     };
   }).
+  service('msgS', function () {
+    this.msgs = [];
+    this.curMsg = '';
+  }).
   service('notifS', function () {
     this.msg = null;
     this.type = 'err';
