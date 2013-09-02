@@ -59,6 +59,7 @@ app.post('/auth', routes.auth);
 app.get('/exit', routes.exit);
 app.get('/chat', routesChat.chat);
 app.get('/partials/:name', routes.partials);
+app.get('/rules', routes.rules);
 
 // JSON API
 app.get('/api/version', routesApi.version);
@@ -80,7 +81,7 @@ server.listen(app.get('port'), function () {
 
 function authenticate() {
   return function (req, res, next) {
-    if (req.path != '/') {
+    if (req.path != '/' && req.path != '/rules') {
       if (!req.session.loggedIn) {
         res.redirect('/');
       }

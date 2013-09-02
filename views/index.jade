@@ -1,19 +1,27 @@
-extends layout
+extends base
 
 block body
-  .index-ctrl(ng-controller='IndexCtrl')
-    .container
-      .row
-        .col-md-3.col-md-offset-4
-          .login-form
-            img.img-responsive(src="/img/logo.png", alt="talkie")
-            legend(style=)
-              برای ورود به چت و یافتن فردی برای چت وارد شوید! 
-            form(method='post', action='/auth', name='login-form', role='form')
-              .form-group
-                label.sr-only(for='login-form-full-name')
-                input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام کامل')
-              button.btn.btn-primary.btn-lg.btn-block(type='submit')
-                ورود
+  .row
+    .col-md-4.col-md-offset-4
+      .login-form
+        legend
+          برای ورود به چت و یافتن فردی برای چت وارد شوید! 
+        form(method='post', action='/auth', name='login-form', role='form')
+          .form-group
+            label.sr-only(for='login-form-full-name')
+            input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام کامل')
+          button.btn.btn-primary.btn-lg.btn-block(type='submit')
+            ورود
 
-          قوانین
+  .row
+    .col-md-4.col-md-offset-4
+      small از 
+        a(href="/rules")
+          اینجا 
+        قوانین را مطالعه کنید!
+      hr
+      ul.list-inline 
+        li 
+          a(href="/") درباره ی talkie
+        li تبلیغات
+        li تماس

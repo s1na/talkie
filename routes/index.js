@@ -32,3 +32,7 @@ exports.exit = function(req, res) {
   req.session.destroy();
   res.redirect('/');
 };
+
+module.exports.rules = function(req, res) {
+  res.render('rules');
+};
