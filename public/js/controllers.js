@@ -80,7 +80,7 @@ angular.module('talkie.controllers', []).
       var status = 'typing';
       if (!$scope.curMsg) {
         status = 'cleared';
-      };
+      }
 
       socket.emit('msg:typing', status);
     };

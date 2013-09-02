@@ -6,11 +6,14 @@ block body
       .row
         .col-md-3.col-md-offset-4
           .login-form
-            legend
-              آماده شو برای هیجان
+            img.img-responsive(src="/img/logo.png", alt="talkie")
+            legend(style=)
+              برای ورود به چت و یافتن فردی برای چت وارد شوید! 
             form(method='post', action='/auth', name='login-form', role='form')
               .form-group
                 label.sr-only(for='login-form-full-name')
                 input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام کامل')
-              button.btn.btn-primary(type='submit')
+              button.btn.btn-primary.btn-lg.btn-block(type='submit')
                 ورود
+
+          قوانین
