@@ -1,11 +1,45 @@
 /* app css stylesheet */
 body {
   font-family: 'bmitra';
-  font-size: 1.4em;
+  font-size: 1.6em;
 }
 .login-form {
-  margin-top: 4em;
+  margin-top: 2em;
 }
 .login-form button {
   float: right;
+}
+.image {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p {
+  text-align: center;
+}
+
+.titr {
+  color: white;
+  font-size: 4em;
+  text-align: center;
+}
+
+.blue {
+  background: #5bc0de;
+
+
+
+}
+
+.white {
+  background: white;
+  .titr {
+    color: black;
+    font-size: 4em;
+    text-align: center;
+  }
+}
+
+.white .titr{
+  color: black;
 }
