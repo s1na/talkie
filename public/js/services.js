@@ -68,4 +68,30 @@ angular.module('talkie.services', []).
     this.trigger = function () {
       this.enable = !this.enable;
     };
+  }).
+  service('titleS', function () {
+    this.title = 'Talkie';
+    this.unseenMsgs = 0;
+
+    this.newMsg = function () {
+      if (!document.hasFocus()) {
+        this.unseenMsgs++;
+        if (document.title[0] == '(') {
+          this.removeUnseenMsgs();
+        }
+        this.addUnseenMsgs();
+      }
+    };
+
+    this.removeUnseenMsgs = function () {
+      if (this.title.indexOf('(') !== -1) {
+        this.title = this.title.slice(
+          this.title.indexOf(')') + 2
+        );
+      }
+    };
+
+    this.addUnseenMsgs = function () {
+      this.title = '(' + this.unseenMsgs + ') ' + this.title;
+    };
   });

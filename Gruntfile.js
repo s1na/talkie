@@ -10,7 +10,9 @@ module.exports = function (grunt) {
         globals: {
           'angular': true,
           '_': true,
-          'console': true
+          'console': true,
+          'window': true,
+          'document': true
         }
       }
     },

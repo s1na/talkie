@@ -35,7 +35,11 @@ block body
                   button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
                 .col-md-10.fill
                   textarea.form-control(data-ng-model='curMsg', data-ng-disabled='loading.enable',
-                                        data-ret-pressed='sendMsg();', data-ng-change='typing()')
+                    data-ret-pressed='sendMsg();', data-ng-change='typing()')
     div.notif(data-ng-show='notif.show', style='display: none;')
       span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
       p {{ notif.msg }}
+
+block prepend bottom-js
+  script(src='/socket.io/socket.io.js')
+

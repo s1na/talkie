@@ -4,14 +4,25 @@
 /* Controllers */
 
 angular.module('talkie.controllers', []).
-  controller('ChatCtrl', function ($scope, $http,
+  controller('ChatCtrl', function ($rootScope, $scope, $http,
                                    socket, userS, notifS,
-                                   loadingS
+                                   loadingS, titleS
                                   ) {
+    $rootScope.title = titleS;
+
     $scope.user = {};
     $scope.notif = notifS;
     $scope.loading = loadingS;
     $scope.strangerName = '';
+
+    window.onfocus = function () {
+      titleS.removeUnseenMsgs();
+      titleS.unseenMsgs = 0;
+    };
+
+    document.onblur = window.onblur;
+    document.focus = window.focus;
+
 
     $scope.init = function () {
       $scope.getData();
@@ -60,7 +71,8 @@ angular.module('talkie.controllers', []).
       );
     });
   }).
-  controller('MsgController', function($scope, socket, userS, notifS) {
+  controller('MsgController', function($scope, socket,
+                                       userS, notifS, titleS) {
     $scope.msgs = [];
     $scope.curMsg = '';
     $scope.strangerTyping = false;
@@ -88,6 +100,7 @@ angular.module('talkie.controllers', []).
     socket.on('msg:recv', function (data) {
       $scope.msgs.push({text: data.msg, from: userS.stranger});
       $scope.strangerTyping = false;
+      titleS.newMsg();
     });
 
     socket.on('msg:strangerTyping', function (data) {
