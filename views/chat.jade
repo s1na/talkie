@@ -21,7 +21,7 @@ block body
                   خروج
             .col-md-9.chat-box(data-ng-controller='MsgController')
               .row.messages(data-scroll-btm)
-                .col-md-12(ng-repeat='msg in msgs')
+                .col-md-12(ng-repeat='msg in msg.msgs')
                   .message
                     .author(ng-class='{me: msg.from == "me", stranger: msg.from != "me"}')
                       | {{ msg.from }}
@@ -34,8 +34,11 @@ block body
                 .col-md-2.fill
                   button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
                 .col-md-10.fill
-                  textarea.form-control(data-ng-model='curMsg', data-ng-disabled='loading.enable',
-                    data-ret-pressed='sendMsg();', data-ng-change='typing()')
+                  textarea.form-control(data-ng-model='msg.curMsg',
+                    data-ng-disabled='loading.enable',
+                    data-ret-pressed='sendMsg();', data-ng-change='typing()',
+                    data-get-focus='!loading.enable'
+                  )
     div.notif(data-ng-show='notif.show', style='display: none;')
       span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
       p {{ notif.msg }}

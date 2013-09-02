@@ -33,4 +33,13 @@ angular.module('talkie.directives', []).
         }, true);
       }
     };
+  }).
+  directive('getFocus', function () {
+    return {
+      link: function(scope, elem, attr) {
+        if (attr.getFocus) {
+          elem[0].focus();
+        }
+      }
+    };
   });

@@ -45,8 +45,7 @@ module.exports = function (socket) {
 
   // New message to be sent
   socket.on('msg:send', function (data) {
-    var strangerSocket = null;
-    var res = getStrangerSocket(socket, strangerSocket);
+    var res = getStrangerSocket(socket);
 
     if (res.ok) {
       res.strangerSocket.emit('msg:recv', {msg: data.msg});
@@ -55,8 +54,7 @@ module.exports = function (socket) {
 
   // Typing status
   socket.on('msg:typing', function (data) {
-    var strangerSocket = null;
-    var res = getStrangerSocket(socket, strangerSocket);
+    var res = getStrangerSocket(socket);
 
     if (res.ok) {
       res.strangerSocket.emit('msg:strangerTyping', data);
@@ -68,13 +66,11 @@ module.exports = function (socket) {
     console.log('Socket disconnected, ' + socket.id);
     rdb.srem('chat:online', socket.id, rdbLogger);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
-    socket.get('strangerSID', function (err, sid) {
-      if (err || !sid) {
-        socket.emit('stranger:err');
-      } else {
-        strangerSocket.emit('stranger:disconnected');
-      }
-    });
+    var res = getStrangerSocket(socket);
+
+    if (res.ok) {
+      res.strangerSocket.emit('stranger:disconnected');
+    }
   });
 
 //  setInterval(function () {
@@ -84,8 +80,9 @@ module.exports = function (socket) {
 //  }, 1000);
 };
 
-function getStrangerSocket(socket, strangerSocket) {
+function getStrangerSocket(socket) {
   var ok = true;
+  var strangerSocket = null;
   socket.get('strangerSID', function (err, sid) {
     if (err || !sid) {
       socket.emit('msg:err');

@@ -6,11 +6,12 @@
 angular.module('talkie.controllers', []).
   controller('ChatCtrl', function ($rootScope, $scope, $http,
                                    socket, userS, notifS,
-                                   loadingS, titleS
+                                   loadingS, titleS, msgS
                                   ) {
     $rootScope.title = titleS;
 
     $scope.user = {};
+    $scope.msg = msgS;
     $scope.notif = notifS;
     $scope.loading = loadingS;
     $scope.strangerName = '';
@@ -52,7 +53,10 @@ angular.module('talkie.controllers', []).
     });
 
     socket.on('stranger:disconnected', function(data) {
+      console.log('hereee');
       userS.setStranger('');
+      $scope.msg.msgs = [];
+      $scope.msg.curMsg = '';
       loadingS.trigger();
       $scope.findStranger();
     });
@@ -72,25 +76,20 @@ angular.module('talkie.controllers', []).
     });
   }).
   controller('MsgController', function($scope, socket,
-                                       userS, notifS, titleS) {
-    $scope.msgs = [];
-    $scope.curMsg = '';
+                                       userS, notifS, titleS
+                                      ) {
     $scope.strangerTyping = false;
 
-    $scope.filter = function () {
-      console.log('here');
-    };
-
     $scope.sendMsg = function () {
-      var msg = $scope.curMsg;
+      var msg = $scope.msg.curMsg;
       socket.emit('msg:send', {msg: msg});
-      $scope.msgs.push({text: msg, from: 'me'});
-      $scope.curMsg = '';
+      $scope.msg.msgs.push({text: msg, from: 'me'});
+      $scope.msg.curMsg = '';
     };
 
     $scope.typing = function () {
       var status = 'typing';
-      if (!$scope.curMsg) {
+      if (!$scope.msg.curMsg) {
         status = 'cleared';
       }
 
@@ -98,7 +97,7 @@ angular.module('talkie.controllers', []).
     };
 
     socket.on('msg:recv', function (data) {
-      $scope.msgs.push({text: data.msg, from: userS.stranger});
+      $scope.msg.msgs.push({text: data.msg, from: userS.stranger});
       $scope.strangerTyping = false;
       titleS.newMsg();
     });
