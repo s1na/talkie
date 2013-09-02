@@ -1,17 +1,26 @@
 extends base
 
+block append css
+  link(rel='stylesheet', type='text/css', href='/css/app.css')
+
 block body
   .row
     .col-md-4.col-md-offset-4
       .login-form
         legend
-          برای ورود به چت و یافتن فردی برای چت وارد شوید! 
+          برای یافتن فردی برای چت وارد شوید! 
+
         form(method='post', action='/auth', name='login-form', role='form')
           .form-group
             label.sr-only(for='login-form-full-name')
             input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام')
-          button.btn.btn-primary.btn-lg.btn-block(type='submit')
+          button.btn.btn-primary.btn-lg.btn-block(type='submit')            
             ورود
+        small
+          این نسخه آزمایشی سایت است. پیشاپیش از ایرادات احتمالی عذر خواهیم می کنیم! برای گزارش ایراد با ما 
+          a(href="/about#contact")
+            تماس 
+          بگیرید.
 
   .row
     .col-md-4.col-md-offset-4
@@ -21,11 +30,13 @@ block body
         قوانین را بخوانید!
       hr
       small
-        ul.list-inline
+        ul.list-inline.pull-right
           li 
             a(href="/about") درباره ی talkie
           li تبلیغات
-          li تماس
           li 
-            a(href="http://kargaheweb.com/blogminer/" target="_blank")
+            a(href="/about#contact") 
+              تماس
+          li 
+            a(href="http://kargaheweb.com/blogminer/", target="_blank")
               انتقال وبلاگ به سایت

@@ -3,7 +3,11 @@ extends base
 block page_title 
   title Talkie - درباره
 
+block append css
+  link(rel='stylesheet', type='text/css', href='/css/about.css')
+
 block bottom  
+
   .row.white
     .col-md-8.col-md-offset-2
       p.titr Talkie چیست؟
@@ -15,84 +19,65 @@ block bottom
       img.img-responsive.image(src="/img/hand.png", align="middle", alt="hand")
 
   .row.blue
-    br
-    br
     .col-md-2
     .col-md-3
 
-      img.img-responsive.image(src="/img/speed.png", align="middle",style="margin-left: auto; margin-right: auto" alt="talkie")
+      img.img-responsive.image(src="/img/speed.png", align="middle", alt="talkie")
       br
-      p.titr سرعت بالا
+      p.titr سُرعَت بالا
       p(style="text-align:center") به دلیل استفاده از تکنولوژی های جدید در طراحی، این سیستم از سرعت بسیار بالایی برخوردار است.
       br
       br
     .col-md-3.col-md-offset-1
       br
       img.img-responsive.image(src="/img/mobile.png", align="middle", alt="talkie")
-      p.titr طراحی زیبا 
+      p.titr طَرّاحی زیبا 
       p این وبسایت از رابط کاربری زیبا، سریع، پاسخگو و سازگار با مرورگرهای موبایل برخوردار است.
       br
       br
       br
 
   .row.white
-    br
-    br
     .col-md-6.col-md-offset-3
       p.titr مرورگر های پیشنهادی
       p جهت مشاهده بهتر سایت مرورگر های زیر را پیشنهاد می کنیم. برای دانلود هر مرورگر روی تصویر آن کلیک کنید!
   .row.white
     .col-md-3.col-md-offset-3
-      img.img-responsive.image(src="/img/chrome.png", align="middle", alt="chrome")
+      a(href="https://www.google.com/intl/en/chrome/browser/", target="_blanck")
+        img.img-responsive.image(src="/img/chrome.png", align="middle", alt="chrome")
     .col-md-3
-      img.img-responsive.image(src="/img/firefox.png", align="middle", alt="firefox")
+      a(href="http://www.mozilla.org/en-US/firefox/new/", target="_blanck")
+        img.img-responsive.image(src="/img/firefox.png", align="middle", alt="firefox")
   .row.white
     .col-md-3.col-md-offset-3
-      img.img-responsive.image(src="/img/safari.png", align="middle", alt="safari")
+      a(href="http://support.apple.com/downloads/#safari", target="_blanck")
+        img.img-responsive.image(src="/img/safari.png", align="middle", alt="safari")
+      br
     .col-md-3
-      img.img-responsive.image(src="/img/opera.png", align="middle", alt="opera")
-  br
-  br
+      a(href="http://www.opera.com/computer/windows", target="_blanck")
+        img.img-responsive.image(src="/img/opera.png", align="middle", alt="opera")
+      br
+  .row.white
+    .col-md-4.col-md-offset-4
+      a.btn.btn-primary.btn-lg.btn-block(href='/auth') ورود به چت
+      br
+      small
+        ul.list-inline.pull-right
+          li 
+            a(href="/about#contact") 
+              برای تبادل لینک یا تبلیغ تماس بگیرید!
+          li 
+            p |
+          li
+            در مورد  
+            a(href="http://kargaheweb.com/blogminer/", target="_blank")
+              انتقال وبلاگ به سایت 
+            بخوانید!
+      br
   .row.blue
-    p.titr تماس
-    p جهت  تماس با ما به آدرس زیر ایمیل بزنید! لطفا انتقادات و پیشنهادات خود را به ما بگویید.
-    p.titr info@talkie.ir
-  //-   .col-md-8.col-md-offset-2
-  //-       //- .row 
-  //-       //-   .col-md-8
-  //-       //-     dsfsd سریع
-  //-       //-   .col-md-4
-  //-       //-     img.img-responsive(src="/img/hand.png", align="middle", alt="talkie")
+    .col-md-4.col-md-offset-4
+      p#contact.titr تماس
+      p جهت  تماس با ما به آدرس زیر ایمیل بزنید! لطفا انتقادات و پیشنهادات خود را به ما بگویید.
+      p info@talkie.ir
 
-  //-       .row
-  //-         .col-md-8.col-md-offset-2
-  //-           .row 
-  //-             .col-md-8
-  //-               dsfsd سریع
-  //-             .col-md-4
-  //-               img.img-responsive(src="/img/speed.png", align="middle", alt="talkie")
 
-  //-       .row
-  //-         .col-md-8.col-md-offset-2
-  //-           .row 
-  //-             .col-md-8
-  //-               dsfsd سریع
-  //-             .col-md-4
-  //-               img.img-responsive(src="/img/graphic.png", align="middle", alt="talkie")
-
-      
-  //-       .row
-  //-         .col-md-8.col-md-offset-2
-  //-           .row 
-  //-             .col-md-8
-  //-               dsfsd سریع
-  //-             .col-md-4
-  //-               img.img-responsive(src="/img/mobile.png", align="middle", alt="talkie")
-
-  //-           .row
-
-  //- .row
-  //-   .col-md-6(style="background: red")
-  //-     p sdfdsf
-  //-   .col-md-6(style="background: green")
-  //-     p sdr
