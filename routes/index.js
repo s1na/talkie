@@ -33,6 +33,10 @@ exports.exit = function(req, res) {
   res.redirect('/');
 };
 
+module.exports.about = function(req, res) {
+  res.render('about');
+};
+
 module.exports.rules = function(req, res) {
   res.render('rules');
 };

@@ -1,0 +1,26 @@
+extends base
+
+block page_title 
+  title Talkie - درباره
+
+block body
+  .row
+    .col-md-2
+    .col-md-8 
+      legend 
+        p Talkie چیست؟
+      تاکی یک 
+      br
+      br
+      ul
+        li 
+          a(href="http://internet.ir/crime_index.html", target="_blank")
+            فهرست مصادیق محتوای مجرمانه
+        li 
+          a(href="http://internet.ir/law.html", target="_blank")
+            قانون جرایم رایانه ای
+      br
+      a.btn.btn-primary.btn-lg.btn-block(href="/auth")
+        ورود به چت
+
+      hr

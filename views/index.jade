@@ -9,7 +9,7 @@ block body
         form(method='post', action='/auth', name='login-form', role='form')
           .form-group
             label.sr-only(for='login-form-full-name')
-            input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام کامل')
+            input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام')
           button.btn.btn-primary.btn-lg.btn-block(type='submit')
             ورود
 
@@ -18,10 +18,14 @@ block body
       small از 
         a(href="/rules")
           اینجا 
-        قوانین را مطالعه کنید!
+        قوانین را بخوانید!
       hr
-      ul.list-inline 
-        li 
-          a(href="/") درباره ی talkie
-        li تبلیغات
-        li تماس
+      small
+        ul.list-inline
+          li 
+            a(href="/") درباره ی talkie
+          li تبلیغات
+          li تماس
+          li 
+            a(href="http://kargaheweb.com/blogminer/" target="_blank")
+              انتقال وبلاگ به سایت
