@@ -14,7 +14,7 @@ block body
           .form-group
             label.sr-only(for='login-form-full-name')
             input#login-form-full-name.form-control(type='text', name='fullName', placeholder='نام')
-          button.btn.btn-primary.btn-lg.btn-block(type='submit')            
+          button.btn.btn-primary.btn-lg.btn-block(type='submit')
             ورود
         small
           این نسخه آزمایشی سایت است، بنابراین پیشاپیش از ایرادات احتمالی عذر خواهیم می کنیم! برای گزارش ایراد با ما 
@@ -31,12 +31,16 @@ block body
       hr
       small
         ul.list-inline.pull-right
-          li 
+          li
             a(href="/about") درباره ی talkie
           li تبلیغات
-          li 
+          li
             a(href="/about#contact") 
               تماس
-          li 
+          li
             a(href="http://kargaheweb.com/blogminer/", target="_blank")
               انتقال وبلاگ به سایت
+
+block prepend bottom-js
+  script(type='text/javascript')
+    document.getElementById('login-form-full-name').focus();
