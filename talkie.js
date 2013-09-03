@@ -34,7 +34,8 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(authenticate());
+var staticPages = ['/', '/rules', '/about'];
+app.use(authenticate(staticPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
 
@@ -80,9 +81,10 @@ server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-function authenticate() {
+function authenticate(staticPages) {
   return function (req, res, next) {
-    if (req.path != '/' && req.path != '/rules' && req.path != '/about') {
+    if (staticPages.indexOf(req.path) == -1) {
+      console.log('Not in statics, ' + req.path);
       if (!req.session.loggedIn) {
         res.redirect('/');
       }

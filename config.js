@@ -34,6 +34,7 @@ io.set('authorization', function (hs, accept) {
       sessionID = hs.signedCookies['connect.sid'];
     });
     hs.sessionStore = redisStore;
+    hs.sessionID = sessionID;
     redisStore.get(sessionID, function (err, session) {
       if (err || !session) {
         console.log('Handshake error, ' + session + ', ' + err);

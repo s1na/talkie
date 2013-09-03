@@ -13,19 +13,6 @@ var app = angular.module('talkie', [
   'btford.socket-io'
 ]);
 
-app.config(function ($routeProvider, $locationProvider) {
-  $routeProvider.
-    when('/', {
-      templateUrl: 'partials/landing-page',
-      controller: 'MyCtrl1'
-    }).
-    when('/view2', {
-      templateUrl: 'partials/partial2',
-      controller: 'MyCtrl2'
-    }).
-    otherwise({
-      redirectTo: '/view1'
-    });
-
+app.config(function ($locationProvider) {
   $locationProvider.html5Mode(true);
 });

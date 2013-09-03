@@ -4,8 +4,8 @@
 /* Controllers */
 
 angular.module('talkie.controllers', []).
-  controller('ChatCtrl', function ($rootScope, $scope, $http,
-                                   socket, userS, notifS,
+  controller('ChatCtrl', function ($rootScope, $scope, $http, $window,
+                                   $document, socket, userS, notifS,
                                    loadingS, titleS, msgS
                                   ) {
     $rootScope.title = titleS;
@@ -16,13 +16,13 @@ angular.module('talkie.controllers', []).
     $scope.loading = loadingS;
     $scope.strangerName = '';
 
-    window.onfocus = function () {
+    $window.onfocus = function () {
       titleS.removeUnseenMsgs();
       titleS.unseenMsgs = 0;
     };
 
-    document.onblur = window.onblur;
-    document.focus = window.focus;
+    $document.onblur = $window.onblur;
+    $document.focus = $window.focus;
 
 
     $scope.init = function () {
@@ -43,6 +43,7 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.findStranger = function () {
+      clearEnv();
       loadingS.on();
       socket.emit('stranger:req');
     };
@@ -53,10 +54,7 @@ angular.module('talkie.controllers', []).
     });
 
     socket.on('stranger:disconnected', function(data) {
-      console.log('hereee');
-      userS.setStranger('');
-      $scope.msg.msgs = [];
-      $scope.msg.curMsg = '';
+      clearEnv();
       loadingS.trigger();
       $scope.findStranger();
     });
@@ -74,6 +72,16 @@ angular.module('talkie.controllers', []).
         'err'
       );
     });
+
+    socket.on('server:logout', function (data) {
+      $window.location = '/';
+    });
+
+    function clearEnv() {
+      userS.setStranger('');
+      $scope.msg.msgs = [];
+      $scope.msg.curMsg = '';
+    }
   }).
   controller('MsgController', function($scope, socket,
                                        userS, notifS, titleS
