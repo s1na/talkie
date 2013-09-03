@@ -1,9 +1,18 @@
-@main-font-family: 'bmitra';
-@main-font-size: 1.6em;
-@titr-font-size: 4em; 
-@color-blue: #79afd7;//#88c5f1;////#5bc0de;
-@color-white: white;
+@import "globals.less";
 
-li{
-  text-align: center;
+body {
+  font-family: @main-font-family;
+  font-size: @main-font-size;
+}
+
+ul .list-inline{
+  li{
+    text-align: center;
+  }
+}
+
+.image {
+  margin-left: auto;
+  margin-right: auto;
+  align: middle;
 }

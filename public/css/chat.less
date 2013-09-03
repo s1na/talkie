@@ -1,9 +1,6 @@
+@import "globals.less";
+@import "common.less";
 
-@main-font-family: 'bmitra';
-@main-font-size: 1.7em;
-@main-font-color: #bdc3c7;
-@color-midnight-blue: #34495e;
-@main-background: 'color-midnight-blue';
 
 html, body {
   width: 100%;
@@ -33,7 +30,7 @@ a:hover {
   height: 100%;
   position: fixed;
   margin: 0;
-  background-color: @@main-background;
+  background-color: @main-background;
 }
 
 .fill {
@@ -67,46 +64,87 @@ a:hover {
 }
 
 .loading {
-  .close-button(.9em, 2.5em);
   position: fixed;
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
   background-color: #000;
-  opacity: 0.3;
+  opacity: 0.9;
   display: block;
   z-index: 9999;
 
-  h3 {
-    position: fixed;
-    top: 30%;
-    right: 40%;
+  p {
+    text-align: center;
   }
 
-  img {
-    position: fixed;
-    top: 40%;
-    bottom: 50%;
-    right: 45%;
-    left: 50%;
-    animation: rotate .8s infinite linear;
-    -webkit-animation: rotate .8s infinite linear;
-    font-size: 3em;
+  .titr {
+    font-size: @main-font-size + 1;
+    text-align: center;
+  }
+
+  .spinner {
+    margin-top: 10em;
+    height: 7em;
+    width: 7em;
+    position:relative;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border: @spinner-size solid @spinner-border-color;
+    border-radius: 100%;
+  }
+
+  .spinner:before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-top: @spinner-size solid @spinner-color;
+    border-left: @spinner-size solid transparent;
+    border-bottom: @spinner-size solid transparent;
+    border-right: @spinner-size solid transparent;
+    border-radius: 100%;
+  }
+
+}
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
   }
 }
 
-@-moz-keyframes rotate {
-    from { -moz-transform: rotate(0deg); }
-    to { -moz-transform: rotate(360deg); }
+@-moz-keyframes rotation {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(359deg);
+  }
 }
-@-webkit-keyframes rotate {
-    from { -webkit-transform: rotate(0deg); }
-    to { -webkit-transform: rotate(360deg); }
+
+@-o-keyframes rotation {
+  from {
+    -o-transform: rotate(0deg);
+  }
+  to {
+    -o-transform: rotate(359deg);
+  }
 }
-@keyframes rotate {
-    from {transform:rotate(0deg);}
-    to {transform:rotate(360deg);}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }
 
 .actions {

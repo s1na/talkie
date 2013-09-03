@@ -6,9 +6,16 @@ block body
   #main(data-ng-controller='ChatCtrl')
     .container.fill(data-ng-init='init();')
       .loading(data-ng-show='loading.enable', style='display: none;')
-        h3 در حال یافتن فردی ناشناس هستیم!
-        img(src='img/sync.png')
-        span.glyphicon.glyphicon-remove(data-ng-click='loading.trigger()')
+        .row 
+          .col-md-2.col-md-offset-5
+            .spinner.image
+        .row
+          .col-md-4.col-md-offset-4
+            p.text-muted شکیبا باشید!
+            p.titr در حال یافتن فردی ناشناس هستیم!
+            //- img(src='img/sync.png')
+            //- span.glyphicon.glyphicon-remove(data-ng-click='loading.trigger()')
+
       .row.fill
         .col-md-12.fill
           .row.fill

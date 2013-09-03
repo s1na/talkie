@@ -1,13 +1,14 @@
 extends base
 
+block append css
+  link(rel='stylesheet', type='text/css', href='/css/common.css')
 
 block page_title 
   title Talkie - قوانین
 
 block body
   .row
-    .col-md-2
-    .col-md-8 
+    .col-md-8.col-md-offset-2
       legend 
         p
           قوانین
@@ -40,6 +41,6 @@ block body
           li 
             p |
           li
-            a(href="http://kargaheweb.com/blogminer/", target="_blank")
+            a(href="/about")
               درباره
       br
