@@ -20,7 +20,7 @@ block body
         .col-md-12.fill
           .row.fill
             .col-md-3.actions
-              a(data-ng-click='findStranger()' href='#')
+              a(data-ng-click='findStranger()')
                 .action
                   بعدی
               a(data-ng-href='/exit')
@@ -39,7 +39,8 @@ block body
                   در حال نوشتن
               .row.fill.input
                 .col-md-2.fill
-                  button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
+                  button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()',
+                    data-ng-disabled='loading.enable || !msg.curMsg') بفرست
                 .col-md-10.fill
                   textarea.form-control(data-ng-model='msg.curMsg',
                     data-ng-disabled='loading.enable',

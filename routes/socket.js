@@ -29,9 +29,25 @@ module.exports = function (socket) {
                         {err: 'Something happened when looking up for strangers.'}
                        );
           } else if (!reply) {
+            var res = getStrangerSocket(socket);
+
+            if (res.ok) {
+              console.log('found stranger');
+              res.strangerSocket.emit('stranger:disconnected');
+              res.strangerSocket.set('strangerSID', '');
+            }
+
             rdb.sadd('chat:waiting', socket.id);
             // TODO: setInterval(); or node events
           } else{
+            var res = getStrangerSocket(socket);
+
+            if (res.ok) {
+              console.log('fount stranger');
+              res.strangerSocket.emit('stranger:disconnected');
+              res.strangerSocket.set('strangerID', '');
+            }
+
             console.log('stranger found, ' + reply);
             rdb.srem('chat:waiting', reply);
 
@@ -96,6 +112,7 @@ module.exports = function (socket) {
 
     if (res.ok) {
       res.strangerSocket.emit('stranger:disconnected');
+      res.strangerSocket.set('strangerSID', '');
     }
   });
 
