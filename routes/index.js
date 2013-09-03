@@ -2,6 +2,7 @@
 var config = require('../config');
 var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
+var io = config.io;
 
 exports.index = function(req, res) {
   if (req.session.loggedIn) {
@@ -23,12 +24,19 @@ exports.auth = function(req, res) {
 
   var fullName = req.body.fullName;
   req.session.fullName = fullName;
+  req.session.msgCount = 0;
+  req.session.chatCount = 0;
+  req.session.socket = [];
   req.session.loggedIn = true;
   req.session.save();
   res.redirect('/chat');
 };
 
 exports.exit = function(req, res) {
+  for (var sid in req.session.socket) {
+    io.sockets.socket(req.session.socket[sid]).
+      handshake.session.destroy();
+  }
   req.session.destroy();
   res.redirect('/');
 };

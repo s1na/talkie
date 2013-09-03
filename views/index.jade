@@ -31,12 +31,16 @@ block body
       hr
       small
         ul.list-inline.pull-right
-          li 
+          li
             a(href="/about") درباره ی talkie
           li تبلیغات
-          li 
+          li
             a(href="/about#contact") 
               تماس
-          li 
+          li
             a(href="http://kargaheweb.com/blogminer/", target="_blank")
               انتقال وبلاگ به سایت
+
+block prepend bottom-js
+  script(type='text/javascript')
+    document.getElementById('login-form-full-name').focus();

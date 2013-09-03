@@ -12,52 +12,78 @@ module.exports = function (socket) {
   rdb.sadd('chat:online', socket.id, rdbLogger);
   console.log('New socket, ' + socket.id);
 
+  // Add socket to session
+  socket.handshake.session.socket.push(socket.id);
+  socket.handshake.session.save();
+
   // Looking for a new stranger.
   socket.on('stranger:req', function (data) {
     console.log('Socket requested, ' + socket.id);
-    rdb.srandmember('chat:waiting', function (err, reply) {
-      if (err) {
-        socket.emit('stranger:err',
-                    {err: 'Something happened when looking up for strangers.'}
-                   );
-      } else if (!reply) {
-        rdb.sadd('chat:waiting', socket.id);
-        // TODO: setInterval(); or node events
-      } else{
-        console.log('stranger found, ' + reply);
-        rdb.srem('chat:waiting', reply);
 
-        strangerSocket = io.sockets.socket(reply);
-        socket.set('strangerSID', reply);
-        strangerSocket.set('strangerSID', socket.id);
+    if (authenticated(socket.handshake.session)) {
+      console.log('authenticated');
+      if (isActive(socket.handshake.session)) {
+        rdb.srandmember('chat:waiting', function (err, reply) {
+          if (err) {
+            socket.emit('stranger:err',
+                        {err: 'Something happened when looking up for strangers.'}
+                       );
+          } else if (!reply) {
+            rdb.sadd('chat:waiting', socket.id);
+            // TODO: setInterval(); or node events
+          } else{
+            console.log('stranger found, ' + reply);
+            rdb.srem('chat:waiting', reply);
 
-        socket.emit('stranger:res', {
-          fullName: strangerSocket.handshake.session.fullName,
+            strangerSocket = io.sockets.socket(reply);
+            socket.set('strangerSID', reply);
+            strangerSocket.set('strangerSID', socket.id);
+
+            socket.handshake.session.chatCount += 1;
+            socket.handshake.session.save();
+            strangerSocket.handshake.session.chatCount += 1;
+            strangerSocket.handshake.session.save();
+
+            socket.emit('stranger:res', {
+              fullName: strangerSocket.handshake.session.fullName,
+            });
+
+            strangerSocket.emit('stranger:res', {
+              fullName: socket.handshake.session.fullName,
+            });
+          }
         });
-
-        strangerSocket.emit('stranger:res', {
-          fullName: socket.handshake.session.fullName,
-        });
+        //socket.emit('stranger:res', {found: false});
+      } else {
+        socket.handshake.session.destroy();
+        socket.emit('server:logout');
       }
-    });
-    //socket.emit('stranger:res', {found: false});
+    } else {
+      socket.emit('server:logout');
+    }
   });
 
   // New message to be sent
   socket.on('msg:send', function (data) {
-    var res = getStrangerSocket(socket);
+    if (authenticated(socket.handshake.session)) {
+      socket.handshake.session.msgCount += 1;
+      socket.handshake.session.save();
+      var res = getStrangerSocket(socket);
 
-    if (res.ok) {
-      res.strangerSocket.emit('msg:recv', {msg: data.msg});
+      if (res.ok) {
+        res.strangerSocket.emit('msg:recv', {msg: data.msg});
+      }
     }
   });
 
   // Typing status
   socket.on('msg:typing', function (data) {
-    var res = getStrangerSocket(socket);
+    if (authenticated(socket.handshake.session)) {
+      var res = getStrangerSocket(socket);
 
-    if (res.ok) {
-      res.strangerSocket.emit('msg:strangerTyping', data);
+      if (res.ok) {
+        res.strangerSocket.emit('msg:strangerTyping', data);
+      }
     }
   });
 
@@ -93,4 +119,20 @@ function getStrangerSocket(socket) {
   });
 
   return {ok: ok, strangerSocket: strangerSocket};
+}
+
+function isActive(session) {
+  if (session.msgCount === 0 && session.chatCount >= 3) {
+    return false;
+  }
+  return true;
+}
+
+function authenticated(session) {
+  if (typeof session !== 'undefined') {
+    if (session.loggedIn) {
+      return true;
+    }
+  }
+  return false;
 }

@@ -20,10 +20,10 @@ block body
         .col-md-12.fill
           .row.fill
             .col-md-3.actions
-              a(href='/next')
+              a(data-ng-click='findStranger()' href='#')
                 .action
                   بعدی
-              a(href='/exit')
+              a(data-ng-href='/exit')
                 .action
                   خروج
             .col-md-9.chat-box(data-ng-controller='MsgController')
