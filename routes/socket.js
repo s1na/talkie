@@ -162,15 +162,16 @@ function authenticate(socket) {
 }
 
 function updateParallelSessions(socket) {
+  var errorHandler = function (err) {
+    if (err) {
+      console.log('Error in parallel update session.');
+    }
+  };
   for (var sidIndex in socket.handshake.session.socket) {
     if (socket.handshake.session.socket[sidIndex] !== socket.id) {
       io.sockets.socket(
         socket.handshake.session.socket[sidIndex]
-      ).handshake.session.reload(function (err) {
-        if (err) {
-          console.log('Error in parallel update session.');
-        }
-      });
+      ).handshake.session.reload(errorHandler);
     }
   }
 }
