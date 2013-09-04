@@ -4,6 +4,72 @@ block append css
   link(rel='stylesheet', type='text/css', href='/css/chat.css')
 block body
   #main(data-ng-controller='ChatCtrl')
+    .row
+      .col-xs-12.col-sm-9
+        .row.hidden-lg.hidden-md.hidden-sm.visible-xs
+          .col-xs-3
+            img(src="/img/logo.png",style="float:left;width: 35px;margin-left: 5px; height:35px;" alt="ایجاد ارتباط")
+          .col-xs-9
+            button.btn.btn-default.btn-md.btn-block(data-ng-click='findStranger()') گفتگو با نفر بعد
+
+        hr.visible-xs.hidden-sm.hidden-md.hidden-lg(style="margin-top: -0.5px;")
+        .row
+          .hidden-xs.col-sm-1
+            sdfds گوشه اینور
+          .col-xs-12.col-sm-10
+            //- textarea.form-class(rows='10')
+            //- input.form-class(type="text")
+            .row(data-ng-controller='MsgController') {{ msg.msgs }}
+              .messages(data-scroll-btm, ng-repeat='msg in msg.msgs')
+                .message(ng-class='msg.from')
+                  .text
+                    pre.
+                      {{ msg.text }}
+
+            .row
+              .col
+
+              //- .input-group
+              //-   input.form-control(type="text")
+              //-   span.input-group-btn.pull-right
+              //-     button.btn.btn-default(type="button") GO
+              //- .col-xs-2
+              //-   button.btn.btn-default.btn-lg.btn-block سلام
+              //- .col-xs-10
+              //-   input#chat-input.form-control(type="input", placeholder="سلام", style="min-width:20px")
+              .input-group 
+                span.input-group-btn(style="float:left; width:0;")
+                  button.btn.btn-default.btn-lg(
+                    data-ng-click='sendMsg();console.log("chera?")',
+                    data-ng-disabled='loading.enable || !msg.curMsg',
+                  ) بفرست
+                input#chat-input.input-lg.form-control(
+                  type="text",
+                  data-ng-model='msg.curMsg',
+                  data-ng-disabled='loading.enable',
+                  data-ret-pressed='sendMsg();',
+                  data-ng-change='typing()',
+                  data-get-focus='!loading.enable'
+                )
+
+          //- .hidden-xs.col-sm-1
+          //-   sdfd گوشه اونور
+
+
+      .hidden-xs.col-sm-2
+        img.img-responsive.image(src="/img/logo.png", alt="ایجاد ارتباط")
+        //- .hidden-lg.hidden-md.hidden-sm.visible-xs
+        p.titr هورین
+        p.text-info.
+          ناشناخته ها را تجربه کن! 
+        hr
+        button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') چت با شخص دیگر
+        button.btn.btn-default.btn-lg.btn-block(type="button", data-ng-href='/exit') خروج از چت
+        p.text-muted.
+          برای گزارش ایراد با ما تماس بگیرید!
+    
+      
+ 
     .container.fill(data-ng-init='init();')
       .loading(data-ng-show='loading.enable', style='display: none;')
         .row 
@@ -13,42 +79,40 @@ block body
           .col-md-4.col-md-offset-4
             p.text-muted شکیبا باشید!
             p.titr در حال یافتن فردی ناشناس هستیم!
-            //- img(src='img/sync.png')
-            //- span.glyphicon.glyphicon-remove(data-ng-click='loading.trigger()')
 
-      .row.fill
-        .col-md-12.fill
-          .row.fill
-            .col-md-3.actions
-              a(data-ng-click='findStranger()' href='#')
-                .action
-                  بعدی
-              a(data-ng-href='/exit')
-                .action
-                  خروج
-            .col-md-9.chat-box(data-ng-controller='MsgController')
-              .row.messages(data-scroll-btm)
-                .col-md-12(ng-repeat='msg in msg.msgs')
-                  .message
-                    .author(ng-class='{me: msg.from == "me", stranger: msg.from != "me"}')
-                      | {{ msg.from }}
-                    .text
-                      pre.
-                        {{ msg.text }}
-                .stranger-typing(data-ng-show='strangerTyping')
-                  در حال نوشتن
-              .row.fill.input
-                .col-md-2.fill
-                  button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
-                .col-md-10.fill
-                  textarea.form-control(data-ng-model='msg.curMsg',
-                    data-ng-disabled='loading.enable',
-                    data-ret-pressed='sendMsg();', data-ng-change='typing()',
-                    data-get-focus='!loading.enable'
-                  )
-    div.notif(data-ng-show='notif.show', style='display: none;')
-      span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
-      p {{ notif.msg }}
+//-       .row
+//-         .col-md-12
+//-           .row
+//-             .col-md-3.actions
+//-               a(data-ng-click='findStranger()' href='#')
+//-                 .action
+//-                   بعدی
+//-               a(data-ng-href='/exit')
+//-                 .action
+//-                   خروج
+//-             .col-md-9.chat-box(data-ng-controller='MsgController')
+//-               .row.messages(data-scroll-btm)
+//-                 .col-md-12(ng-repeat='msg in msg.msgs')
+//-                   .message
+//-                     .author(ng-class='{me: msg.from == "me", stranger: msg.from != "me"}')
+//-                       | {{ msg.from }}
+//-                     .text
+//-                       pre.
+//-                         {{ msg.text }}
+//-                 .stranger-typing(data-ng-show='strangerTyping')
+//-                   در حال نوشتن
+//-               .row.fill.input
+//-                 .col-md-2.fill
+//-                   button.btn.btn-info.btn-disabled(data-ng-click='sendMsg()', data-ng-disabled='loading.enable') بفرست
+//-                 .col-md-10.fill
+//-                   textarea.form-control(data-ng-model='msg.curMsg',
+//-                     data-ng-disabled='loading.enable',
+//-                     data-ret-pressed='sendMsg();', data-ng-change='typing()',
+//-                     data-get-focus='!loading.enable'
+//-                   )
+//-     div.notif(data-ng-show='notif.show', style='display: none;')
+//-       span.glyphicon.glyphicon-remove(data-ng-click='notif.clear()')
+//-       p {{ notif.msg }}
 
 block prepend bottom-js
   script(src='/socket.io/socket.io.js')

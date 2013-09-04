@@ -15,10 +15,22 @@ body {
   color: @main-font-color;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: @main-font-family;
-  font-size: @main-font-size;
-  color: @main-font-color;
+// p {
+//   text-align: center;
+// }
+
+.titr {
+  font-size: 1.8em;
+}
+
+#chat-input {
+  // font-size: 1.7em;
+  // height: 1.7em;
+  // width: 1000px;
+}
+
+#sent-btn {
+  width: 1
 }
 
 a:hover {
@@ -69,7 +81,7 @@ a:hover {
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: #000;
+  background-color: @loading-background-color;
   opacity: 0.9;
   display: block;
   z-index: 9999;
@@ -79,12 +91,12 @@ a:hover {
   }
 
   .titr {
-    font-size: @main-font-size + 1;
+    font-size: 3em;
     text-align: center;
   }
 
   .spinner {
-    margin-top: 10em;
+    margin-top: 2em;
     height: 7em;
     width: 7em;
     position:relative;
@@ -174,35 +186,90 @@ a:hover {
 
 .messages {
   height: 80%;
-  margin: .5em;
-  background-color: #ecf0f1;
+  margin-right: 0.5em;
+  margin-left: 1em;
+  margin-top: 0.5em;
+  // margin: .5em;
+  // background-color: #ecf0f1;
   overflow-y: scroll;
   overflow-x: auto;
 }
 
 .message {
-  margin-top: .5em;
-  margin-bottom: .5em;
+  display: block;
+  clear: both;
+}
+pre {
+  max-width: 85%;
+  min-width: 10%;
+}
 
-  .author {
-    color: #7f8c8d;
-    font-size: 1em;
-
-    .me {
-    }
-
-    .stranger {
-    }
-  }
-
+.message.me{
   .text {
     pre {
-      font-family: @main-font-family;
-      font-size: (@main-font-size - .2em);
-      color: #2980b9;
+      float: left;
     }
   }
 }
+
+.message.system {
+
+}
+
+.message.stranger {
+
+  .text {
+    pre {
+      float: right;
+      margin-right: 1em;
+      // padding-right: -10px;
+      // z-index: 100;
+      // width: 50%;
+    }
+  }
+}
+
+// .message {
+//   margin-top: .5em;
+//   margin-bottom: .5em;
+  
+//   .me {
+//     .text {
+//       pre {
+//         width: 100px;
+//         font-family: @main-font-family;
+//         font-size: (@main-font-size - .2em);
+//         color: #2980b9;
+//       }
+//     }
+//   }
+
+//   .stranger {
+//     .text {
+//       pre {
+//         width: 200px;
+//         font-family: @main-font-family;
+//         font-size: (@main-font-size - .2em);
+//         color: #2980b9;
+//       }
+//     }
+
+//   }
+
+//   .author {
+//     color: #7f8c8d;
+//     font-size: 1em;
+
+//     .me {
+//     }
+
+//     .stranger {
+//     }
+
+//   }
+
+
+// }
 
 .input {
   height: 30%;
