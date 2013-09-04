@@ -13,13 +13,13 @@ block body
             button.btn.btn-default.btn-md.btn-block(data-ng-click='findStranger()') گفتگو با نفر بعد
 
         hr.visible-xs.hidden-sm.hidden-md.hidden-lg(style="margin-top: -0.5px;")
-        .row
+        .row(data-ng-controller='MsgCtrl')
           .hidden-xs.col-sm-1
             sdfds گوشه اینور
           .col-xs-12.col-sm-10
             //- textarea.form-class(rows='10')
             //- input.form-class(type="text")
-            .row(data-ng-controller='MsgController') {{ msg.msgs }}
+            .row
               .messages(data-scroll-btm, ng-repeat='msg in msg.msgs')
                 .message(ng-class='msg.from')
                   .text

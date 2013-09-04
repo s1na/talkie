@@ -84,7 +84,7 @@ angular.module('talkie.controllers', []).
       $scope.msg.curMsg = '';
     }
   }).
-  controller('MsgController', function($scope, socket,
+  controller('MsgCtrl', function($scope, socket,
                                        userS, notifS, titleS
                                       ) {
     $scope.strangerTyping = false;
