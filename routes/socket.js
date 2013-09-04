@@ -113,6 +113,8 @@ module.exports = function (socket) {
     if (typeof socket.handshake.session !== 'undefined') {
       socket.handshake.session.socket.splice(
         socket.handshake.session.socket.indexOf(socket.id), 1);
+      socket.handshake.session.save();
+      updateParallelSessions(socket);
     }
     var res = getStrangerSocket(socket);
 
