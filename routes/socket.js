@@ -15,23 +15,40 @@ module.exports = function (socket) {
   // Add socket to session
   socket.handshake.session.socket.push(socket.id);
   socket.handshake.session.save();
+  updateParallelSessions(socket);
 
   // Looking for a new stranger.
   socket.on('stranger:req', function (data) {
     console.log('Socket requested, ' + socket.id);
 
-    if (authenticated(socket.handshake.session)) {
-      console.log('authenticated');
+    if (authenticate(socket)) {
       if (isActive(socket.handshake.session)) {
+        var res;
         rdb.srandmember('chat:waiting', function (err, reply) {
           if (err) {
             socket.emit('stranger:err',
                         {err: 'Something happened when looking up for strangers.'}
                        );
           } else if (!reply) {
+            res = getStrangerSocket(socket);
+
+            if (res.ok) {
+              console.log('found stranger');
+              res.strangerSocket.emit('stranger:disconnected');
+              res.strangerSocket.set('strangerSID', '');
+            }
+
             rdb.sadd('chat:waiting', socket.id);
             // TODO: setInterval(); or node events
-          } else{
+          } else {
+            res = getStrangerSocket(socket);
+
+            if (res.ok) {
+              console.log('fount stranger');
+              res.strangerSocket.emit('stranger:disconnected');
+              res.strangerSocket.set('strangerID', '');
+            }
+
             console.log('stranger found, ' + reply);
             rdb.srem('chat:waiting', reply);
 
@@ -41,8 +58,10 @@ module.exports = function (socket) {
 
             socket.handshake.session.chatCount += 1;
             socket.handshake.session.save();
+            updateParallelSessions(socket);
             strangerSocket.handshake.session.chatCount += 1;
             strangerSocket.handshake.session.save();
+            updateParallelSessions(strangerSocket);
 
             socket.emit('stranger:res', {
               fullName: strangerSocket.handshake.session.fullName,
@@ -58,16 +77,15 @@ module.exports = function (socket) {
         socket.handshake.session.destroy();
         socket.emit('server:logout');
       }
-    } else {
-      socket.emit('server:logout');
     }
   });
 
   // New message to be sent
   socket.on('msg:send', function (data) {
-    if (authenticated(socket.handshake.session)) {
+    if (authenticate(socket)) {
       socket.handshake.session.msgCount += 1;
       socket.handshake.session.save();
+      updateParallelSessions(socket);
       var res = getStrangerSocket(socket);
 
       if (res.ok) {
@@ -78,7 +96,7 @@ module.exports = function (socket) {
 
   // Typing status
   socket.on('msg:typing', function (data) {
-    if (authenticated(socket.handshake.session)) {
+    if (authenticate(socket)) {
       var res = getStrangerSocket(socket);
 
       if (res.ok) {
@@ -92,10 +110,15 @@ module.exports = function (socket) {
     console.log('Socket disconnected, ' + socket.id);
     rdb.srem('chat:online', socket.id, rdbLogger);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
+    if (typeof socket.handshake.session !== 'undefined') {
+      socket.handshake.session.socket.splice(
+        socket.handshake.session.socket.indexOf(socket.id), 1);
+    }
     var res = getStrangerSocket(socket);
 
     if (res.ok) {
       res.strangerSocket.emit('stranger:disconnected');
+      res.strangerSocket.set('strangerSID', '');
     }
   });
 
@@ -128,11 +151,26 @@ function isActive(session) {
   return true;
 }
 
-function authenticated(session) {
-  if (typeof session !== 'undefined') {
-    if (session.loggedIn) {
+function authenticate(socket) {
+  if (typeof socket.handshake.session !== 'undefined') {
+    if (socket.handshake.session.loggedIn) {
       return true;
     }
   }
+  socket.emit('server:logout');
   return false;
+}
+
+function updateParallelSessions(socket) {
+  for (var sidIndex in socket.handshake.session.socket) {
+    if (socket.handshake.session.socket[sidIndex] !== socket.id) {
+      io.sockets.socket(
+        socket.handshake.session.socket[sidIndex]
+      ).handshake.session.reload(function (err) {
+        if (err) {
+          console.log('Error in parallel update session.');
+        }
+      });
+    }
+  }
 }

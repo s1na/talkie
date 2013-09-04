@@ -54,9 +54,10 @@ angular.module('talkie.controllers', []).
     });
 
     socket.on('stranger:disconnected', function(data) {
-      clearEnv();
-      loadingS.trigger();
-      $scope.findStranger();
+      $scope.msg.msgs.push({
+        text: 'نفر مقابل گفتگو را ترک کرد.',
+        from: 'سرور'
+      });
     });
 
     socket.on('error', function (data) {
