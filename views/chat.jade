@@ -12,10 +12,10 @@ html(ng-app='talkie', lang='fa')
 
   body(dir='rtl')
     #main(data-ng-controller='ChatCtrl')
-      .container.fill
+      .container.fill(data-ng-controller='MsgCtrl')
 
         //- design for xs
-        .row.hidden-lg.hidden-md.hidden-sm.visible-xs(data-ng-controller='MsgCtrl')
+        .row.hidden-lg.hidden-md.hidden-sm.visible-xs
           .container(style="height: 100%")
             .row(style="min-height:40px;")
               .col-xs-1(style="")
@@ -63,7 +63,7 @@ html(ng-app='talkie', lang='fa')
                 .col-xs-2(style="")
 
         //- Design for other devices
-        .row.visible-lg.visible-md.visible-sm.hidden-xs.fill(data-ng-controller='MsgCtrl')
+        .row.visible-lg.visible-md.visible-sm.hidden-xs.fill
           .col-sm-9.col-md-9.fill
             .row.fill
               .col-sm-1
@@ -74,7 +74,7 @@ html(ng-app='talkie', lang='fa')
                   br
                 .row
                   p آی آدم ها که در ساحل نشسته شاد و خندانید
-                .row(style="background: orange; max-height: 70%; position:absolute; width:100%")
+                .row(style="background: orange; max-height: 70%; position:absolute; width:100%; height: 60%")
                   .messages(data-scroll-btm)
                     .message(ng-class='msg.from',ng-repeat='msg in msg.msgs')
                       .text
