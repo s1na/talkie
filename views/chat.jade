@@ -74,7 +74,7 @@ html(ng-app='talkie', lang='fa')
                   br
                 .row
                   p آی آدم ها که در ساحل نشسته شاد و خندانید
-                .row(style="background: orange; max-height: 70%; position:absolute; width:100%")
+                .row.fill(style="background: orange; max-height: 70%; position:absolute; width:100%; overflow: hidden;")
                   .messages(data-scroll-btm)
                     .message(ng-class='msg.from',ng-repeat='msg in msg.msgs')
                       .text
