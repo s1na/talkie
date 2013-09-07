@@ -70,21 +70,31 @@ html(ng-app='talkie', lang='fa')
               .col-sm-10.fill
                 .row
                   br
-                  br 
-                  br
+                  //- p.message.me سلام علیکم
+                  //- p.message.stranger علیکم السلام 
+                  //- p.message مسیج 
                 .row
-                  p آی آدم ها که در ساحل نشسته شاد و خندانید
-                .row(style="background: orange; max-height: 70%; position:absolute; width:100%; height: 60%")
+                  .col-sm-1
+                    img.image.author-avatar(src="/img/anon.png")
+                  .col-sm-2
+                    p.author(style="text-align: left;") شما
+                  .col-sm-6
+                  .col-sm-2
+                    p.author(style="text-align: right;") دیگری
+                  .col-sm-1
+                    img.image.author-avatar(src="/img/anon.png")
+                .row
+                  hr(style="margin-top: -5px;")
+                .row(style="max-height: 70%; margin-top: -15px;position:absolute; width:100%; height: 60%")
                   .messages(data-scroll-btm)
-                    .message(ng-class='msg.from',ng-repeat='msg in msg.msgs')
-                      .text
-                        pre.
-                          {{ msg.text }}
+                    //- .message
+                    pre.message(ng-class='msg.from',ng-repeat='msg in msg.msgs')
+                      {{ msg.text }}
 
                 .row(data-ng-show="strangerTyping", style="position: fixed;bottom: 100px; width: 100%;")
                   p.text-muted در حال نوشتن...
-
-                .row(style="position: fixed; bottom:60px;width: 60%")
+                .row(style="position: fixed;bottom: 50px;width: 60%")
+                  hr(style="margin: 10px; width:93%;")
                   .col-sm-2
                   .col-sm-10
                     .input-group(style="width: 100%;")
@@ -113,8 +123,9 @@ html(ng-app='talkie', lang='fa')
             .row
               button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') گفتگو با نفر بعد
               button.btn.btn-default.btn-lg.btn-block(type="button", data-ng-href='/exit') خروج از چت
-              p.center.text-muted.
-                برای گزارش ایراد با ما تماس بگیرید!
+              p.center.text-muted برای گزارش ایراد با ما 
+               a(href="/about#contact", target="_blank") تماس 
+               بگیرید!
 
 
       //- .row.visible-lg.visible-md.visible-sm.hidden-xs
