@@ -60,5 +60,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
 
   grunt.registerTask('default', ['jshint', 'nodemon']); // 'uglify'
+  grunt.registerTask('production', ['nodemon:prod']);
 
 };
