@@ -70,6 +70,14 @@ body {
   font-size: 1.8em;
 }
 
+.author {
+  font-size: 1.3em;
+}
+
+.author-avatar {
+  height: 30px;
+  width: 30px;
+}
 #chat-input {
   // font-size: 1.7em;
   // height: 1.7em;
@@ -236,6 +244,7 @@ a:hover {
 
 
   height: 100%;
+  width: 100%;
   margin-right: 0.5em;
   margin-left: 1em;
   margin-top: 0.5em;
@@ -245,80 +254,36 @@ a:hover {
   overflow-x: auto;
 }
 
-.message {
-  display: block;
-  clear: both;
-}
+
 pre {
   max-width: 85%;
   min-width: 10%;
 }
 
-.message.me{
-  .text {
-    pre {
-      float: left;
-    }
-  }
-}
-
-.message.system {
-
-}
-
-.message.stranger {
-
-  .text {
-    pre {
-      float: right;
-      margin-right: 1em;
-      // padding-right: -10px;
-      // z-index: 100;
-      // width: 50%;
-    }
-  }
-}
-
-// .message {
-//   margin-top: .5em;
-//   margin-bottom: .5em;
-  
-//   .me {
-//     .text {
-//       pre {
-//         width: 100px;
-//         font-family: @main-font-family;
-//         font-size: (@main-font-size - .2em);
-//         color: #2980b9;
-//       }
-//     }
+// .message.me{
+//   .text {
+//     // pre {
+//     //   float: left;
+//     //   margin-left: 1em;
+//     // }
 //   }
+// }
 
-//   .stranger {
-//     .text {
-//       pre {
-//         width: 200px;
-//         font-family: @main-font-family;
-//         font-size: (@main-font-size - .2em);
-//         color: #2980b9;
-//       }
-//     }
+// .message.system {
 
+// }
+
+// .message.stranger {
+//   min-width: 10%;
+//   .text {
+//     // pre {
+//     //   float: right;
+//     //   margin-right: 1em;
+//     //   // padding-right: -10px;
+//     //   // z-index: 100;
+//     //   // width: 50%;
+//     // }
 //   }
-
-//   .author {
-//     color: #7f8c8d;
-//     font-size: 1em;
-
-//     .me {
-//     }
-
-//     .stranger {
-//     }
-
-//   }
-
-
 // }
 
 .input {
@@ -357,3 +322,83 @@ pre {
 .stranger-typing {
   margin-right: 1em;
 }
+
+.message  {
+  display: block;
+  clear: both;
+  position: relative;
+  padding: 15px;
+  margin: 0.3em 0 0.3em;
+  border: @message-border-size solid @color-blue;
+  background: @color-white;
+  -webkit-border-radius: @message-border-radius;
+  -moz-border-radius: @message-border-radius;
+  border-radius: @message-border-radius;
+}
+
+.message.me {
+  margin-left: 30px;
+}
+
+.message.stranger {
+  margin-right: 30px;
+}
+
+.message:before {
+  content:"";
+  position: absolute;
+  bottom: -20px;/* value = - border-top-width - border-bottom-width */
+  left: 40px;
+  border-width: 20px 20px 0;
+  border-style: solid;
+  border-color: @color-blue transparent;
+  display: block; 
+  width: 0;
+}
+
+.message:after {
+  content: "";
+  position: absolute;
+  bottom: -13px;/* value = - border-top-width - border-bottom-width */
+  left: 47px;/* value = (:before left) + (:before border-left) - (:after border-left) */
+  border-width: 13px 13px 0;
+  border-style: solid;
+  border-color: @color-white transparent;
+  display: block; 
+  width: 0;
+}
+
+.message.me:before {
+  top: 10px;
+  bottom: auto;
+  left: -30px;/* value = - border-left-width - border-right-width */
+  border-width: 15px 30px 15px 0;
+  border-color: transparent @color-blue;
+}
+
+.message.me:after {
+  top: 16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom: auto;
+  left: -21px;
+  border-width: 9px 21px 9px 0;
+  border-color: transparent @color-white;
+}
+
+.message.stranger:before {
+  top: 10px;
+  bottom: auto;
+  left: auto;
+  right: -30px;/* value = - border-left-width - border-right-width */
+  border-width: 15px 0 15px 30px;
+  border-color: transparent @color-blue;
+}
+
+.message.stranger:after {
+  top: 16px;/* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom: auto;
+  left: auto;
+  right: -21px;/* value = - border-left-width - border-right-width */
+  border-width: 9px 0 9px 21px;
+  border-color: transparent @color-white;
+}
+//http://nicolasgallagher.com/pure-css-speech-bubbles/demo/
