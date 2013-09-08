@@ -14,12 +14,14 @@ angular.module('talkie.directives', []).
       restrict: 'A',
       link: function(scope, elem, attr) {
         elem.bind('keypress', function (e) {
-          if (e.keyCode == 13) {
-            if (!e.shiftKey) {
-              e.preventDefault();
-              scope.$apply(function (s) {
-                s.$eval(attr.retPressed);
-              });
+          if (elem[0].value) {
+            if (e.keyCode == 13) {
+              if (!e.shiftKey) {
+                e.preventDefault();
+                scope.$apply(function (s) {
+                  s.$eval(attr.retPressed);
+                });
+              }
             }
           }
         });

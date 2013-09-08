@@ -110,7 +110,7 @@ angular.module('talkie.controllers', []).
     };
 
     socket.on('msg:recv', function (data) {
-      $scope.msg.msgs.push({text: data.msg, from: userS.stranger});
+      $scope.msg.msgs.push(data.msg);
       $scope.strangerTyping = false;
       titleS.newMsg();
     });
