@@ -89,6 +89,8 @@ module.exports = function (socket) {
       var res = getStrangerSocket(socket);
 
       if (res.ok) {
+        data.msg = {text: data.msg};
+        data.msg.from = 'stranger';
         res.strangerSocket.emit('msg:recv', {msg: data.msg});
       }
     }

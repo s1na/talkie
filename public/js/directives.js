@@ -14,12 +14,14 @@ angular.module('talkie.directives', []).
       restrict: 'A',
       link: function(scope, elem, attr) {
         elem.bind('keypress', function (e) {
-          if (e.keyCode == 13) {
-            if (!e.shiftKey) {
-              e.preventDefault();
-              scope.$apply(function (s) {
-                s.$eval(attr.retPressed);
-              });
+          if (elem[0].value) {
+            if (e.keyCode == 13) {
+              if (!e.shiftKey) {
+                e.preventDefault();
+                scope.$apply(function (s) {
+                  s.$eval(attr.retPressed);
+                });
+              }
             }
           }
         });
@@ -28,8 +30,9 @@ angular.module('talkie.directives', []).
   directive('scrollBtm', function () {
     return {
       link: function(scope, elem, attr) {
-        scope.$watch('msgs', function() {
-          elem[0].scrollTop = elem[0].scrollHeight;
+        scope.$watch('msg.msgs', function() {
+          console.log(elem[0].scrollHeight);
+          elem[0].scrollTop = elem[0].scrollHeight - 100;
         }, true);
       }
     };

@@ -250,15 +250,19 @@ a:hover {
   margin-top: 0.5em;
   // margin: .5em;
   // background-color: #ecf0f1;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: auto;
+
+  pre {
+    max-width: 85%;
+    min-width: 10%;
+    font-family: @main-font-family;
+    font-size: @main-font-size - .3em;
+  }
+
 }
 
 
-pre {
-  max-width: 85%;
-  min-width: 10%;
-}
 
 // .message.me{
 //   .text {
@@ -337,17 +341,32 @@ pre {
 }
 
 .message.me {
-  margin-left: 30px;
+  margin-left: 50px;
+  float: left;
 }
 
 .message.stranger {
   margin-right: 30px;
+  float: right;
+}
+
+.message.server {
+  margin: 0 auto;
+  border-color: black;
+
+  &:before {
+    display: none;
+  }
+
+  &:after {
+    display: none;
+  }
 }
 
 .message:before {
   content:"";
   position: absolute;
-  bottom: -20px;/* value = - border-top-width - border-bottom-width */
+  bottom: -20px; /* value = - border-top-width - border-bottom-width */
   left: 40px;
   border-width: 20px 20px 0;
   border-style: solid;
@@ -359,12 +378,12 @@ pre {
 .message:after {
   content: "";
   position: absolute;
-  bottom: -13px;/* value = - border-top-width - border-bottom-width */
-  left: 47px;/* value = (:before left) + (:before border-left) - (:after border-left) */
+  bottom: -13px; /* value = - border-top-width - border-bottom-width */
+  left: 47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
   border-width: 13px 13px 0;
   border-style: solid;
   border-color: @color-white transparent;
-  display: block; 
+  display: block;
   width: 0;
 }
 
