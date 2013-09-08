@@ -27,12 +27,14 @@ angular.module('talkie.directives', []).
         });
       }};
   }).
-  directive('scrollBtm', function () {
+  directive('scrollBtm', function ($window) {
     return {
       link: function(scope, elem, attr) {
         scope.$watch('msg.msgs', function() {
           console.log(elem[0].scrollHeight);
-          elem[0].scrollTop = elem[0].scrollHeight - 100;
+          $window.setTimeout(function () {
+            elem[0].scrollTop = elem[0].scrollHeight;
+          }, 1);
         }, true);
       }
     };
