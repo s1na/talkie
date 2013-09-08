@@ -31,7 +31,6 @@ angular.module('talkie.directives', []).
     return {
       link: function(scope, elem, attr) {
         scope.$watch('msg.msgs', function() {
-          console.log(elem[0].scrollHeight);
           $window.setTimeout(function () {
             elem[0].scrollTop = elem[0].scrollHeight;
           }, 1);
