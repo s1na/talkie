@@ -48,6 +48,10 @@ angular.module('talkie.controllers', []).
       socket.emit('stranger:req');
     };
 
+    $scope.exit = function () {
+      $window.location = '/exit';
+    };
+
     socket.on('stranger:res', function(data) {
       userS.setStranger(data.fullName);
       loadingS.trigger();
