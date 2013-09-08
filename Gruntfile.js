@@ -37,6 +37,16 @@ module.exports = function (grunt) {
           cwd: __dirname
         }
       },
+      prod: {
+        options: {
+          file: 'talkie.js',
+          args: ['production'],
+          env: {
+            PORT: 80,
+          },
+          cwd: __dirname
+        }
+      },
       exec: {
         options: {
           exec: 'less',
