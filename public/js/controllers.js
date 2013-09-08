@@ -11,10 +11,10 @@ angular.module('talkie.controllers', []).
     $rootScope.title = titleS;
 
     $scope.user = {};
+    $scope.stranger = userS.stranger;
     $scope.msg = msgS;
     $scope.notif = notifS;
     $scope.loading = loadingS;
-    $scope.strangerName = '';
 
     $window.onfocus = function () {
       titleS.removeUnseenMsgs();
@@ -53,15 +53,17 @@ angular.module('talkie.controllers', []).
     };
 
     socket.on('stranger:res', function(data) {
-      userS.setStranger(data.fullName);
+      /*userS.setStranger(data.fullName);*/
+      $scope.stranger = data.fullName;
       loadingS.trigger();
     });
 
     socket.on('stranger:disconnected', function(data) {
       $scope.msg.msgs.push({
         text: 'نفر مقابل گفتگو را ترک کرد.',
-        from: 'سرور'
+        from: 'server'
       });
+      $scope.stranger = '';
     });
 
     socket.on('error', function (data) {
