@@ -13,6 +13,6 @@ var app = angular.module('talkie', [
   'btford.socket-io'
 ]);
 
-app.config(function ($locationProvider) {
+app.config(['$locationProvider', function ($locationProvider) {
   $locationProvider.html5Mode(true);
-});
+}]);

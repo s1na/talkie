@@ -18,14 +18,33 @@ module.exports = function (grunt) {
     },
     uglify: {
       build: {
-        src: 'public/js/src/*.js',
-        dest: 'public/js/main.min.js'
+        files: {
+          'public/js/prod.min.js': ['public/js/*.js', 'public/lib/angular-socket-io/socket.js']
+        }
+      }
+    },
+    less: {
+      production: {
+        options: {
+          paths: ['public/css'],
+          yuicompress: true
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'public/',
+            src: ['css/*.less'],
+            dest: 'public/',
+            ext: '.css'
+          }
+        ]
       }
     },
     nodemon: {
       dev: {
         options: {
           file: 'talkie.js',
+          args: ['--development'],
           ignoredFiles: ['README.md', 'node_modules/**'],
           watchedExtensions: ['js'],
           watchedFolders: ['public', 'routes', 'views'],
@@ -33,6 +52,7 @@ module.exports = function (grunt) {
           delayTime: 1,
           env: {
             PORT: 3000,
+            development: true,
           },
           cwd: __dirname
         }
@@ -40,9 +60,10 @@ module.exports = function (grunt) {
       prod: {
         options: {
           file: 'talkie.js',
-          args: ['production'],
+          args: ['--production'],
           env: {
             PORT: 80,
+            development: true,
           },
           cwd: __dirname
         }
@@ -56,10 +77,11 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  //grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-nodemon');
 
-  grunt.registerTask('default', ['jshint', 'nodemon']); // 'uglify'
-  grunt.registerTask('production', ['nodemon:prod']);
+  grunt.registerTask('default', ['jshint', 'nodemon']);
+  grunt.registerTask('production', ['less', 'uglify', 'nodemon:prod']);
 
 };

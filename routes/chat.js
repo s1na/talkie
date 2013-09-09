@@ -1,4 +1,5 @@
 
 module.exports.chat = function(req, res) {
-  res.render('chat');
+  console.log('devel, ' + req.development);
+  res.render('chat', {development: req.development});
 };

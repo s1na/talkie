@@ -9,7 +9,7 @@ exports.index = function(req, res) {
     req.session.touch();
     res.redirect('/chat');
   }
-  res.render('index');
+  res.render('index', {development: req.development});
 };
 
 exports.partials = function(req, res) {

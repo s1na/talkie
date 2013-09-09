@@ -4,10 +4,11 @@
 /* Controllers */
 
 angular.module('talkie.controllers', []).
-  controller('ChatCtrl', function ($rootScope, $scope, $http, $window,
-                                   $document, socket, userS, notifS,
-                                   loadingS, titleS, msgS
-                                  ) {
+  controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$window',
+             '$document', 'socket', 'userS', 'notifS', 'loadingS',
+             'titleS', 'msgS', function ($rootScope, $scope, $http, $window,
+                                         $document, socket, userS, notifS,
+                                         loadingS, titleS, msgS) {
     $rootScope.title = titleS;
 
     $scope.user = {};
@@ -89,10 +90,10 @@ angular.module('talkie.controllers', []).
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';
     }
-  }).
-  controller('MsgCtrl', function($scope, socket,
-                                       userS, notifS, titleS
-                                      ) {
+  }]).
+  controller('MsgCtrl', ['$scope', 'socket', 'userS',
+             'notifS', 'titleS', function($scope, socket,
+                                          userS, notifS, titleS) {
     $scope.strangerTyping = false;
 
     $scope.sendMsg = function () {
@@ -124,4 +125,4 @@ angular.module('talkie.controllers', []).
         $scope.strangerTyping = false;
       }
     });
-  });
+  }]);

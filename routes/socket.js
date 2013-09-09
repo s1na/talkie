@@ -46,7 +46,7 @@ module.exports = function (socket) {
             if (res.ok) {
               console.log('fount stranger');
               res.strangerSocket.emit('stranger:disconnected');
-              res.strangerSocket.set('strangerID', '');
+              res.strangerSocket.set('strangerSID', '');
             }
 
             console.log('stranger found, ' + reply);

@@ -23,7 +23,10 @@ var io = config.io;
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
+if (process.env.development) {
+  app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
+}
+app.use(determineEnv());
 app.use(express.cookieParser(config.secretKey));
 app.use(express.session({
   store: config.redisStore,
@@ -92,3 +95,14 @@ function authenticate(staticPages) {
     next();
   };
 }
+
+function determineEnv() {
+  return function (req, res, next) {
+    req.development = false;
+    if (process.env.development === 'true') {
+      req.development = true;
+    }
+    next();
+  };
+}
+

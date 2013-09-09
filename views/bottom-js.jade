@@ -1,7 +1,11 @@
-script(src='lib/angular/angular.js')
-script(src='lib/angular-socket-io/socket.js')
-script(src='js/app.js')
-script(src='js/services.js')
-script(src='js/controllers.js')
-script(src='js/filters.js')
-script(src='js/directives.js')
+if development
+  script(src='lib/angular/angular.js')
+  script(src='lib/angular-socket-io/socket.js')
+  script(src='js/app.js')
+  script(src='js/services.js')
+  script(src='js/controllers.js')
+  script(src='js/filters.js')
+  script(src='js/directives.js')
+else
+  script(src='lib/angular/angular.min.js')
+  script(src='js/prod.min.js')

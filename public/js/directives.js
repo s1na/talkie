@@ -4,11 +4,6 @@
 /* Directives */
 
 angular.module('talkie.directives', []).
-  directive('appVersion', function (version) {
-    return function (scope, elm, attrs) {
-      elm.text(version);
-    };
-  }).
   directive('retPressed', function () {
     return {
       restrict: 'A',
@@ -27,7 +22,7 @@ angular.module('talkie.directives', []).
         });
       }};
   }).
-  directive('scrollBtm', function ($window) {
+  directive('scrollBtm', ['$window', function ($window) {
     return {
       link: function(scope, elem, attr) {
         scope.$watch('msg.msgs', function() {
@@ -37,7 +32,7 @@ angular.module('talkie.directives', []).
         }, true);
       }
     };
-  }).
+  }]).
   directive('getFocus', function () {
     return {
       link: function(scope, elem, attr) {
