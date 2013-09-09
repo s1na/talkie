@@ -19,7 +19,7 @@ module.exports = function (grunt) {
     uglify: {
       build: {
         files: {
-          'public/js/prod.min.js': ['public/js/*.js', 'public/lib/angular-socket-io/socket.js']
+          'public/js/prod.min.js': ['public/js/*.js', '!public/js/prod.min.js', 'public/lib/angular-socket-io/socket.js']
         }
       }
     },
