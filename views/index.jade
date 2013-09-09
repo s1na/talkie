@@ -7,10 +7,9 @@ block body
   .row
     .col-md-4.col-md-offset-4
       p.text-info(style="text-align:center; font-size: 5em;margin-top: -120px") هورین 
+      legend.
+        برای یافتن فردی برای چت وارد شوید! 
       .login-form
-        legend
-          برای یافتن فردی برای چت وارد شوید! 
-
         form(method='post', action='/auth', name='login-form', role='form')
           .form-group
             label.sr-only(for='login-form-full-name')
@@ -30,17 +29,18 @@ block body
           اینجا 
         قوانین را بخوانید!
       hr
-      small
-        ul.list-inline.pull-right
-          li
-            a(href="/about") درباره ی هورین
-          li تبلیغات
-          li
-            a(href="/about#contact") 
-              تماس
-          li
-            a(href="http://kargaheweb.com/blogminer/", target="_blank")
-              انتقال وبلاگ به سایت
+      ul.list-inline.pull-right
+        li
+          a(href="/about")
+            small درباره ی هورین
+        li 
+          small تبلیغات
+        li
+          a(href="/about#contact")
+            small تماس
+        li
+          a(href="http://kargaheweb.com/blogminer/", target="_blank")
+            small انتقال وبلاگ به سایت
 
 block prepend bottom-js
   script(type='text/javascript').
