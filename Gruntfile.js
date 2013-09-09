@@ -4,7 +4,6 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      //jshintrc: '.jshintrc',
       all: ['Grunfile.js', 'talkie.js', 'public/js/*.js', 'routes/*.js'],
       options: {
         globals: {
@@ -19,7 +18,7 @@ module.exports = function (grunt) {
     uglify: {
       build: {
         files: {
-          'public/js/prod.min.js': ['public/js/*.js', 'public/lib/angular-socket-io/socket.js']
+          'public/js/prod.min.js': ['public/js/*.js', '!public/js/prod.min.js']
         }
       }
     },
@@ -38,6 +37,12 @@ module.exports = function (grunt) {
             ext: '.css'
           }
         ]
+      }
+    },
+    ngmin: {
+      lib: {
+        src: 'public/lib/angular-socket-io/socket.js',
+        dest: 'public/js/angular-socket-io.js'
       }
     },
     nodemon: {
@@ -79,9 +84,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-nodemon');
 
   grunt.registerTask('default', ['jshint', 'nodemon']);
-  grunt.registerTask('production', ['less', 'uglify', 'nodemon:prod']);
+  grunt.registerTask('production', ['less', 'ngmin:lib', 'uglify', 'nodemon:prod']);
 
 };
