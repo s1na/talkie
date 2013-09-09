@@ -63,7 +63,7 @@ module.exports = function (grunt) {
           args: ['--production'],
           env: {
             PORT: 80,
-            development: true,
+            development: false,
           },
           cwd: __dirname
         }
