@@ -87,7 +87,6 @@ server.listen(app.get('port'), function () {
 function authenticate(staticPages) {
   return function (req, res, next) {
     if (staticPages.indexOf(req.path) == -1) {
-      console.log('Not in statics, ' + req.path);
       if (!req.session.loggedIn) {
         res.redirect('/');
       }

@@ -33,7 +33,6 @@ module.exports = function (socket) {
             res = getStrangerSocket(socket);
 
             if (res.ok) {
-              console.log('found stranger');
               res.strangerSocket.emit('stranger:disconnected');
               res.strangerSocket.set('strangerSID', '');
             }
@@ -44,7 +43,6 @@ module.exports = function (socket) {
             res = getStrangerSocket(socket);
 
             if (res.ok) {
-              console.log('fount stranger');
               res.strangerSocket.emit('stranger:disconnected');
               res.strangerSocket.set('strangerSID', '');
             }
