@@ -80,7 +80,7 @@ html(ng-app='talkie', lang='fa')
                     p.author(style="text-align: left;") من
                   .col-sm-6
                   .col-sm-2
-                    p.author(style="text-align: right;") {{ stranger }}
+                    p.author(ng-bind='stranger', style="text-align: right;")
                   .col-sm-1
                     img.image.author-avatar(src="/img/anon.png")
                 .row

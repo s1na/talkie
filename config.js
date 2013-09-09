@@ -28,6 +28,9 @@ function rdbLogger(err, res) {
 
 // Websocket authorization
 io.set('log level', 2);
+io.configure(function () {
+  io.set('polling duration', 0.5);
+});
 io.set('authorization', function (hs, accept) {
   if (hs.headers.cookie) {
     var sessionID;
