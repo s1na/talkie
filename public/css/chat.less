@@ -24,8 +24,7 @@ body {
   ::-webkit-scrollbar-track-piece { background-color: #ecf0f1 ;}
   ::-webkit-scrollbar-thumb { height: 50px; background-color: @color-blue ; border-radius: 1em;}
   // ::-webkit-scrollbar-corner { background-color: red;}
-  // ::-webkit-resizer { background-color: black;}
-}
+ }
 //for firefox
 @-moz-document url-prefix(http://),url-prefix(https://) {
   scrollbar {
@@ -246,19 +245,15 @@ a:hover {
   margin-top: 0.5em;
   // margin: .5em;
   // background-color: #ecf0f1;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: auto;
-
-  pre {
-    max-width: 85%;
-    min-width: 10%;
-    font-family: @main-font-family;
-    font-size: @main-font-size - .3em;
-  }
-
 }
 
 
+pre {
+  max-width: 85%;
+  min-width: 10%;
+}
 
 // .message.me{
 //   .text {
@@ -337,32 +332,17 @@ a:hover {
 }
 
 .message.me {
-  margin-left: 50px;
-  float: left;
+  margin-left: 30px;
 }
 
 .message.stranger {
   margin-right: 30px;
-  float: right;
-}
-
-.message.server {
-  margin: 0 auto;
-  border-color: black;
-
-  &:before {
-    display: none;
-  }
-
-  &:after {
-    display: none;
-  }
 }
 
 .message:before {
   content:"";
   position: absolute;
-  bottom: -20px; /* value = - border-top-width - border-bottom-width */
+  bottom: -20px;/* value = - border-top-width - border-bottom-width */
   left: 40px;
   border-width: 20px 20px 0;
   border-style: solid;
@@ -374,12 +354,12 @@ a:hover {
 .message:after {
   content: "";
   position: absolute;
-  bottom: -13px; /* value = - border-top-width - border-bottom-width */
-  left: 47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+  bottom: -13px;/* value = - border-top-width - border-bottom-width */
+  left: 47px;/* value = (:before left) + (:before border-left) - (:after border-left) */
   border-width: 13px 13px 0;
   border-style: solid;
   border-color: @color-white transparent;
-  display: block;
+  display: block; 
   width: 0;
 }
 
