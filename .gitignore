@@ -22,3 +22,4 @@ public/lib
 *.swp
 
 *.css
+!bootstap.min.css
