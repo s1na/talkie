@@ -15,7 +15,7 @@ module.exports = function (socket) {
   // Add socket to session
   if (socket.handshake.session === 'undefined') {
     socket.emit('error');
-  } else if (socket.handshake.socket === 'undefined') {
+  } else if (socket.handshake.session.socket === 'undefined') {
     socket.emit('error');
   } else {
     socket.handshake.session.socket.push(socket.id);
