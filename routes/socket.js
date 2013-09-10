@@ -13,9 +13,9 @@ module.exports = function (socket) {
   console.log('New socket, ' + socket.id);
 
   // Add socket to session
-  if (socket.handshake.session === 'undefined') {
+  if (typeof socket.handshake.session === 'undefined') {
     socket.emit('error');
-  } else if (socket.handshake.session.socket === 'undefined') {
+  } else if (typeof socket.handshake.session.socket === 'undefined') {
     socket.emit('error');
   } else {
     socket.handshake.session.socket.push(socket.id);
@@ -185,9 +185,9 @@ function updateParallelSessions(socket) {
         socket.handshake.session.socket[sidIndex]
       );
       if (parallelSocket) {
-        if (parallelSocket.handshake === 'undefined') {
+        if (typeof parallelSocket.handshake === 'undefined') {
           errorHandler(true);
-        } else if (parallelSocket.handshake.session === 'undefined') {
+        } else if (typeof parallelSocket.handshake.session === 'undefined') {
           errorHandler(true);
         } else {
           parallelSocket.handshake.session.reload(errorHandler);
