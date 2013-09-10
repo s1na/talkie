@@ -13,9 +13,15 @@ module.exports = function (socket) {
   console.log('New socket, ' + socket.id);
 
   // Add socket to session
-  socket.handshake.session.socket.push(socket.id);
-  socket.handshake.session.save();
-  updateParallelSessions(socket);
+  if (socket.handshake.session === 'undefined') {
+    socket.emit('error');
+  } else if (socket.handshake.socket === 'undefined') {
+    socket.emit('error');
+  } else {
+    socket.handshake.session.socket.push(socket.id);
+    socket.handshake.session.save();
+    updateParallelSessions(socket);
+  }
 
   // Looking for a new stranger.
   socket.on('stranger:req', function (data) {
@@ -169,11 +175,26 @@ function updateParallelSessions(socket) {
       console.log('Error in parallel update session.');
     }
   };
+  if (! socket.handshake.session) {
+    errorHandler(true);
+  }
+  var parallelSocket;
   for (var sidIndex in socket.handshake.session.socket) {
     if (socket.handshake.session.socket[sidIndex] !== socket.id) {
-      io.sockets.socket(
+      parallelSocket = io.sockets.socket(
         socket.handshake.session.socket[sidIndex]
-      ).handshake.session.reload(errorHandler);
+      );
+      if (parallelSocket) {
+        if (parallelSocket.handshake === 'undefined') {
+          errorHandler(true);
+        } else if (parallelSocket.handshake.session === 'undefined') {
+          errorHandler(true);
+        } else {
+          parallelSocket.handshake.session.reload(errorHandler);
+        }
+      } else {
+        errorHandler(true);
+      }
     }
   }
 }

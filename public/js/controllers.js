@@ -72,6 +72,7 @@ angular.module('talkie.controllers', []).
         'مشکلی در ارتباط با سرور پیش آمده.',
         'err'
       );
+      $window.location = '/';
     });
 
     socket.on('stranger:err', function (data) {

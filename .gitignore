@@ -23,3 +23,6 @@ public/lib
 
 *.css
 !bootstap.min.css
+
+prod.min.js
+public/js/angular-socket-io.js

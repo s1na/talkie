@@ -38,6 +38,9 @@ io.set('authorization', function (hs, accept) {
       sessionID = hs.signedCookies['connect.sid'];
     });
     hs.sessionStore = redisStore;
+    if (!sessionID) {
+      accept('[Handshake] has no socket.', false);
+    }
     hs.sessionID = sessionID;
     redisStore.get(sessionID, function (err, session) {
       if (err || !session) {
