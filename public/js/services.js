@@ -73,13 +73,23 @@ angular.module('talkie.services', []).
     };
   }).
   service('titleS', function () {
-    this.title = 'Talkie';
+    this.defaultTitle = 'هورین';
+    this.title = this.defaultTitle;
     this.unseenMsgs = 0;
+
+    this.setStranger = function (stranger) {
+      if (!stranger) {
+        this.title = this.defaultTitle;
+      } else {
+        this.removeUnseenMsgs;
+        this.title = this.title + ' - ' + stranger;
+      }
+    };
 
     this.newMsg = function () {
       if (!document.hasFocus()) {
         this.unseenMsgs++;
-        if (document.title[0] == '(') {
+        if (this.title[this.title.length - 1] === ')') {
           this.removeUnseenMsgs();
         }
         this.addUnseenMsgs();
@@ -89,12 +99,12 @@ angular.module('talkie.services', []).
     this.removeUnseenMsgs = function () {
       if (this.title.indexOf('(') !== -1) {
         this.title = this.title.slice(
-          this.title.indexOf(')') + 2
+          0, this.title.indexOf('(')
         );
       }
     };
 
     this.addUnseenMsgs = function () {
-      this.title = '(' + this.unseenMsgs + ') ' + this.title;
+      this.title = this.title + ' (' + this.unseenMsgs + ')';
     };
   });

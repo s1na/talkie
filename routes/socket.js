@@ -120,11 +120,6 @@ module.exports = function (socket) {
     console.log('Socket disconnected, ' + socket.id);
     rdb.srem('chat:online', socket.id, rdbLogger);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
-    if (typeof socket.handshake.sw.s() !== 'undefined') {
-      /*socket.handshake.session.sockets.splice(
-        socket.handshake.session.sockets.indexOf(socket.id), 1);
-      socket.handshake.session.save();*/
-    }
     var res = getStrangerSocket(socket);
 
     if (res.ok) {

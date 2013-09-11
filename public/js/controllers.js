@@ -54,8 +54,9 @@ angular.module('talkie.controllers', []).
     };
 
     socket.on('stranger:res', function(data) {
-      /*userS.setStranger(data.fullName);*/
+      //userS.setStranger(data.fullName);
       $scope.stranger = data.fullName;
+      titleS.setStranger(data.fullName);
       loadingS.trigger();
     });
 
@@ -65,6 +66,7 @@ angular.module('talkie.controllers', []).
         from: 'server'
       });
       $scope.stranger = '';
+      titleS.setStranger(data.fullName);
     });
 
     socket.on('error', function (data) {
@@ -83,7 +85,8 @@ angular.module('talkie.controllers', []).
     });
 
     function clearEnv() {
-      userS.setStranger('');
+      $scope.stranger = '';
+      titleS.setStranger('');
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';
     }
