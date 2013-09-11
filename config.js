@@ -8,12 +8,12 @@ var redis = require('redis');
 var sub = redis.createClient();
 var client = redis.createClient();*/
 var rdb = redis.createClient();
-var Session = express.session.Session;
 var RedisStore = require('connect-redis')(express);
 
 var secretKey = 'This4is$highly4secure.';
 var sessionPrefix = 'sess:';
 var parseCookie = express.cookieParser(secretKey);
+var sessionSingleton = require('./singleton').SessionSingleton.getInstance();
 
 // Redis and session configuration
 rdb.select(3, redis.print);
@@ -69,7 +69,7 @@ io.set('authorization', function (hs, accept) {
         console.log('Handshake error, ' + session + ', ' + err);
         accept('Error while handshaking.', false);
       } else {
-        hs.session = new Session(hs, session);
+        hs.sw = new sessionSingleton.getSession(hs, session);
         accept(null, true);
       }
     });

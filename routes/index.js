@@ -3,6 +3,7 @@ var config = require('../config');
 var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
 var io = config.io;
+var sessionSingleton = require('../singleton').SessionSingleton.getInstance();
 
 exports.index = function(req, res) {
   if (req.session.loggedIn) {
@@ -26,18 +27,19 @@ exports.auth = function(req, res) {
   req.session.fullName = fullName;
   req.session.msgCount = 0;
   req.session.chatCount = 0;
-  req.session.socket = [];
   req.session.loggedIn = true;
   req.session.save();
   res.redirect('/chat');
 };
 
 exports.exit = function(req, res) {
-  for (var sid in req.session.socket) {
-    io.sockets.socket(req.session.socket[sid]).
-      handshake.session.destroy();
+  if (typeof req.session !== 'undefined') {
+    var sw = sessionSingleton.getSessionWrapper(req.session.id);
+    if (typeof sw !== 'undefined') {
+      sw.destroy();
+    }
+    req.session.destroy();
   }
-  req.session.destroy();
   res.redirect('/');
 };
 

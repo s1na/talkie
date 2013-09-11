@@ -72,7 +72,7 @@ angular.module('talkie.controllers', []).
         'مشکلی در ارتباط با سرور پیش آمده.',
         'err'
       );
-      $window.location = '/';
+      $window.location = '/exit';
     });
 
     socket.on('stranger:err', function (data) {
@@ -80,10 +80,6 @@ angular.module('talkie.controllers', []).
         'مشکلی در پیدا کردن فردی برای شما پیش آمده.',
         'err'
       );
-    });
-
-    socket.on('server:logout', function (data) {
-      $window.location = '/';
     });
 
     function clearEnv() {
