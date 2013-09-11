@@ -57,7 +57,7 @@ module.exports = function (grunt) {
           delayTime: 1,
           env: {
             PORT: 3000,
-            development: true,
+            NODE_ENV: 'development'
           },
           cwd: __dirname
         }
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
           args: ['--production'],
           env: {
             PORT: 80,
-            development: false,
+            NODE_ENV: 'production'
           },
           cwd: __dirname
         }

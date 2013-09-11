@@ -2,7 +2,11 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+//var SocketRedisStore = require('socket.io/lib/stores/redis');
 var redis = require('redis');
+/*var pub = redis.createClient();
+var sub = redis.createClient();
+var client = redis.createClient();*/
 var rdb = redis.createClient();
 var Session = express.session.Session;
 var RedisStore = require('connect-redis')(express);
@@ -13,6 +17,10 @@ var parseCookie = express.cookieParser(secretKey);
 
 // Redis and session configuration
 rdb.select(3, redis.print);
+/*pub.select(3, redis.print);
+sub.select(3, redis.print);
+client.select(3, redis.print);*/
+
 rdb.on('error', function (err) {
   console.log('[Redis](Error) ' + err);
 });
@@ -28,9 +36,23 @@ function rdbLogger(err, res) {
 
 // Websocket authorization
 io.set('log level', 2);
-io.configure(function () {
-  io.set('polling duration', 0.5);
+io.configure('production', function () {
+  io.set('transports', [
+    'websocket',
+    'htmlfile',
+    'xhr-polling',
+    'jsonp-polling'
+  ]);
+  io.enable('browser client minification', true);
+  io.enable('browser client etag', true);
+  io.enable('browser client gzip', true);
+  /*io.set('store', new SocketRedisStore({
+    redisPub: pub,
+    redisSub: sub,
+    redisClient: client
+  }));*/
 });
+io.set('polling duration', 3);
 io.set('authorization', function (hs, accept) {
   if (hs.headers.cookie) {
     var sessionID;

@@ -23,7 +23,7 @@ var io = config.io;
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-if (process.env.development) {
+if (app.get('env') === 'development') {
   app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
 }
 app.use(determineEnv());
@@ -98,7 +98,7 @@ function authenticate(staticPages) {
 function determineEnv() {
   return function (req, res, next) {
     req.development = false;
-    if (process.env.development === 'true') {
+    if (app.get('env') === 'development') {
       req.development = true;
     }
     next();
