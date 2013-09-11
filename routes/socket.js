@@ -46,8 +46,9 @@ module.exports = function (socket) {
             res = getStrangerSocket(socket);
 
             if (res.ok) {
-              res.strangerSocket.emit('stranger:disconnected');
               res.strangerSocket.set('strangerSID', '');
+              socket.set('strangerSID', '');
+              res.strangerSocket.emit('stranger:disconnected');
             }
 
             rdb.sadd('chat:waiting', socket.id);
@@ -56,8 +57,9 @@ module.exports = function (socket) {
             res = getStrangerSocket(socket);
 
             if (res.ok) {
-              res.strangerSocket.emit('stranger:disconnected');
               res.strangerSocket.set('strangerSID', '');
+              socket.set('strangerSID', '');
+              res.strangerSocket.emit('stranger:disconnected');
             }
 
             console.log('stranger found, ' + reply);
@@ -123,8 +125,10 @@ module.exports = function (socket) {
     var res = getStrangerSocket(socket);
 
     if (res.ok) {
-      res.strangerSocket.emit('stranger:disconnected');
+      console.log('Stranger disconnected, ' + res.strangerSocket.id);
       res.strangerSocket.set('strangerSID', '');
+      socket.set('strangerSID', '');
+      res.strangerSocket.emit('stranger:disconnected');
     }
   });
 
@@ -143,6 +147,7 @@ function getStrangerSocket(socket) {
       socket.emit('msg:err');
       ok = false;
     } else {
+      console.log('Stranger SID, ' + sid);
       strangerSocket = io.sockets.socket(sid);
     }
   });
