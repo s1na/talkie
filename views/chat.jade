@@ -11,57 +11,56 @@ html(ng-app='talkie', lang='fa')
   body(dir='rtl')
     #main(data-ng-controller='ChatCtrl')
       .container.fill(data-ng-controller='MsgCtrl')
-
         //- design for xs
-        .row.hidden-lg.hidden-md.hidden-sm.visible-xs
-          .container(style="height: 100%")
-            .row(style="min-height:40px;")
-              .col-xs-1(style="")
-                img.image(src="/img/logo.png",style="float:left;height: 40px; width:40px;" alt="ایجاد ارتباط")
-              .col-xs-1
-              .col-xs-3
-                p.text-info(style="text-align: left;font-size: 1.5em") هورین
-              .col-xs-6
-                button.btn.btn-primary.btn-md.btn-block(data-ng-click='findStranger()') گفتگو با نفر بعد
-              .col-xs-1
-          .row(style="height: 5px;")
-            hr(style="margin-top: 0px; margin-bottom: 0px;")
-          .container
-            .row(style="height: 30px;margin-right: 20px;")
-              p اسامی اشخاص
-            .row(style="width: 100%;background: gray; position: fixed;height: 67%; margin-bottom: 150px;")
-              .messages(data-scroll-btm)
-                .message(ng-class='msg.from',ng-repeat='msg in msg.msgs')
-                  .text
-                    pre.
-                      {{ msg.text }}
+        //- .row.hidden-lg.hidden-md.hidden-sm.visible-xs
+        //-   .container(style="height: 100%")
+        //-     .row(style="min-height:40px;")
+        //-       .col-xs-1(style="")
+        //-         img.image(src="/img/logo.png",style="float:left;height: 40px; width:40px;" alt="ایجاد ارتباط")
+        //-       .col-xs-1
+        //-       .col-xs-3
+        //-         p.text-info(style="text-align: left;font-size: 1.5em") هورین
+        //-       .col-xs-6
+        //-         button.btn.btn-primary.btn-md.btn-block(data-ng-click='findStranger()') گفتگو با نفر بعد
+        //-       .col-xs-1
+        //-   .row(style="height: 5px;")
+        //-     hr(style="margin-top: 0px; margin-bottom: 0px;")
+        //-   .container
+        //-     .row(style="height: 30px;margin-right: 20px;")
+        //-       p اسامی اشخاص
+        //-     .row(style="width: 100%;background: gray; position: fixed;height: 67%; margin-bottom: 150px;")
+        //-       .messages(data-scroll-btm)
+        //-         .message(ng-class='msg.from',ng-repeat='msg in msg.msgs')
+        //-           .text
+        //-             pre.
+        //-               {{ msg.text }}
 
-            .row(style="position: fixed;bottom: 45px;right: 0; left: 0;")
-              p.text-muted(data-ng-show="strangerTyping", style="text-align: center") در حال نوشتن...
+        //-     .row(style="position: fixed;bottom: 45px;right: 0; left: 0;")
+        //-       p.text-muted(data-ng-show="strangerTyping", style="text-align: center") در حال نوشتن...
 
-          .row(style="position:fixed;margin-bottom: 5px;left: 0; right: 0;bottom: 0;")
-            .container
-              .row(style="")
-                .col-xs-2(style="")
-                .col-xs-8
-                  .input-group(style="width: 80%;")
-                    span.input-group-btn(style="float:left; width:0;")
-                      button.btn.btn-default.btn-lg(
-                        data-ng-click='sendMsg();',
-                        data-ng-disabled='loading.enable || !msg.curMsg',
-                      ) بفرست
-                    input#chat-input.input-lg.form-control.col-lg-12(
-                      type="text",
-                      data-ng-model='msg.curMsg',
-                      data-ng-disabled='loading.enable',
-                      data-ret-pressed='sendMsg();',
-                      data-ng-change='typing()',
-                      data-get-focus='!loading.enable'
-                    )
-                .col-xs-2(style="")
+        //-   .row(style="position:fixed;margin-bottom: 5px;left: 0; right: 0;bottom: 0;")
+        //-     .container
+        //-       .row(style="")
+        //-         .col-xs-2(style="")
+        //-         .col-xs-8
+        //-           .input-group(style="width: 80%;")
+        //-             span.input-group-btn(style="float:left; width:0;")
+        //-               button.btn.btn-default.btn-lg(
+        //-                 data-ng-click='sendMsg();',
+        //-                 data-ng-disabled='loading.enable || !msg.curMsg',
+        //-               ) بفرست
+        //-             input#chat-input.input-lg.form-control.col-lg-12(
+        //-               type="text",
+        //-               data-ng-model='msg.curMsg',
+        //-               data-ng-disabled='loading.enable',
+        //-               data-ret-pressed='sendMsg();',
+        //-               data-ng-change='typing()',
+        //-               data-get-focus='!loading.enable'
+        //-             )
+        //-         .col-xs-2(style="")
 
         //- Design for other devices
-        .row.visible-lg.visible-md.visible-sm.hidden-xs.fill
+        .row.visible-lg.visible-md.visible-sm.visible-xs.fill
           .col-sm-9.col-md-9.fill
             .row.fill
               .col-sm-1
