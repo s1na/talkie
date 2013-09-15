@@ -81,7 +81,7 @@ angular.module('talkie.services', []).
       if (!stranger) {
         this.title = this.defaultTitle;
       } else {
-        this.removeUnseenMsgs;
+        this.removeUnseenMsgs();
         this.title = this.title + ' - ' + stranger;
       }
     };
