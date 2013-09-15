@@ -94,14 +94,18 @@ module.exports = function (socket) {
   // New message to be sent
   socket.on('msg:send', function (data) {
     if (authenticate(socket)) {
-      socket.handshake.sw.s().msgCount += 1;
-      socket.handshake.sw.save();
-      var res = getStrangerSocket(socket);
+      if (data.msg.trim()) {
+        socket.handshake.sw.s().msgCount += 1;
+        socket.handshake.sw.save();
+        var res = getStrangerSocket(socket);
 
-      if (res.ok) {
-        data.msg = {text: data.msg};
-        data.msg.from = 'stranger';
-        res.strangerSocket.emit('msg:recv', {msg: data.msg});
+        if (res.ok) {
+          data.msg = {text: data.msg};
+          data.msg.from = 'stranger';
+          res.strangerSocket.emit('msg:recv', {msg: data.msg});
+        }
+      } else {
+        socket.emit('msg:failed');
       }
     }
   });
@@ -147,7 +151,6 @@ function getStrangerSocket(socket) {
       socket.emit('msg:err');
       ok = false;
     } else {
-      console.log('Stranger SID, ' + sid);
       strangerSocket = io.sockets.socket(sid);
     }
   });

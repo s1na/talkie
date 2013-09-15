@@ -34,10 +34,11 @@ app.use(express.session({
   prefix: config.sessionPrefix,
 }));
 app.use(express.logger('dev'));
+app.use(statistics());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-var staticPages = ['/', '/rules', '/about'];
+var staticPages = ['/', '/auth', '/rules', '/about'];
 app.use(authenticate(staticPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
@@ -89,9 +90,12 @@ function authenticate(staticPages) {
     if (staticPages.indexOf(req.path) == -1) {
       if (!req.session.loggedIn) {
         res.redirect('/');
+      } else {
+        next();
       }
+    } else {
+      next();
     }
-    next();
   };
 }
 
@@ -105,3 +109,8 @@ function determineEnv() {
   };
 }
 
+function statistics() {
+  return function (req, res, next) {
+    next();
+  };
+}

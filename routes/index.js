@@ -21,15 +21,17 @@ exports.partials = function(req, res) {
 exports.auth = function(req, res) {
   if (req.session.loggedIn) {
     res.redirect('/chat');
+  } else if (req.body.fullName.trim().length === 0) {
+    res.redirect('/');
+  } else {
+    var fullName = req.body.fullName;
+    req.session.fullName = fullName;
+    req.session.msgCount = 0;
+    req.session.chatCount = 0;
+    req.session.loggedIn = true;
+    req.session.save();
+    res.redirect('/chat');
   }
-
-  var fullName = req.body.fullName;
-  req.session.fullName = fullName;
-  req.session.msgCount = 0;
-  req.session.chatCount = 0;
-  req.session.loggedIn = true;
-  req.session.save();
-  res.redirect('/chat');
 };
 
 exports.exit = function(req, res) {

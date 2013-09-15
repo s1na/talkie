@@ -118,6 +118,13 @@ angular.module('talkie.controllers', []).
       titleS.newMsg();
     });
 
+    socket.on('msg:failed', function (data) {
+      notifS.set(
+        'پیام ارسال تشد.',
+        'err'
+      );
+    });
+
     socket.on('msg:strangerTyping', function (data) {
       if (data == 'typing') {
         $scope.strangerTyping = true;
