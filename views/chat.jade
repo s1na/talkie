@@ -5,8 +5,8 @@ html(ng-app='talkie', lang='fa')
     base(href='/')
     title(ng-bind='title.title') هورین
     block css
-      link(rel='stylesheet', type='text/css', href='/css/bootstrap.min.css')
-      link(rel='stylesheet', type='text/css', href='/css/chat.css')
+      link(rel='stylesheet', type='text/css', href='/static/css/bootstrap.min.css')
+      link(rel='stylesheet', type='text/css', href='/static/css/chat.css')
 
   body(dir='rtl')
     #main(data-ng-controller='ChatCtrl')
@@ -17,7 +17,7 @@ html(ng-app='talkie', lang='fa')
           .container(style="height: 100%")
             .row(style="min-height:40px;")
               .col-xs-1(style="")
-                img.image(src="/img/logo.png",style="float:left;height: 40px; width:40px;" alt="ایجاد ارتباط")
+                img.image(src="/static/img/logo.png",style="float:left;height: 40px; width:40px;" alt="ایجاد ارتباط")
               .col-xs-1
               .col-xs-3
                 p.text-info(style="text-align: left;font-size: 1.5em") هورین
@@ -73,14 +73,14 @@ html(ng-app='talkie', lang='fa')
                   //- p.message مسیج 
                 .row
                   .col-sm-1
-                    img.image.author-avatar(src="/img/anon.png")
+                    img.image.author-avatar(src="/static/img/anon.png")
                   .col-sm-2
                     p.author(style="text-align: left;") من
                   .col-sm-6
                   .col-sm-2
                     p.author(ng-bind='stranger', style="text-align: right;")
                   .col-sm-1
-                    img.image.author-avatar(src="/img/anon.png")
+                    img.image.author-avatar(src="/static/img/anon.png")
                 .row
                   hr(style="margin-top: -5px;")
                 .row(style="max-height: 70%; margin-top: -15px;position:absolute; width:100%; height: 60%")
@@ -111,7 +111,7 @@ html(ng-app='talkie', lang='fa')
               .col-sm-1
           .col-sm-3.col-md-2
             .row
-              img.img-responsive.image(src="/img/logo.png", alt="ایجاد ارتباط")
+              img.img-responsive.image(src="/static/img/logo.png", alt="ایجاد ارتباط")
             .row
               p.text-info.center(style="font-size: 3em;") هورین 
               p.text-muted.center ناشناخته ها را تجربه کن
@@ -128,7 +128,7 @@ html(ng-app='talkie', lang='fa')
       //-   .col-xs-12.col-sm-9
       //-     .row
       //-       .col-xs-3
-      //-         img(src="/img/logo.png",style="float:left;width: 35px;margin-left: 5px; height:35px;" alt="ایجاد ارتباط")
+      //-         img(src="/static/img/logo.png",style="float:left;width: 35px;margin-left: 5px; height:35px;" alt="ایجاد ارتباط")
       //-       .col-xs-9
       //-         button.btn.btn-default.btn-md.btn-block(data-ng-click='findStranger()') گفتگو با نفر بعد
 
@@ -172,7 +172,7 @@ html(ng-app='talkie', lang='fa')
 
 
       //-   .hidden-xs.col-sm-2
-      //-     img.img-responsive.image(src="/img/logo.png", alt="ایجاد ارتباط")
+      //-     img.img-responsive.image(src="/static/img/logo.png", alt="ایجاد ارتباط")
       //-     //- .hidden-lg.hidden-md.hidden-sm.visible-xs
       //-     p.titr هورین
       //-     p.text-info.
