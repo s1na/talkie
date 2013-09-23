@@ -12,14 +12,14 @@ html(lang='fa')
     block page-title
       title هورین
     block css
-      link(rel='stylesheet', type='text/css', href='/css/bootstrap.min.css')
+      link(rel='stylesheet', type='text/css', href='/static/css/bootstrap.min.css')
   body(dir='rtl')
     .index-ctrl(ng-controller='IndexCtrl')
       .container
         .row
           .col-md-4.col-md-offset-4
             a(href='/')
-              img.img-responsive.image(src="/img/logo.png", alt="horin-هورین")
+              img.img-responsive.image(src="/static/img/logo.png", alt="horin-هورین")
         block body
 
         block bottom-js

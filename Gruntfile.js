@@ -67,7 +67,7 @@ module.exports = function (grunt) {
           file: 'talkie.js',
           args: ['--production'],
           env: {
-            PORT: 80,
+            PORT: 3000,
             NODE_ENV: 'production'
           },
           cwd: __dirname
@@ -88,6 +88,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
 
   grunt.registerTask('default', ['jshint', 'nodemon']);
-  grunt.registerTask('production', ['less', 'ngmin:lib', 'uglify', 'nodemon:prod']);
+  grunt.registerTask('production', ['less', 'ngmin:lib', 'uglify']); //, 'nodemon:prod'
 
 };

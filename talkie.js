@@ -7,7 +7,8 @@ var routes = require('./routes'),
   routesApi = require('./routes/api'),
   routesChat = require('./routes/chat'),
   http = require('http'),
-  path = require('path');
+  path = require('path'),
+  longjohn = require('longjohn');
 
 var config = require('./config');
 var express = config.express;
@@ -37,7 +38,7 @@ app.use(express.logger('dev'));
 app.use(statistics());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
 var staticPages = ['/', '/auth', '/rules', '/about'];
 app.use(authenticate(staticPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
