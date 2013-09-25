@@ -15,7 +15,6 @@ var express = config.express;
 var app = config.app;
 var server = config.server;
 var io = config.io;
-var sessionExpiration = config.sessionExpiration;
 
 /**
  * Configuration
@@ -34,9 +33,7 @@ app.use(express.session({
   store: config.redisStore,
   secret: config.secretKey,
   prefix: config.sessionPrefix,
-  cookie: {
-    maxAge: sessionExpiration,
-  },
+  cookie: { expires: false },
 }));
 app.use(express.logger('dev'));
 app.use(statistics());

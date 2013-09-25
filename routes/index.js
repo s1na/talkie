@@ -4,6 +4,7 @@ var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
 var io = config.io;
 var sessionSingleton = require('../singleton').SessionSingleton.getInstance();
+var sessionExpiration = config.sessionExpiration;
 
 exports.index = function(req, res) {
   if (req.session.loggedIn) {
@@ -29,6 +30,7 @@ exports.auth = function(req, res) {
     req.session.msgCount = 0;
     req.session.chatCount = 0;
     req.session.loggedIn = true;
+    req.session.cookie.maxAge = sessionExpiration;
     req.session.save();
     res.redirect('/chat');
   }
