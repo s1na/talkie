@@ -12,6 +12,7 @@ var RedisStore = require('connect-redis')(express);
 
 var secretKey = 'This4is$highly4secure.';
 var sessionPrefix = 'sess:';
+var sessionExpiration = 1000 * 60 * 60 * 24 * 2;
 var parseCookie = express.cookieParser(secretKey);
 var sessionSingleton = require('./singleton').SessionSingleton.getInstance();
 
@@ -87,4 +88,5 @@ module.exports.rdb = rdb;
 module.exports.rdbLogger = rdbLogger;
 module.exports.redisStore = redisStore;
 module.exports.secretKey = secretKey;
+module.exports.sessionExpiration = sessionExpiration;
 module.exports.parseCookie = parseCookie;
