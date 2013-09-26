@@ -15,6 +15,7 @@ var express = config.express;
 var app = config.app;
 var server = config.server;
 var io = config.io;
+var statistics = require('./statistics');
 
 /**
  * Configuration
@@ -36,12 +37,12 @@ app.use(express.session({
   cookie: { expires: false },
 }));
 app.use(express.logger('dev'));
-app.use(statistics());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
-var staticPages = ['/', '/auth', '/rules', '/about'];
-app.use(authenticate(staticPages));
+app.use(statistics());
+var appPages = ['/chat', '/api/user-data'];
+app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
 
@@ -87,16 +88,16 @@ server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-function authenticate(staticPages) {
+function authenticate(appPages) {
   return function (req, res, next) {
-    if (staticPages.indexOf(req.path) == -1) {
+    if (appPages.indexOf(req.path) == -1) {
+      next();
+    } else {
       if (!req.session.loggedIn) {
         res.redirect('/');
       } else {
         next();
       }
-    } else {
-      next();
     }
   };
 }
@@ -107,12 +108,6 @@ function determineEnv() {
     if (app.get('env') === 'development') {
       req.development = true;
     }
-    next();
-  };
-}
-
-function statistics() {
-  return function (req, res, next) {
     next();
   };
 }
