@@ -63,8 +63,12 @@ html(ng-app='talkie', lang='fa')
               p.text-muted.center ناشناخته ها را تجربه کن
             hr
             .row
-              button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') گفتگو با نفر بعد
-              button.btn.btn-default.btn-lg.btn-block(type="button", data-ng-click='exit()') خروج از چت
+              .row
+                button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') گفتگو با نفر بعد
+              .row(style="margin-top: .1em;")
+                .btn-group.btn-group-justified
+                  button.btn.btn-lg.btn-danger.col-xs-6(type="button", data-ng-click='report()', data-ng-disabled="reported") گزارش
+                    button.btn.btn-default.btn-lg.col-xs-6(type="button", data-ng-click='exit()') خروج از چت
               p.center.text-muted این نسخه آزمایشی سایت است. برای گزارش ایراد با ما 
                a(href="/about#contact", target="_blank") تماس 
                بگیرید!

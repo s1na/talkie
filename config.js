@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-//var SocketRedisStore = require('socket.io/lib/stores/redis');
 var redis = require('redis');
 /*var pub = redis.createClient();
 var sub = redis.createClient();
@@ -15,6 +14,11 @@ var sessionPrefix = 'sess:';
 var sessionExpiration = 1000 * 60 * 60 * 24 * 2;
 var parseCookie = express.cookieParser(secretKey);
 var sessionSingleton = require('./singleton').SessionSingleton.getInstance();
+
+var mongoose = require('mongoose');
+
+var maxReports = 3;
+var banExpiration = 1000 * 60 * 60 * 24 * 3;
 
 // Redis and session configuration
 rdb.select(3, redis.print);
@@ -34,6 +38,14 @@ function rdbLogger(err, res) {
   process.stdout.write('[Redis] ');
   redis.print(err, res);
 }
+
+mongoose.connect('mongodb://localhost/talkie');
+
+var db = mongoose.connection;
+db.on('error', function (err) {
+  console.error(err);
+  throw "MongoDB connection error.";
+});
 
 // Websocket authorization
 io.set('log level', 2);
@@ -90,3 +102,5 @@ module.exports.redisStore = redisStore;
 module.exports.secretKey = secretKey;
 module.exports.sessionExpiration = sessionExpiration;
 module.exports.parseCookie = parseCookie;
+module.exports.maxReports = maxReports;
+module.exports.banExpiration = banExpiration;

@@ -17,6 +17,9 @@ var server = config.server;
 var io = config.io;
 var statistics = require('./statistics');
 
+var db = require('./db');
+var Banned = db.Banned;
+
 /**
  * Configuration
  */
@@ -29,6 +32,7 @@ if (app.get('env') === 'development') {
   app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
 }
 app.use(determineEnv());
+app.use(isBanned());
 app.use(express.cookieParser(config.secretKey));
 app.use(express.session({
   store: config.redisStore,
@@ -40,7 +44,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
-app.use(statistics());
+//app.use(statistics());
 var appPages = ['/chat', '/api/user-data'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
@@ -87,6 +91,36 @@ io.sockets.on('connection', require('./routes/socket'));
 server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+function isBanned() {
+  return function (req, res, next) {
+    var ip;
+    if (req.headers['x-nginx-proxy']) {
+      ip = req.headers['x-real-ip'];
+    } else {
+      ip = req.connection.remoteAddress;
+    }
+    Banned.find(function (err, banneds) {
+      console.log(banneds);
+    });
+    Banned.findOne({ip: ip}, function (err, banned) {
+      if (err || !banned) {
+        next();
+      } else {
+        if (banned.expires <= new Date(Date.now())) {
+          banned.remove(function (err) {
+            if (err) {
+              console.error('[Middleware] Could not remove banned from db.');
+            }
+          });
+          next();
+        } else {
+          res.render('banned', {expireDate: banned.expires.toDateString()});
+        }
+      }
+    });
+  };
+}
 
 function authenticate(appPages) {
   return function (req, res, next) {

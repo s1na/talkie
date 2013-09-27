@@ -6,6 +6,11 @@ var config = require('../config');
 var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
 var io = config.io;
+var maxReports = config.maxReports;
+var banExpiration = config.banExpiration;
+
+var db = require('../db');
+var Reported = db.Reported;
 
 
 module.exports = function (socket) {
@@ -47,6 +52,7 @@ module.exports = function (socket) {
 
             if (res.ok) {
               res.strangerSocket.set('strangerSID', '');
+              res.strangerSocket.set('lastStrangerSID', socket.id);
               socket.set('strangerSID', '');
               res.strangerSocket.emit('stranger:disconnected');
             }
@@ -58,6 +64,7 @@ module.exports = function (socket) {
 
             if (res.ok) {
               res.strangerSocket.set('strangerSID', '');
+              res.strangerSocket.set('lastStrangerSID', socket.id);
               socket.set('strangerSID', '');
               res.strangerSocket.emit('stranger:disconnected');
             }
@@ -88,6 +95,118 @@ module.exports = function (socket) {
         socket.handshake.sw.destroy();
         socket.emit('error');
       }
+    }
+  });
+
+  socket.on('stranger:report', function (data) {
+    if (authenticate(socket)) {
+      if (data.noStranger) {
+        socket.get('lastStrangerIp', function (err, ip) {
+          if (err || !ip) {
+            console.error('[Socket] No last stranger available.');
+          } else {
+            Reported.findOne({ip: ip}, function (err, reported) {
+              if (err) {
+                console.error('[Socket] in reporting: ' + err);
+              } else if (!reported){
+                var reported = new Reported({ip: ip});
+                reported.reporters.push(socket.handshake.sw.s().ip);
+                reported.save(function (err, reported) {
+                  if (err) {
+                    console.error('[Socket] Error in saving report: ' + err);
+                  }
+                });
+              } else {
+                if (reported.reporters.indexOf(socket.handshake.sw.s().ip) === -1) {
+                  if (reported.reporters.length >= maxReports - 1) {
+                    Banned.findOne({ip: ip}, function (err, banned) {
+                      if (err) {
+                      } else if (!banned) {
+                        var banned = new Banned(
+                          {ip: ip, expires: new Date(Date.now() + banExpiration)}
+                        );
+                        banned.save(function (err, banned) {
+                          if (err) {
+                            console.error('[Socket] Error in saving a banned user.');
+                          }
+                        });
+                      } else {
+                      }
+                    });
+                  } else {
+                    reported.update(
+                      {$push: {reporters: ip}},
+                      function (err, reported) {
+                        if (err) {
+                          console.error('[Socket] Could not add reporter ip.');
+                        }
+                      }
+                    );
+                  }
+                }
+              }
+           });
+          }
+        });
+      } else {
+        var res = getStrangerSocket(socket);
+
+        if (res.ok) {
+          if (res.strangerSocket.handshake.sw.s().ip) {
+            var ip = res.strangerSocket.handshake.sw.s().ip;
+            Reported.findOne({ip: ip}, function (err, reported) {
+              if (err) {
+                console.error("[Socket] in reporting: " + err);
+              } else if (!reported) {
+                var reported = new Reported({
+                  ip: ip
+                });
+                reported.reporters.push(socket.handshake.sw.s().ip);
+                reported.save(function (err, reported) {
+                  if (err) {
+                    console.error('[Socket] Error while saving report: ' + err);
+                  }
+                });
+              } else {
+                if (reported.reporters.indexOf(socket.handshake.sw.s().ip) === -1) {
+                  if (reported.reporters.length >= maxReports - 1) {
+                    Banned.findOne({ip: ip}, function (err, banned) {
+                      if (err) {
+                      } else if (!banned) {
+                        var banned = new Banned(
+                          {ip: ip, expires: new Date(Date.now() + banExpiration)}
+                        );
+                        banned.save(function (err, banned) {
+                          if (err) {
+                            console.error('[Socket] Error in saving a banned user.');
+                          }
+                        });
+                      } else {
+                      }
+                    });
+                  } else {
+                    reported.update(
+                      {$push: {reporters: ip}},
+                      function (err, reported) {
+                        if (err) {
+                          console.error('[Socket] Could not add reporter ip.');
+                        }
+                      }
+                    );
+                  }
+                }
+              }
+           });
+          } else {
+            console.error('[Socket] stranger socket has no ip for report.');
+          }
+        } else {
+          console.error('[Socket] Getting stranger socket for report failed.');
+        }
+      }
+    } else {
+      socket.handshake.sw.destroy();
+      socket.emit('error');
     }
   });
 
@@ -131,6 +250,7 @@ module.exports = function (socket) {
     if (res.ok) {
       console.log('Stranger disconnected, ' + res.strangerSocket.id);
       res.strangerSocket.set('strangerSID', '');
+      res.strangerSocket.set('lastStrangerSID', socket.id);
       socket.set('strangerSID', '');
       res.strangerSocket.emit('stranger:disconnected');
     }

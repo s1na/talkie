@@ -1,0 +1,28 @@
+extends base
+
+block append css
+  link(rel='stylesheet', type='text/css', href='/static/css/common.css')
+
+block page_title 
+  title هورین - محروم هستید
+
+block body
+  .row
+    .col-md-8.col-md-offset-2
+      legend 
+        p
+          محروم شده‌اید
+      شما از هورین محروم شده‌اید، این محرومیت بر اساس گزارش‌های سایر
+      اعضا می‌باشد. در صورتی که فکر می‌کنید اشتباهی صورت گرفته است
+      با ما تماس بگیرید.
+      br
+      br
+      p
+        پایان محرومیت: 
+        h4=  expireDate
+      br
+      br
+      p.
+        تماس با ما
+        horin.ir@gmail.com
+

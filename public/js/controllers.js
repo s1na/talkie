@@ -16,6 +16,7 @@ angular.module('talkie.controllers', []).
     $scope.msg = msgS;
     $scope.notif = notifS;
     $scope.loading = loadingS;
+    $scope.reported = false;
 
     $window.onfocus = function () {
       titleS.removeUnseenMsgs();
@@ -47,6 +48,11 @@ angular.module('talkie.controllers', []).
       clearEnv();
       loadingS.on();
       socket.emit('stranger:req');
+    };
+
+    $scope.report = function () {
+      socket.emit('stranger:report', {noStranger: !$scope.stranger});
+      $scope.reported = true;
     };
 
     $scope.exit = function () {
@@ -89,6 +95,7 @@ angular.module('talkie.controllers', []).
       titleS.setStranger('');
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';
+      $scope.reported = false;
     }
   }]).
   controller('MsgCtrl', ['$scope', 'socket', 'userS',

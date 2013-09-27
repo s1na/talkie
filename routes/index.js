@@ -30,6 +30,13 @@ exports.auth = function(req, res) {
     req.session.msgCount = 0;
     req.session.chatCount = 0;
     req.session.loggedIn = true;
+    var ip;
+    if (req.headers['x-nginx-proxy']) {
+      ip = req.headers['x-real-ip'];
+    } else {
+      ip = req.connection.remoteAddress;
+    }
+    req.session.ip = ip;
     req.session.cookie.maxAge = sessionExpiration;
     req.session.save();
     res.redirect('/chat');
