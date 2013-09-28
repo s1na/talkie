@@ -115,7 +115,27 @@ function isBanned() {
           });
           next();
         } else {
-          res.render('banned', {expireDate: banned.expires.toDateString()});
+          var remaining = new Date(banned.expires - new Date(Date.now()));
+          remaining = remaining.getTime();
+
+          var days = Math.floor(remaining / 1000 / 60 / 60 / 24);
+          remaining -= days * 1000 * 60 * 60 * 24;
+
+          var hours = Math.floor(remaining / 1000 / 60 / 60);
+          remaining -= hours * 1000 * 60 * 60;
+
+          var minutes = Math.floor(remaining / 1000 / 60);
+          remaining -= minutes * 1000 * 60;
+
+          var seconds = Math.floor(remaining / 1000);
+
+          var output = '';
+          if (days) output = days + 'روز ';
+          if (hours) output = output + hours + 'ساعت ';
+          if (minutes) output = output + minutes + 'دقیقه ';
+          if (seconds) output = output + seconds + 'ثانیه';
+
+          res.render('banned', {expireDate: output});
         }
       }
     });
