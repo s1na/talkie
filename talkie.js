@@ -94,6 +94,9 @@ server.listen(app.get('port'), function () {
 
 function isBanned() {
   return function (req, res, next) {
+    if (req.path.indexOf('/static') == 0) {
+      next();
+    }
     var ip;
     if (req.headers['x-nginx-proxy']) {
       ip = req.headers['x-real-ip'];
