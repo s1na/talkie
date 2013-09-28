@@ -130,6 +130,12 @@ module.exports = function (socket) {
                             console.error('[Socket] Error in saving a banned user.');
                           }
                         });
+                        reported.remove(function (err) {
+                          if (err) {
+                            console.error('[Socket] Error in removing the reported person after ban.');
+                          }
+                        });
+                        socket.handshake.sw.destroy();
                       } else {
                       }
                     });
@@ -181,6 +187,12 @@ module.exports = function (socket) {
                             console.error('[Socket] Error in saving a banned user.');
                           }
                         });
+                        reported.remove(function (err) {
+                          if (err) {
+                            console.error('[Socket] Error in removing the reported person after ban.');
+                          }
+                        });
+                        socket.handshake.sw.destroy();
                       } else {
                       }
                     });

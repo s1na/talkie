@@ -100,9 +100,6 @@ function isBanned() {
     } else {
       ip = req.connection.remoteAddress;
     }
-    Banned.find(function (err, banneds) {
-      console.log(banneds);
-    });
     Banned.findOne({ip: ip}, function (err, banned) {
       if (err || !banned) {
         next();
