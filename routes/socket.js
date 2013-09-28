@@ -52,7 +52,7 @@ module.exports = function (socket) {
 
             if (res.ok) {
               res.strangerSocket.set('strangerSID', '');
-              res.strangerSocket.set('lastStrangerSID', socket.id);
+              res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
               socket.set('strangerSID', '');
               res.strangerSocket.emit('stranger:disconnected');
             }
@@ -64,7 +64,7 @@ module.exports = function (socket) {
 
             if (res.ok) {
               res.strangerSocket.set('strangerSID', '');
-              res.strangerSocket.set('lastStrangerSID', socket.id);
+              res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
               socket.set('strangerSID', '');
               res.strangerSocket.emit('stranger:disconnected');
             }
@@ -104,6 +104,7 @@ module.exports = function (socket) {
         socket.get('lastStrangerIp', function (err, ip) {
           if (err || !ip) {
             console.error('[Socket] No last stranger available.');
+            if (err) console.error(err);
           } else {
             Reported.findOne({ip: ip}, function (err, reported) {
               if (err) {
@@ -262,7 +263,7 @@ module.exports = function (socket) {
     if (res.ok) {
       console.log('Stranger disconnected, ' + res.strangerSocket.id);
       res.strangerSocket.set('strangerSID', '');
-      res.strangerSocket.set('lastStrangerSID', socket.id);
+      res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
       socket.set('strangerSID', '');
       res.strangerSocket.emit('stranger:disconnected');
     }
