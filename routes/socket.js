@@ -136,7 +136,8 @@ module.exports = function (socket) {
                             console.error('[Socket] Error in removing the reported person after ban.');
                           }
                         });
-                        socket.handshake.sw.destroy();
+                        //socket.handshake.sw.destroy();
+                        //socket.emit('error');
                       } else {
                       }
                     });
@@ -193,7 +194,8 @@ module.exports = function (socket) {
                             console.error('[Socket] Error in removing the reported person after ban.');
                           }
                         });
-                        socket.handshake.sw.destroy();
+                        res.strangerSocket.handshake.sw.destroy();
+                        res.strangerSocket.emit('error');
                       } else {
                       }
                     });
