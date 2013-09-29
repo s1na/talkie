@@ -12,34 +12,33 @@ var banExpiration = config.banExpiration;
 var db = require('../db');
 var Reported = db.Reported;
 
+var logger = require('../logger');
 
 module.exports = function (socket) {
 
   // Add socket to session
   if (typeof socket.handshake.sw === 'undefined') {
+    logger.err('socket', 'Socket has no SessionWrapper.');
+    logger.err('socket', socket.handshake);
     socket.emit('error');
     return;
   } else if (typeof socket.handshake.sw.s() === 'undefined') {
-    console.error('[Socket] new socket doesn\'t have session.');
-    console.error(socket.handshake.sw);
+    logger.err('socket', 'new socket doesn\'t have session.');
+    logger.err('socket', socket.handshake.sw);
     socket.emit('error');
     return;
-  }// else {
-    /*socket.handshake.session.sockets.push(socket.id);
-    socket.handshake.session.save();
-  }*/
+  }
+
   rdb.sadd('chat:online', socket.id, rdbLogger);
-  console.log(
-    'New socket, ' + socket.id + ' ' +
-    JSON.stringify(socket.handshake.sw.s())
-  );
+  logger.info('socket',
+              'New socket, ' + socket.id + ' '
+             );
 
   // Looking for a new stranger.
   socket.on('stranger:req', function (data) {
-    console.log(
-      'Socket requested, ' + socket.id + ' ' +
-      JSON.stringify(socket.handshake.sw.s())
-    );
+    logger.info('socket',
+                'Socket requested, ' + socket.id + ' '
+               );
 
     if (authenticate(socket)) {
       if (isActive(socket.handshake.sw.s())) {
@@ -71,7 +70,7 @@ module.exports = function (socket) {
               res.strangerSocket.emit('stranger:disconnected');
             }
 
-            console.log('stranger found, ' + reply);
+            logger.info('socket', 'Stranger found, ' + reply);
             rdb.srem('chat:waiting', reply);
 
             strangerSocket = io.sockets.socket(reply);
@@ -105,18 +104,18 @@ module.exports = function (socket) {
       if (data.noStranger) {
         socket.get('lastStrangerIp', function (err, ip) {
           if (err || !ip) {
-            console.error('[Socket] No last stranger available.');
-            if (err) console.error(err);
+            logger.err('socket', 'No last stranger available.');
+            if (err) logger.err('socket', err);
           } else {
             Reported.findOne({ip: ip}, function (err, reported) {
               if (err) {
-                console.error('[Socket] in reporting: ' + err);
+                logger.err('socket', 'in reporting: ' + err);
               } else if (!reported){
                 var reported = new Reported({ip: ip});
                 reported.reporters.push(socket.handshake.sw.s().ip);
                 reported.save(function (err, reported) {
                   if (err) {
-                    console.error('[Socket] Error in saving report: ' + err);
+                    logger.error('socket', 'Error in saving report: ' + err);
                   }
                 });
               } else {
@@ -130,12 +129,12 @@ module.exports = function (socket) {
                         );
                         banned.save(function (err, banned) {
                           if (err) {
-                            console.error('[Socket] Error in saving a banned user.');
+                            logger.err('socket', 'Error in saving a banned user.');
                           }
                         });
                         reported.remove(function (err) {
                           if (err) {
-                            console.error('[Socket] Error in removing the reported person after ban.');
+                            logger.err('socket', 'Error in removing the reported person after ban.');
                           }
                         });
                         //socket.handshake.sw.destroy();
@@ -148,7 +147,7 @@ module.exports = function (socket) {
                       {$push: {reporters: ip}},
                       function (err, reported) {
                         if (err) {
-                          console.error('[Socket] Could not add reporter ip.');
+                          logger.err('socket', 'Could not add reporter ip.');
                         }
                       }
                     );
@@ -166,7 +165,7 @@ module.exports = function (socket) {
             var ip = res.strangerSocket.handshake.sw.s().ip;
             Reported.findOne({ip: ip}, function (err, reported) {
               if (err) {
-                console.error("[Socket] in reporting: " + err);
+                logger.err('socket', "in reporting: " + err);
               } else if (!reported) {
                 var reported = new Reported({
                   ip: ip
@@ -174,7 +173,7 @@ module.exports = function (socket) {
                 reported.reporters.push(socket.handshake.sw.s().ip);
                 reported.save(function (err, reported) {
                   if (err) {
-                    console.error('[Socket] Error while saving report: ' + err);
+                    logger.err('socket', 'Error while saving report: ' + err);
                   }
                 });
               } else {
@@ -188,12 +187,12 @@ module.exports = function (socket) {
                         );
                         banned.save(function (err, banned) {
                           if (err) {
-                            console.error('[Socket] Error in saving a banned user.');
+                            logger.err('socket', 'Error in saving a banned user.');
                           }
                         });
                         reported.remove(function (err) {
                           if (err) {
-                            console.error('[Socket] Error in removing the reported person after ban.');
+                            logger.err('socket', 'Error in removing the reported person after ban.');
                           }
                         });
                         res.strangerSocket.handshake.sw.destroy();
@@ -206,7 +205,7 @@ module.exports = function (socket) {
                       {$push: {reporters: ip}},
                       function (err, reported) {
                         if (err) {
-                          console.error('[Socket] Could not add reporter ip.');
+                          logger.err('socket', 'Could not add reporter ip.');
                         }
                       }
                     );
@@ -215,10 +214,10 @@ module.exports = function (socket) {
               }
            });
           } else {
-            console.error('[Socket] stranger socket has no ip for report.');
+            logger.err('socket', 'stranger socket has no ip for report.');
           }
         } else {
-          console.error('[Socket] Getting stranger socket for report failed.');
+          logger.err('socket', 'Getting stranger socket for report failed.');
         }
       }
     } else {
@@ -259,15 +258,20 @@ module.exports = function (socket) {
 
   // Socket disconnected.
   socket.on('disconnect', function () {
-    console.log('Socket disconnected, ' + socket.id);
+    logger.info('socket', 'Socket disconnected, ' + socket.id);
     rdb.srem('chat:online', socket.id, rdbLogger);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
     var res = getStrangerSocket(socket);
 
     if (res.ok) {
-      console.log('Stranger disconnected, ' + res.strangerSocket.id);
+      logger.info('socket', 'Stranger disconnected, ' + res.strangerSocket.id);
       res.strangerSocket.set('strangerSID', '');
-      res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
+      // TODO: Somehow keep their ips even if their session is destroyed.
+      if (typeof socket.handshake.sw !== 'undefined') {
+        if (typeof socket.handshake.sw.s() !== 'undefined') {
+          res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
+        }
+      }
       socket.set('strangerSID', '');
       res.strangerSocket.emit('stranger:disconnected');
     }
@@ -292,6 +296,19 @@ function getStrangerSocket(socket) {
     }
   });
 
+  if (typeof strangerSocket !== 'undefined' && strangerSocket) {
+    try {
+      if (typeof strangerSocket.handshake === 'undefined' ||
+          typeof strangerSocket.handshake.sw === 'undefined' ||
+          typeof strangerSocket.handshake.sw.s() === 'undefined') {
+        ok = false;
+        strangerSocket.emit('error');
+      }
+    } catch (TypeError) {
+      ok = false;
+      strangerSocket.emit('error');
+    }
+  }
   return {ok: ok, strangerSocket: strangerSocket};
 }
 
