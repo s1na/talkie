@@ -20,6 +20,8 @@ module.exports = function (socket) {
     socket.emit('error');
     return;
   } else if (typeof socket.handshake.sw.s() === 'undefined') {
+    console.error('[Socket] new socket doesn\'t have session.');
+    console.error(socket.handshake.sw);
     socket.emit('error');
     return;
   }// else {

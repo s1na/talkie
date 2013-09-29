@@ -28,7 +28,7 @@ angular.module('talkie.controllers', []).
 
 
     $scope.init = function () {
-      $scope.getData();
+//      $scope.getData();
 
       $scope.findStranger();
     };

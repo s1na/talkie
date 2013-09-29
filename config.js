@@ -52,20 +52,22 @@ io.set('log level', 2);
 io.configure('production', function () {
   io.set('transports', [
     'websocket',
-    'htmlfile',
     'xhr-polling',
+    'flashsocket',
+    'htmlfile',
     'jsonp-polling'
   ]);
   io.enable('browser client minification', true);
   io.enable('browser client etag', true);
   io.enable('browser client gzip', true);
+  io.enable('sync disconnect on unload ', true);
   /*io.set('store', new SocketRedisStore({
     redisPub: pub,
     redisSub: sub,
     redisClient: client
   }));*/
 });
-io.set('polling duration', 3);
+io.set('polling duration', 20);
 io.set('authorization', function (hs, accept) {
   if (hs.headers.cookie) {
     var sessionID;
