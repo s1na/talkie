@@ -75,12 +75,16 @@ angular.module('talkie.controllers', []).
       titleS.clear();
     });
 
+    socket.on('system:error', function (data) {
+      $scope.exit();
+    });
+
     socket.on('error', function (data) {
-      notifS.set(
-        'مشکلی در ارتباط با سرور پیش آمده.',
-        'err'
-      );
-      $window.location = '/exit';
+      //notifS.set(
+      //  'مشکلی در ارتباط با سرور پیش آمده.',
+      //  'err'
+      //);
+      //$window.location = '/exit';
     });
 
     socket.on('stranger:err', function (data) {
