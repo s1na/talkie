@@ -4,7 +4,8 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      all: ['Grunfile.js', 'talkie.js', 'public/js/*.js', 'routes/*.js'],
+      all: ['Grunfile.js', 'talkie.js', 'public/js/*.js',
+        'routes/*.js', '!public/js/prod.min.js', '!public/js/socket.js'],
       options: {
         globals: {
           'angular': true,
@@ -18,7 +19,7 @@ module.exports = function (grunt) {
     uglify: {
       build: {
         files: {
-          'public/js/prod.min.js': ['public/js/*.js', '!public/js/prod.min.js']
+          'public/js/prod.min.js': ['public/js/*.js', '!public/js/prod.min.js', '!public/js/socket.js']
         }
       }
     },
@@ -41,7 +42,7 @@ module.exports = function (grunt) {
     },
     ngmin: {
       lib: {
-        src: 'public/lib/angular-socket-io/socket.js',
+        src: 'public/js/socket.js',
         dest: 'public/js/angular-socket-io.js'
       }
     },
