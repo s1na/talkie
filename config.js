@@ -17,6 +17,8 @@ var sessionSingleton = require('./singleton').SessionSingleton.getInstance();
 
 var mongoose = require('mongoose');
 
+var logger = require('./logger');
+
 var maxReports = 3;
 var banExpiration = 1000 * 60 * 60 * 24 * 3;
 
@@ -34,9 +36,15 @@ var redisStore = new RedisStore({
   client: rdb
 });
 
-function rdbLogger(err, res) {
-  process.stdout.write('[Redis] ');
-  redis.print(err, res);
+function rdbLogger(err, res, action) {
+  if (err) {
+    logger.error('redis', err);
+  } else {
+    if (typeof action === 'defined') {
+      res = action + ' ' + res;
+    }
+    logger.info('redis', res);
+  }
 }
 
 mongoose.connect('mongodb://localhost/talkie');
@@ -60,7 +68,6 @@ io.configure('production', function () {
   io.enable('browser client minification', true);
   io.enable('browser client etag', true);
   io.enable('browser client gzip', true);
-  io.enable('sync disconnect on unload ', true);
   /*io.set('store', new SocketRedisStore({
     redisPub: pub,
     redisSub: sub,
