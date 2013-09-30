@@ -72,7 +72,7 @@ angular.module('talkie.controllers', []).
         from: 'server'
       });
       $scope.stranger = '';
-      titleS.setStranger(data.fullName);
+      titleS.clear();
     });
 
     socket.on('error', function (data) {

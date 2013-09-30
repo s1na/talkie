@@ -107,4 +107,8 @@ angular.module('talkie.services', []).
     this.addUnseenMsgs = function () {
       this.title = this.title + ' (' + this.unseenMsgs + ')';
     };
+
+    this.clear = function () {
+      this.title = this.defaultTitle;
+    };
   });
