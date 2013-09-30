@@ -44,7 +44,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
-//app.use(statistics());
+// app.use(statistics());
 var appPages = ['/chat', '/api/user-data'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
@@ -144,6 +144,9 @@ function isBanned() {
 
 function authenticate(appPages) {
   return function (req, res, next) {
+    if (req.path.indexOf('/static') === 0 ) {
+      return;
+    }
     if (appPages.indexOf(req.path) == -1) {
       next();
     } else {
