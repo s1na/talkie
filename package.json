@@ -10,7 +10,8 @@
     "redis": "~0.8.4",
     "connect-redis": "~1.4.5",
     "longjohn": "~0.2.1",
-    "mongoose": "~3.6.20"
+    "mongoose": "~3.6.20",
+    "json-stringify-safe": "~5.0.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
