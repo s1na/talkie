@@ -18,14 +18,10 @@ module.exports = function (socket) {
 
   // Add socket to session
   if (typeof socket.handshake.sw === 'undefined') {
-    logger.err('socket', 'Socket has no SessionWrapper.');
-    logger.err('socket', socket.handshake);
-    socket.emit('system:error');
+    emitError(socket);
     return;
   } else if (typeof socket.handshake.sw.s() === 'undefined') {
-    logger.err('socket', 'new socket doesn\'t have session.');
-    logger.err('socket', socket.handshake.sw);
-    socket.emit('system:error');
+    emitError(socket);
     return;
   }
 
@@ -74,27 +70,31 @@ module.exports = function (socket) {
             rdb.srem('chat:waiting', reply);
 
             strangerSocket = io.sockets.socket(reply);
-            socket.set('strangerSID', reply);
-            strangerSocket.set('strangerSID', socket.id);
+            if (typeof strangerSocket.handshake !== 'undefined') {
+              socket.set('strangerSID', reply);
+              strangerSocket.set('strangerSID', socket.id);
 
-            socket.handshake.sw.s().chatCount += 1;
-            socket.handshake.sw.save();
-            strangerSocket.handshake.sw.s().chatCount += 1;
-            strangerSocket.handshake.sw.save();
+              socket.handshake.sw.s().chatCount += 1;
+              socket.handshake.sw.save();
+              strangerSocket.handshake.sw.s().chatCount += 1;
+              strangerSocket.handshake.sw.save();
 
-            socket.emit('stranger:res', {
-              fullName: strangerSocket.handshake.sw.s().fullName,
-            });
+              socket.emit('stranger:res', {
+                fullName: strangerSocket.handshake.sw.s().fullName,
+              });
 
-            strangerSocket.emit('stranger:res', {
-              fullName: socket.handshake.sw.s().fullName,
-            });
+              strangerSocket.emit('stranger:res', {
+                fullName: socket.handshake.sw.s().fullName,
+              });
+            } else {
+              logger.err('socket', 'Found stranger has no handshake. Still looking.');
+            }
           }
         });
         //socket.emit('stranger:res', {found: false});
       } else {
         socket.handshake.sw.destroy();
-        socket.emit('system:error');
+        emitError(socket);
       }
     }
   });
@@ -138,7 +138,7 @@ module.exports = function (socket) {
                           }
                         });
                         //socket.handshake.sw.destroy();
-                        //socket.emit('system:error');
+                        //emitError(socket);
                       } else {
                       }
                     });
@@ -222,7 +222,7 @@ module.exports = function (socket) {
       }
     } else {
       socket.handshake.sw.destroy();
-      socket.emit('system:error');
+      emitError(socket);
     }
   });
 
@@ -325,7 +325,7 @@ function authenticate(socket) {
       return true;
     }
   }
-  socket.emit('system:error');
+  emitError(socket);
   return false;
 }
 
