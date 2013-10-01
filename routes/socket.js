@@ -2,6 +2,8 @@
  * Serve content over a socket
  */
 
+var stringify = require('json-stringify-safe');
+
 var config = require('../config');
 var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
@@ -88,6 +90,7 @@ module.exports = function (socket) {
               });
             } else {
               logger.err('socket', 'Found stranger has no handshake. Still looking.');
+              logger.err('socket', strangerSocket);
             }
           }
         });
