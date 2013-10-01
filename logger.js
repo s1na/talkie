@@ -23,7 +23,12 @@ function log(type, from, msg) {
   }
 
   if (typeof msg === 'object') {
-    msg = JSON.stringify(msg);
+    try {
+      msg = JSON.stringify(msg);
+    } catch (TypeError) {
+      console.log(msg);
+      return;
+    }
   }
 
   if (type == 'info') {
