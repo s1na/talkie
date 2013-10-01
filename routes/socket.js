@@ -326,6 +326,8 @@ function authenticate(socket) {
       return true;
     }
   }
+  logger.err('socket', 'Socket not authenticated.');
+  logger.err('socket', socket.handshake.sw.s());
   emitError(socket);
   return false;
 }
