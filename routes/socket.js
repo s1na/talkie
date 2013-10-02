@@ -315,6 +315,7 @@ function getStrangerSocket(socket) {
 
 function isActive(session) {
   if (session.msgCount === 0 && session.chatCount >= 3) {
+    logger.err('socket', 'User is not active.');
     return false;
   }
   return true;
