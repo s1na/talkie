@@ -314,11 +314,12 @@ function getStrangerSocket(socket) {
 }
 
 function isActive(session) {
-  if (session.msgCount === 0 && session.chatCount >= 3) {
+  return true;
+  /*if (session.msgCount === 0 && session.chatCount >= 3) {
     logger.err('socket', 'User is not active.');
     return false;
   }
-  return true;
+  return true;*/
 }
 
 function authenticate(socket) {
