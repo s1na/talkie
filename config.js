@@ -61,8 +61,8 @@ io.configure('production', function () {
   io.set('transports', [
     'websocket',
     'xhr-polling',
-    'flashsocket',
     'htmlfile',
+    'flashsocket',
     'jsonp-polling'
   ]);
   io.enable('browser client minification', true);

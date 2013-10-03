@@ -1,3 +1,4 @@
+var stringify = require('json-stringify-safe');
 
 module.exports.info = function (from, msg) {
   setTimeout(function () {
@@ -23,7 +24,7 @@ function log(type, from, msg) {
   }
 
   if (typeof msg === 'object') {
-    msg = JSON.stringify(msg);
+    msg = stringify(msg);
   }
 
   if (type == 'info') {

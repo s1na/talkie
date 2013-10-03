@@ -18,14 +18,10 @@ module.exports = function (socket) {
 
   // Add socket to session
   if (typeof socket.handshake.sw === 'undefined') {
-    logger.err('socket', 'Socket has no SessionWrapper.');
-    logger.err('socket', socket.handshake);
-    socket.emit('error');
+    emitError(socket);
     return;
   } else if (typeof socket.handshake.sw.s() === 'undefined') {
-    logger.err('socket', 'new socket doesn\'t have session.');
-    logger.err('socket', socket.handshake.sw);
-    socket.emit('error');
+    emitError(socket);
     return;
   }
 
@@ -74,27 +70,32 @@ module.exports = function (socket) {
             rdb.srem('chat:waiting', reply);
 
             strangerSocket = io.sockets.socket(reply);
-            socket.set('strangerSID', reply);
-            strangerSocket.set('strangerSID', socket.id);
+            if (typeof strangerSocket.handshake !== 'undefined') {
+              socket.set('strangerSID', reply);
+              strangerSocket.set('strangerSID', socket.id);
 
-            socket.handshake.sw.s().chatCount += 1;
-            socket.handshake.sw.save();
-            strangerSocket.handshake.sw.s().chatCount += 1;
-            strangerSocket.handshake.sw.save();
+              socket.handshake.sw.s().chatCount += 1;
+              socket.handshake.sw.save();
+              strangerSocket.handshake.sw.s().chatCount += 1;
+              strangerSocket.handshake.sw.save();
 
-            socket.emit('stranger:res', {
-              fullName: strangerSocket.handshake.sw.s().fullName,
-            });
+              socket.emit('stranger:res', {
+                fullName: strangerSocket.handshake.sw.s().fullName,
+              });
 
-            strangerSocket.emit('stranger:res', {
-              fullName: socket.handshake.sw.s().fullName,
-            });
+              strangerSocket.emit('stranger:res', {
+                fullName: socket.handshake.sw.s().fullName,
+              });
+            } else {
+              logger.err('socket', 'Found stranger has no handshake. Still looking.');
+              logger.err('socket', strangerSocket);
+            }
           }
         });
         //socket.emit('stranger:res', {found: false});
       } else {
         socket.handshake.sw.destroy();
-        socket.emit('error');
+        emitError(socket);
       }
     }
   });
@@ -115,7 +116,7 @@ module.exports = function (socket) {
                 reported.reporters.push(socket.handshake.sw.s().ip);
                 reported.save(function (err, reported) {
                   if (err) {
-                    logger.error('socket', 'Error in saving report: ' + err);
+                    logger.err('socket', 'Error in saving report: ' + err);
                   }
                 });
               } else {
@@ -138,7 +139,7 @@ module.exports = function (socket) {
                           }
                         });
                         //socket.handshake.sw.destroy();
-                        //socket.emit('error');
+                        //emitError(socket);
                       } else {
                       }
                     });
@@ -196,7 +197,7 @@ module.exports = function (socket) {
                           }
                         });
                         res.strangerSocket.handshake.sw.destroy();
-                        res.strangerSocket.emit('error');
+                        res.strangerSocket.emit('system:error');
                       } else {
                       }
                     });
@@ -222,7 +223,7 @@ module.exports = function (socket) {
       }
     } else {
       socket.handshake.sw.destroy();
-      socket.emit('error');
+      emitError(socket);
     }
   });
 
@@ -302,21 +303,23 @@ function getStrangerSocket(socket) {
           typeof strangerSocket.handshake.sw === 'undefined' ||
           typeof strangerSocket.handshake.sw.s() === 'undefined') {
         ok = false;
-        strangerSocket.emit('error');
+        strangerSocket.emit('system:error');
       }
     } catch (TypeError) {
       ok = false;
-      strangerSocket.emit('error');
+      strangerSocket.emit('system:error');
     }
   }
   return {ok: ok, strangerSocket: strangerSocket};
 }
 
 function isActive(session) {
-  if (session.msgCount === 0 && session.chatCount >= 3) {
+  return true;
+  /*if (session.msgCount === 0 && session.chatCount >= 3) {
+    logger.err('socket', 'User is not active.');
     return false;
   }
-  return true;
+  return true;*/
 }
 
 function authenticate(socket) {
@@ -325,9 +328,37 @@ function authenticate(socket) {
       return true;
     }
   }
-  socket.emit('error');
+  logger.err('socket', 'Socket not authenticated.');
+  logger.err('socket', socket.handshake.sw.s());
+  emitError(socket);
   return false;
 }
+
+function emitError(socket) {
+  if (typeof socket !== 'undefined') {
+    if (typeof socket.handshake !== 'undefined') {
+      if (typeof socket.handshake.sw !== 'undefined') {
+        if (typeof socket.handshake.sw.s() !== 'undefined') {
+          logger.err('socket', 'Emitting error for socket.');
+          logger.err('socket', socket.handshake.sw.s());
+        } else {
+          logger.err('socket', 'Socket has no session.');
+          logger.err('socket', socket.handshake);
+        }
+      } else {
+        logger.err('socket', 'Socket handshake has no session wrapper.');
+        logger.err('socket', socket.handshake);
+      }
+    } else {
+      logger.err('socket', 'Socket has no handshake data.');
+      logger.err('socket', socket);
+    }
+    socket.emit('system:error');
+  } else {
+    logger.err('socket', 'User has no socket to emit error, weird!');
+  }
+}
+
 /*
 function updateParallelSessions(socket) {
   var errorHandler = function (err) {
