@@ -36,8 +36,10 @@ exports.auth = function(req, res) {
     } else {
       ip = req.connection.remoteAddress;
     }
+    if (req.body.rememberMe) {
+      req.session.cookie.maxAge = sessionExpiration;
+    }
     req.session.ip = ip;
-    req.session.cookie.maxAge = sessionExpiration;
     req.session.save();
     res.redirect('/chat');
   }

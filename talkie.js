@@ -38,7 +38,7 @@ app.use(express.session({
   store: config.redisStore,
   secret: config.secretKey,
   prefix: config.sessionPrefix,
-  cookie: { expires: false },
+  //cookie: { expires: false },
 }));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());

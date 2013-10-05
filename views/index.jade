@@ -16,7 +16,11 @@ block body
             label.sr-only(for='login-form-full-name')
             input#login-form-full-name.form-control.input-lg(type='text', name='fullName',
               placeholder='نام', ng-maxlength='20', required)
-          button.btn.btn-primary.btn-lg.btn-block(type='submit')            
+          .checkbox
+            input#login-form-remember-me(type='checkbox', name='rememberMe', style='float: right;')
+            label(for='login-form-remember-me', style='margin-right: 1em;')
+              مرا به خاطر بسپار
+          button.btn.btn-primary.btn-lg.btn-block(type='submit')
             ورود
         small
           این نسخه آزمایشی سایت است، بنابراین پیشاپیش از ایرادات احتمالی عذر خواهیم می کنیم! برای گزارش ایراد با ما 
