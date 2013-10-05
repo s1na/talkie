@@ -87,8 +87,13 @@ module.exports = function (socket) {
                 fullName: socket.handshake.sw.s().fullName,
               });
             } else {
+              if (typeof strangerSocket.id !== 'undefined') {
+                rdb.srem('chat:online', strangerSocket.id, rdbLogger);
+                strangerSocket.disconnect('Weird Socket');
+              }
+              rdb.sadd('chat:waiting', socket.id);
               logger.err('socket', 'Found stranger has no handshake. Still looking.');
-              logger.err('socket', strangerSocket);
+              //logger.err('socket', strangerSocket);
             }
           }
         });
