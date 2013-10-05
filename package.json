@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "express": "~3.3.6",
-    "socket.io": "~0.9.15",
+    "socket.io": "0.9.16",
     "jade": "~0.35.0",
     "less-middleware": "~0.1.12",
     "redis": "~0.8.4",
