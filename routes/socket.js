@@ -17,10 +17,7 @@ var logger = require('../logger');
 module.exports = function (socket) {
 
   // Add socket to session
-  if (typeof socket.handshake.sw === 'undefined') {
-    emitError(socket);
-    return;
-  } else if (typeof socket.handshake.sw.s() === 'undefined') {
+  if (!isSocketValid(socket)) {
     emitError(socket);
     return;
   }
@@ -36,6 +33,10 @@ module.exports = function (socket) {
                 'Socket requested, ' + socket.id + ' '
                );
 
+    if (!isSocketValid(socket)) {
+      emitError(socket);
+      return;
+    }
     if (authenticate(socket)) {
       if (isActive(socket.handshake.sw.s())) {
         var res;
@@ -55,7 +56,6 @@ module.exports = function (socket) {
             }
 
             rdb.sadd('chat:waiting', socket.id);
-            // TODO: setInterval(); or node events
           } else {
             res = getStrangerSocket(socket);
 
@@ -66,11 +66,11 @@ module.exports = function (socket) {
               res.strangerSocket.emit('stranger:disconnected');
             }
 
-            logger.info('socket', 'Stranger found, ' + reply);
             rdb.srem('chat:waiting', reply);
+            logger.info('socket', 'Stranger found, ' + reply);
 
             strangerSocket = io.sockets.socket(reply);
-            if (typeof strangerSocket.handshake !== 'undefined') {
+            if (isSocketValid(strangerSocket)) {
               socket.set('strangerSID', reply);
               strangerSocket.set('strangerSID', socket.id);
 
@@ -97,7 +97,6 @@ module.exports = function (socket) {
             }
           }
         });
-        //socket.emit('stranger:res', {found: false});
       } else {
         socket.handshake.sw.destroy();
         emitError(socket);
@@ -293,6 +292,7 @@ module.exports = function (socket) {
 function getStrangerSocket(socket) {
   var ok = true;
   var strangerSocket = null;
+
   socket.get('strangerSID', function (err, sid) {
     if (err || !sid) {
       socket.emit('msg:err');
@@ -302,16 +302,9 @@ function getStrangerSocket(socket) {
     }
   });
 
-  if (typeof strangerSocket !== 'undefined' && strangerSocket) {
-    try {
-      if (typeof strangerSocket.handshake === 'undefined' ||
-          typeof strangerSocket.handshake.sw === 'undefined' ||
-          typeof strangerSocket.handshake.sw.s() === 'undefined') {
-        ok = false;
-        strangerSocket.emit('system:error');
-      }
-    } catch (TypeError) {
-      ok = false;
+  if (!isSocketValid(strangerSocket)) {
+    ok = false;
+    if (strangerSocket) {
       strangerSocket.emit('system:error');
     }
   }
@@ -362,6 +355,20 @@ function emitError(socket) {
   } else {
     logger.err('socket', 'User has no socket to emit error, weird!');
   }
+}
+
+function isSocketValid(socket) {
+  if (typeof socket !== 'undefined' && socket !== null) {
+    if (typeof socket.handshake !== 'undefined') {
+      if (typeof socket.handshake.sw !== 'undefined') {
+        if (typeof socket.handshake.sw.s() !== 'undefined') {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 /*
