@@ -68,12 +68,12 @@ html(ng-app='talkie', lang='fa')
               .row(style="margin-top: .1em;")
                 .btn-group.btn-group-justified
                   button.btn.btn-lg.btn-danger.col-xs-6(type="button", data-ng-click='report()', data-ng-disabled="reported") گزارش
-                    button.btn.btn-default.btn-lg.col-xs-6(type="button", data-ng-click='exit()') خروج از چت
+                    button.btn.btn-default.btn-lg.col-xs-6(type="button", data-ng-click='exit()') خروج
               p.center.text-muted این نسخه آزمایشی سایت است. برای گزارش ایراد با ما 
                a(href="/about#contact", target="_blank") تماس 
                بگیرید!
 
-              p.center.text-muted برای پیگیری آخرین تغییرات
+              p.center.text-muted
                 a(href="http://blog.horin.ir", target="_blank")  بلاگ هورین 
                 را بخوانید.
 
@@ -148,12 +148,20 @@ html(ng-app='talkie', lang='fa')
               p.text-muted شکیبا باشید!
               p.titr در حال یافتن هم صحبتی ناشناس هستیم!
           .row
-            .col-md-2.col-md-offset-5
-              //- img.image(src='static/img/exit2.png', data-ng-click='exit()')
-              p
-                a(href='', data-ng-click='exit()') 
-                  خروج از چت
-
+            .col-md-2.col-md-offset-5(style="text-align: center")
+                
+              a(href="/about", target="_blank")
+                small 
+                درباره‌‌ی هورین&nbsp
+              |
+             
+              a(href="http://blog.horin.ir", target="_blank")
+                small 
+                &nbspبلاگ&nbsp
+              |
+              a(href, data-ng-click='exit()')
+                small 
+                &nbspخروج از چت
 
   include bottom-js.jade
   script(src='/socket.io/socket.io.js')
