@@ -9,7 +9,7 @@ block body
       br
       p.text-info(style="text-align:center; font-size: 5em;margin-top: -120px") هورین 
       legend.
-        برای یافتن فردی برای چت تصادفی وارد شوید!
+        برای یافتن فردی جهت چت تصادفی، وارد شوید!
       .login-form
         form(method='post', action='/auth', name='login-form', role='form')
           .form-group
@@ -23,35 +23,37 @@ block body
           button.btn.btn-primary.btn-lg.btn-block(type='submit')
             ورود
         small
-          این نسخه آزمایشی سایت است، بنابراین پیشاپیش از ایرادات احتمالی عذر خواهیم می کنیم! برای گزارش ایراد با ما 
+          این نسخه آزمایشی سایت است. درصورت مشاهده‌ی ایراد با ما 
           a(href="/about#contact")
             تماس 
-          بگیرید. آخرین رویداد ها و تغییرات را از 
-          a(href="http://blog.horin.ir", target="_blank") بلاگ هورین
-          بخوانید.
+          بگیرید.
 
   .row
     .col-md-4.col-md-offset-4
-      small از 
+      p نمی‌دانید چت تصادفی چیست؟! از  
         a(href="/rules")
           اینجا 
-        قوانین را بخوانید!
+        درباره‌ی هورین بخوانید!
       hr
       ul.list-inline.pull-right
-        li
-          a(href="/about")
-            small درباره
         li 
           a(href="http://blog.horin.ir", target="_blank")
-            small بلاگ 
+            small بلاگ&nbsp
+        |
         li 
-          small تبلیغات
+          a(href="/rules")
+            small قوانین&nbsp
+        |
         li
           a(href="/about#contact")
-            small تماس
+            small تماس&nbsp
+        |
         li
-          a(href="http://kargaheweb.com/blogminer/", target="_blank")
-            small انتقال وبلاگ به سایت
+          small سوالات متداول&nbsp
+        |
+        li
+          a(href="/about")
+            small درباره‌ی هورین
 
 block prepend bottom-js
   script(type='text/javascript').
