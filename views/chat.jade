@@ -147,6 +147,12 @@ html(ng-app='talkie', lang='fa')
             .col-md-4.col-md-offset-4
               p.text-muted شکیبا باشید!
               p.titr در حال یافتن هم صحبتی ناشناس هستیم!
+          .row
+            .col-md-2.col-md-offset-5
+              //- img.image(src='static/img/exit2.png', data-ng-click='exit()')
+              p
+                a(href='', data-ng-click='exit()') 
+                  خروج از چت
 
 
   include bottom-js.jade
