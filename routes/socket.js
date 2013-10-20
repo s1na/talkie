@@ -71,6 +71,10 @@ module.exports = function (socket) {
 
             strangerSocket = io.sockets.socket(reply);
             if (isSocketValid(strangerSocket)) {
+              if (!isSocketValid(socket)) {
+                emitError(socket);
+                return;
+              }
               socket.set('strangerSID', reply);
               strangerSocket.set('strangerSID', socket.id);
 
@@ -327,7 +331,7 @@ function authenticate(socket) {
     }
   }
   logger.err('socket', 'Socket not authenticated.');
-  logger.err('socket', socket.handshake.sw.s());
+  //logger.err('socket', socket.handshake.sw.s());
   emitError(socket);
   return false;
 }
@@ -341,7 +345,7 @@ function emitError(socket) {
           logger.err('socket', socket.handshake.sw.s());
         } else {
           logger.err('socket', 'Socket has no session.');
-          logger.err('socket', socket.handshake);
+          //logger.err('socket', socket.handshake);
         }
       } else {
         logger.err('socket', 'Socket handshake has no session wrapper.');
@@ -349,7 +353,7 @@ function emitError(socket) {
       }
     } else {
       logger.err('socket', 'Socket has no handshake data.');
-      logger.err('socket', socket);
+      //logger.err('socket', socket);
     }
     socket.emit('system:error');
   } else {

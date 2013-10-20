@@ -5,6 +5,7 @@ var rdbLogger = config.rdbLogger;
 var io = config.io;
 var sessionSingleton = require('../singleton').SessionSingleton.getInstance();
 var sessionExpiration = config.sessionExpiration;
+var logger = require('../logger');
 
 exports.index = function(req, res) {
   if (req.session.loggedIn) {
@@ -22,9 +23,22 @@ exports.partials = function(req, res) {
 exports.auth = function(req, res) {
   if (req.session.loggedIn) {
     res.redirect('/chat');
-  } else if (req.body.fullName.trim().length === 0) {
-    res.redirect('/');
   } else {
+    if (typeof req.body.fullName !== 'string') {
+      if (typeof req.body.fullName !== 'undefined') {
+        logger.err('auth',
+                   'Fullname entered for auth has typeerror'
+                  );
+        logger.err('auth',
+                   req.body.fullName
+                  );
+      }
+      res.redirect('/');
+      return;
+    } else if (req.body.fullName.trim().length === 0) {
+      res.redirect('/');
+      return;
+    }
     var fullName = req.body.fullName;
     req.session.fullName = fullName;
     req.session.msgCount = 0;
