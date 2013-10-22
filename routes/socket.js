@@ -238,17 +238,35 @@ module.exports = function (socket) {
   // New message to be sent
   socket.on('msg:send', function (data) {
     if (authenticate(socket)) {
-      if (data.msg.trim()) {
+      var msg = '';
+      if (typeof data.msg === 'string') {
+        msg = data.msg;
+      } else {
+        logger.err('socket',
+                   'Message being sent is not string.'
+                  );
+        logger.err('socket',
+                   String(data.msg)
+                  );
+
+        if (typeof data.msg.text === 'string') {
+          msg = data.msg.text;
+        }
+      }
+      if (msg.trim()) {
         socket.handshake.sw.s().msgCount += 1;
         socket.handshake.sw.save();
         var res = getStrangerSocket(socket);
 
         if (res.ok) {
-          data.msg = {text: data.msg};
-          data.msg.from = 'stranger';
-          res.strangerSocket.emit('msg:recv', {msg: data.msg});
+          msg = {text: msg};
+          msg.from = 'stranger';
+          res.strangerSocket.emit('msg:recv', {msg: msg});
         }
       } else {
+        logger.err('socket',
+                   'Message was not sent. ' + msg
+                  )
         socket.emit('msg:failed');
       }
     }
@@ -330,9 +348,9 @@ function authenticate(socket) {
       return true;
     }
   }
-  logger.err('socket', 'Socket not authenticated.');
+  logger.info('socket', 'Socket not authenticated.');
   //logger.err('socket', socket.handshake.sw.s());
-  emitError(socket);
+  //emitError(socket);
   return false;
 }
 
