@@ -42,7 +42,7 @@ userSchema.methods.validPassword = function (password) {
   return hash.validateHash(this.password, password);
 };
 userSchema.methods.report = function (by) {
-  //if (this.reporters.indexOf(by) === -1) {
+  if (this.reporters.indexOf(by) === -1) {
     this.reporters.push(by.username);
     console.log(this.reporters);
     if (this.reporters.length % config.maxReports === 0) {
@@ -52,7 +52,7 @@ userSchema.methods.report = function (by) {
         (this.reporters.length / config.maxReports) * config.banExpiration
       );
     }
-  //}
+  }
   this.save();
 };
 
