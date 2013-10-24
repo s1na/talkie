@@ -11,22 +11,47 @@ block body
       legend.
         برای یافتن فردی جهت چت تصادفی، وارد شوید!
       .login-form
-        form(method='post', action='/auth', name='login-form', role='form')
+        form.form-inline(method='post', action='/login', name='login-form', role='form')
           .form-group
-            label.sr-only(for='login-form-full-name')
-            input#login-form-full-name.form-control.input-lg(type='text', name='fullName',
+            label.sr-only(for='login-username')
+            input#login-username.form-control(type='text', name='username',
               placeholder='نام', ng-maxlength='20', required)
-          .checkbox
-            input#login-form-remember-me(type='checkbox', name='rememberMe', style='float: right;')
-            label(for='login-form-remember-me', style='margin-right: 1em;')
-              مرا به خاطر بسپار
-          button.btn.btn-primary.btn-lg.btn-block(type='submit')
+          .form-group(style='margin-right: .1em;')
+            label.sr-only(for='login-password')
+            input#login-passord.form-control(type='password', name='password',
+              placeholder='رمز عبور', ng-maxlength='20', required)
+          //-
+            .checkbox(disabled)
+              input#login-remember-me(type='checkbox', name='rememberMe')
+              label(for='login-remember-me')
+                مرا به خاطر بسپار
+          button.btn.btn-primary(type='submit', style='float: left;')
             ورود
+        br
         small
           این نسخه آزمایشی سایت است. درصورت مشاهده‌ی ایراد با ما 
           a(href="/about#contact")
             تماس 
           بگیرید.
+      br
+      legend.
+        عضویت
+      .signup-form
+        form(method='post', action='/signup', name='signup-form', role='form')
+          .form-group
+            label.sr-only(for='signup-username')
+            input#signup-username.form-control.input-lg(type='text', name='username',
+              placeholder='نام کاربری', ng-maxlength='20', required)
+          .form-group
+            label.sr-only(for='signup-email')
+            input#signup-email.form-control.input-lg(type='email', name='email',
+              placeholder='ایمیل', ng-maxlength='20', required)
+          .form-group
+            label.sr-only(for='signup-password')
+            input#signup-password.form-control.input-lg(type='password', name='password',
+              placeholder='رمز‌عبور', ng-maxlength='20', required)
+          button.btn.btn-lg.btn-block(type='submit')
+            ثبت
 
   .row
     .col-md-4.col-md-offset-4
@@ -58,4 +83,4 @@ block body
 
 block prepend bottom-js
   script(type='text/javascript').
-    document.getElementById('login-form-full-name').focus();
+    document.getElementById('login-username').focus();

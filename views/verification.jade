@@ -1,0 +1,29 @@
+extends base
+
+block append css
+  link(rel='stylesheet', type='text/css', href='/static/css/common.css')
+
+block page_title
+  title هورین - تایید کاربر
+
+block body
+  .row
+    .col-md-8.col-md-offset-2
+      legend
+        p
+          تایید کاربر
+      یک ایمیل برای شما ارسال شده است، لطفا روی لینک ارسال شده کلیک کنید.
+      br
+      br
+     // یا کلیدی که برای شما فرستاده شده است را اینجا وارد کنید.
+      br
+      br
+      //-
+        .validation-form
+          form(method='post', action='/validate', name='validation-form', role='form')
+            .form-group
+              label.sr-only(for='validation-form-key')
+              input#validation-form-key.form-control.input-lg(type='text', name='key',
+                placeholder='کلید', ng-maxlength='20', required)
+            button.btn.btn-lg.btn-block(type='submit')
+
