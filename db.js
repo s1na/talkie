@@ -1,7 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
+  , hash = require('./hash');
 
 // Schemas
-reportedSchema = mongoose.Schema({
+reportedSchema = new mongoose.Schema({
   ip: String,
   reporters: [String]
 });
@@ -16,15 +17,31 @@ reportedSchema.methods.add = function (by) {
   }
 };
 
-bannedSchema = mongoose.Schema({
+bannedSchema = new mongoose.Schema({
   ip: String,
   expires: Date
 });
 
+userSchema = new mongoose.Schema({
+  username: { type: String, index: {unique: true}},
+  firstname: String,
+  lastname: String,
+  email: {type: String, index: {unique: true}},
+  password: String,
+  verified: Boolean,
+});
+
+userSchema.set('autoIndex', false);
+userSchema.methods.validPassword = function (password) {
+  return hash.validateHash(this.password, password);
+};
+
 // Models
 Reported = mongoose.model('Reported', reportedSchema);
 Banned = mongoose.model('Banned', bannedSchema);
+User = mongoose.model('User', userSchema);
 
 // Exports
 module.exports.Reported = Reported;
 module.exports.Banned = Banned;
+module.exports.User = User;
