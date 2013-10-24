@@ -33,7 +33,6 @@ if (app.get('env') === 'development') {
   app.use(require('less-middleware')({ src : __dirname + '/public', enable: ['less']}));
 }
 app.use(determineEnv());
-app.use(isBanned());
 app.use(express.cookieParser(config.secretKey));
 app.use(express.session({
   store: config.redisStore,
@@ -43,6 +42,7 @@ app.use(express.session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+//app.use(isBanned());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -159,12 +159,31 @@ function authenticate(appPages) {
     if (appPages.indexOf(req.path) == -1) {
       next();
     } else {
-      if (typeof req.session === 'undefined' ||
-          typeof req.session.passport === 'undefined' ||
-          typeof req.session.passport.user === 'undefined' ||
-          ! typeof req.session.passport.user) {
-
+      if (typeof req.user === 'undefined' ||
+          !req.user) {
         res.redirect('/');
+      } else if (req.user.isBanned()) {
+        var remaining = new Date(req.user.banExpiration - new Date(Date.now()));
+        remaining = remaining.getTime();
+
+        var days = Math.floor(remaining / 1000 / 60 / 60 / 24);
+        remaining -= days * 1000 * 60 * 60 * 24;
+
+        var hours = Math.floor(remaining / 1000 / 60 / 60);
+        remaining -= hours * 1000 * 60 * 60;
+
+        var minutes = Math.floor(remaining / 1000 / 60);
+        remaining -= minutes * 1000 * 60;
+
+        var seconds = Math.floor(remaining / 1000);
+
+        var output = '';
+        if (days) output = days + 'روز ';
+        if (hours) output = output + hours + 'ساعت ';
+        if (minutes) output = output + minutes + 'دقیقه ';
+        if (seconds) output = output + seconds + 'ثانیه';
+
+        res.render('banned', {expireDate: output});
       } else {
         next();
       }

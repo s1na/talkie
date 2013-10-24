@@ -1,9 +1,10 @@
 var mongoose = require('mongoose')
-  , hash = require('./hash');
+  , hash = require('./hash')
+  , config = require('./config');
 
 // Schemas
-reportedSchema = new mongoose.Schema({
-  ip: String,
+/*reportedSchema = new mongoose.Schema({
+  username: String,
   reporters: [String]
 });
 
@@ -18,9 +19,9 @@ reportedSchema.methods.add = function (by) {
 };
 
 bannedSchema = new mongoose.Schema({
-  ip: String,
+  username: String,
   expires: Date
-});
+});*/
 
 userSchema = new mongoose.Schema({
   username: { type: String, index: {unique: true}},
@@ -30,20 +31,52 @@ userSchema = new mongoose.Schema({
   password: String,
   verified: Boolean,
   chatCount: Number,
-  msgCount: Number
+  msgCount: Number,
+  reporters: [String],
+  banned: Boolean,
+  banExpiration: Date
 });
 
 userSchema.set('autoIndex', false);
 userSchema.methods.validPassword = function (password) {
   return hash.validateHash(this.password, password);
 };
+userSchema.methods.report = function (by) {
+  //if (this.reporters.indexOf(by) === -1) {
+    this.reporters.push(by.username);
+    console.log(this.reporters);
+    if (this.reporters.length % config.maxReports === 0) {
+      this.banned = true;
+      this.banExpiration = new Date(
+        Date.now() +
+        (this.reporters.length / config.maxReports) * config.banExpiration
+      );
+    }
+  //}
+  this.save();
+};
+
+userSchema.methods.isBanned = function () {
+  if (this.banned) {
+    var now = new Date(Date.now());
+    if (now >= this.banExpiration) {
+      this.banned = false;
+      this.save();
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
+};
 
 // Models
-Reported = mongoose.model('Reported', reportedSchema);
-Banned = mongoose.model('Banned', bannedSchema);
+//Reported = mongoose.model('Reported', reportedSchema);
+//Banned = mongoose.model('Banned', bannedSchema);
 User = mongoose.model('User', userSchema);
 
 // Exports
-module.exports.Reported = Reported;
-module.exports.Banned = Banned;
+//module.exports.Reported = Reported;
+//module.exports.Banned = Banned;
 module.exports.User = User;
