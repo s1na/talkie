@@ -11,7 +11,11 @@
     "connect-redis": "~1.4.5",
     "longjohn": "~0.2.1",
     "mongoose": "~3.6.20",
-    "json-stringify-safe": "~5.0.0"
+    "json-stringify-safe": "~5.0.0",
+    "passport": "~0.1.17",
+    "passport-local": "~0.1.6",
+    "nodemailer": "~0.5.3",
+    "email-templates": "~0.1.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

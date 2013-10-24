@@ -1,26 +1,35 @@
-var express = require('express');
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-var redis = require('redis');
+var express = require('express')
+  , app = express()
+  , server = require('http').createServer(app)
+  , io = require('socket.io').listen(server)
+  , redis = require('redis')
+  , volatileConfig = require('volatile-config');
+
 /*var pub = redis.createClient();
 var sub = redis.createClient();
 var client = redis.createClient();*/
+
 var rdb = redis.createClient();
 var RedisStore = require('connect-redis')(express);
 
-var secretKey = 'This4is$highly4secure.';
+var secretKey = volatileConfig.secretKey;
 var sessionPrefix = 'sess:';
-var sessionExpiration = 1000 * 60 * 60 * 24 * 2;
+var sessionExpiration = 1000 * 60 * 60 * 2;
+var memberSessionExpiration = 1000 * 60 * 60 * 24 * 2;
 var parseCookie = express.cookieParser(secretKey);
 var sessionSingleton = require('./singleton').SessionSingleton.getInstance();
 
 var mongoose = require('mongoose');
 
+var mongoServer = volatileConfig.mongoServer;
 var logger = require('./logger');
+var User = require('./db').User;
 
 var maxReports = 3;
 var banExpiration = 1000 * 60 * 60 * 24 * 3;
+
+var emailUsername = volatileConfig.emailUsername;
+var emailPassword = volatileConfig.emailPassword;
 
 // Redis and session configuration
 rdb.select(3, redis.print);
@@ -29,7 +38,7 @@ sub.select(3, redis.print);
 client.select(3, redis.print);*/
 
 rdb.on('error', function (err) {
-  console.log('[Redis](Error) ' + err);
+  logger.err('redis', err);
 });
 
 var redisStore = new RedisStore({
@@ -38,7 +47,7 @@ var redisStore = new RedisStore({
 
 function rdbLogger(err, res, action) {
   if (err) {
-    logger.error('redis', err);
+    logger.err('redis', err);
   } else {
     if (typeof action === 'defined') {
       res = action + ' ' + res;
@@ -47,11 +56,12 @@ function rdbLogger(err, res, action) {
   }
 }
 
-mongoose.connect('mongodb://localhost/talkie');
+mongoose.connect(mongoServer);
 
 var db = mongoose.connection;
 db.on('error', function (err) {
-  console.error(err);
+  logger.err('mongoose connection',
+             'Error while connecting to mongodb.');
   throw "MongoDB connection error.";
 });
 
@@ -88,11 +98,32 @@ io.set('authorization', function (hs, accept) {
     hs.sessionID = sessionID;
     redisStore.get(sessionID, function (err, session) {
       if (err || !session) {
-        console.log('Handshake error, ' + session + ', ' + err);
+        logger.err('Socket handshake',
+                   'Couldnt get session ' + err);
+        accept('Error while handshaking.', false);
+      } else if (typeof session.passport === 'undefined' ||
+                 typeof session.passport.user === 'undefined' ||
+                 ! session.passport.user) {
+        logger.err('Socket handshake',
+                   'Couldnt get user data from passport.');
         accept('Error while handshaking.', false);
       } else {
-        hs.sw = new sessionSingleton.getSession(hs, session);
-        accept(null, true);
+        //hs.sw = new sessionSingleton.getSession(hs, session);
+        User.findOne({ _id: session.passport.user }, function (err, user) {
+          if (err) {
+            logger.err('Socket handshake',
+                       err);
+            accept('Error while handshaking.', false);
+          } else if (!user) {
+            logger.err('Socket handshake',
+                       'No user found with id in passport. ' +
+                       session.passport.user);
+            accept('Error while handshaking.', false);
+          } else {
+            hs.user = user;
+            accept(null, true);
+          }
+        });
       }
     });
   } else {
@@ -113,3 +144,5 @@ module.exports.sessionExpiration = sessionExpiration;
 module.exports.parseCookie = parseCookie;
 module.exports.maxReports = maxReports;
 module.exports.banExpiration = banExpiration;
+module.exports.emailUsername = emailUsername;
+module.exports.emailPassword = emailPassword;
