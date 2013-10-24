@@ -26,3 +26,4 @@ public/lib
 
 prod.min.js
 public/js/angular-socket-io.js
+volatile-config.js
