@@ -29,6 +29,8 @@ userSchema = new mongoose.Schema({
   email: {type: String, index: {unique: true}},
   password: String,
   verified: Boolean,
+  chatCount: Number,
+  msgCount: Number
 });
 
 userSchema.set('autoIndex', false);

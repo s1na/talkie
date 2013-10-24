@@ -1,13 +1,17 @@
 
 var config = require('../config');
-var rdb = config.rdb;
+/*var rdb = config.rdb;
 var rdbLogger = config.rdbLogger;
-var io = config.io;
+var io = config.io;*/
 var sessionSingleton = require('../singleton').SessionSingleton.getInstance();
 var sessionExpiration = config.sessionExpiration;
 var logger = require('../logger');
+var sendMail = require('../email').sendMail;
 
-exports.index = function(req, res) {
+//var db = require('../db');
+//var User = db.User;
+
+exports.index = function (req, res) {
   if (req.session.loggedIn) {
     req.session.touch();
     res.redirect('/chat');
@@ -15,65 +19,26 @@ exports.index = function(req, res) {
   res.render('index', {development: req.development});
 };
 
-exports.partials = function(req, res) {
+exports.partials = function (req, res) {
   var name = req.params.name;
   res.render('partials/' + name);
 };
 
-exports.auth = function(req, res) {
-  if (req.session.loggedIn) {
-    res.redirect('/chat');
-  } else {
-    if (typeof req.body.fullName !== 'string') {
-      if (typeof req.body.fullName !== 'undefined') {
-        logger.err('auth',
-                   'Fullname entered for auth has typeerror'
-                  );
-        logger.err('auth',
-                   req.body.fullName
-                  );
-      }
-      res.redirect('/');
-      return;
-    } else if (req.body.fullName.trim().length === 0) {
-      res.redirect('/');
-      return;
-    }
-    var fullName = req.body.fullName;
-    req.session.fullName = fullName;
-    req.session.msgCount = 0;
-    req.session.chatCount = 0;
-    req.session.loggedIn = true;
-    var ip;
-    if (req.headers['x-nginx-proxy']) {
-      ip = req.headers['x-real-ip'];
-    } else {
-      ip = req.connection.remoteAddress;
-    }
-    if (req.body.rememberMe) {
-      req.session.cookie.maxAge = sessionExpiration;
-    }
-    req.session.ip = ip;
-    req.session.save();
-    res.redirect('/chat');
-  }
+module.exports.emailTest = function (req, res) {
+  data = {
+    to: 'itz.s1na@gmail.com',
+    subject: 'عضویت',
+    template: 'email-verification',
+    vars: {verificationUrl: 'http://horin.ir/something'}
+  };
+  setTimeout(function () { sendMail(data); }, 2);
+  res.send('Sent');
 };
 
-exports.exit = function(req, res) {
-  if (typeof req.session !== 'undefined') {
-    var sw = sessionSingleton.getSessionWrapper(req.session.id);
-    if (typeof sw !== 'undefined') {
-      sw.destroy();
-    }
-    req.session.destroy();
-  }
-  res.redirect('/');
-};
-
-module.exports.about = function(req, res) {
+module.exports.about = function (req, res) {
   res.render('about');
 };
 
-module.exports.rules = function(req, res) {
+module.exports.rules = function (req, res) {
   res.render('rules');
 };

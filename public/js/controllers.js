@@ -85,6 +85,9 @@ angular.module('talkie.controllers', []).
       //  'err'
       //);
       //$window.location = '/exit';
+      if (data === 'handshake error') {
+        $window.location = '/exit';
+      }
     });
 
     socket.on('stranger:err', function (data) {

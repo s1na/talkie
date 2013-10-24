@@ -4,21 +4,22 @@
  */
 
 var routes = require('./routes'),
+  routesAuth = require('./routes/auth'),
   routesApi = require('./routes/api'),
   routesChat = require('./routes/chat'),
   http = require('http'),
   path = require('path'),
   longjohn = require('longjohn');
 
-var config = require('./config');
-var express = config.express;
-var app = config.app;
-var server = config.server;
-var io = config.io;
-var statistics = require('./statistics');
-
-var db = require('./db');
-var Banned = db.Banned;
+var config = require('./config')
+  , express = config.express
+  , app = config.app
+  , server = config.server
+  , io = config.io
+  , statistics = require('./statistics')
+  , passport = require('./passport').passport
+  , db = require('./db')
+  , Banned = db.Banned;
 
 /**
  * Configuration
@@ -38,8 +39,10 @@ app.use(express.session({
   store: config.redisStore,
   secret: config.secretKey,
   prefix: config.sessionPrefix,
-  //cookie: { expires: false },
+  cookie: { expires: true, maxAge: config.sessionExpiration },
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -67,12 +70,18 @@ if (app.get('env') === 'production') {
 
 // serve index and view partials
 app.get('/', routes.index);
-app.post('/auth', routes.auth);
-app.get('/exit', routes.exit);
+//app.post('/auth', routesAuth.auth);
+app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
+                                                    failureRedirect: '/'}));
+app.get('/exit', routesAuth.exit);
 app.get('/chat', routesChat.chat);
 app.get('/partials/:name', routes.partials);
 app.get('/rules', routes.rules);
 app.get('/about', routes.about);
+app.post('/signup', routesAuth.signup);
+app.get('/verification', routesAuth.verification);
+app.get('/verify/:key', routesAuth.verify);
+app.get('/emailtest', routes.emailTest);
 
 // JSON API
 app.get('/api/version', routesApi.version);
@@ -150,7 +159,11 @@ function authenticate(appPages) {
     if (appPages.indexOf(req.path) == -1) {
       next();
     } else {
-      if (!req.session.loggedIn) {
+      if (typeof req.session === 'undefined' ||
+          typeof req.session.passport === 'undefined' ||
+          typeof req.session.passport.user === 'undefined' ||
+          ! typeof req.session.passport.user) {
+
         res.redirect('/');
       } else {
         next();

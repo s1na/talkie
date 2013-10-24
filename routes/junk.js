@@ -21,45 +21,55 @@ module.exports = function (socket) {
     emitError(socket);
     return;
   }
-  var user = socket.handshake.user;
 
   rdb.sadd('chat:online', socket.id, rdbLogger);
   logger.info('socket',
-              'New socket, ' + socket.id + ' ' + user.username
+              'New socket, ' + socket.id + ' '
              );
 
   // Looking for a new stranger.
   socket.on('stranger:req', function (data) {
     logger.info('socket',
-                'Socket requested, ' + socket.id + ' ' + user.username
+                'Socket requested, ' + socket.id + ' '
                );
 
-    if (isLoggedIn(socket)) {
-      var res;
-      rdb.srandmember('chat:waiting', function (err, reply) {
-        if (err) {
-          socket.emit('stranger:err',
-                      {err: 'Something happened when looking up for strangers.'}
-                     );
-          logger.err('socket',
-                     'Error when getting a random member of waiting list.');
-        } else {
-          res = getStrangerSocket(socket);
+    if (!isSocketValid(socket)) {
+      emitError(socket);
+      return;
+    }
+    if (authenticate(socket)) {
+      if (isActive(socket.handshake.sw.s())) {
+        var res;
+        rdb.srandmember('chat:waiting', function (err, reply) {
+          if (err) {
+            socket.emit('stranger:err',
+                        {err: 'Something happened when looking up for strangers.'}
+                       );
+          } else if (!reply) {
+            res = getStrangerSocket(socket);
 
-          if (res.ok) {
-            res.strangerSocket.set('strangerSID', '');
-            //res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
-            socket.set('strangerSID', '');
-            res.strangerSocket.emit('stranger:disconnected');
-          }
+            if (res.ok) {
+              res.strangerSocket.set('strangerSID', '');
+              res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
+              socket.set('strangerSID', '');
+              res.strangerSocket.emit('stranger:disconnected');
+            }
 
-          if (!reply) {
             rdb.sadd('chat:waiting', socket.id);
           } else {
+            res = getStrangerSocket(socket);
+
+            if (res.ok) {
+              res.strangerSocket.set('strangerSID', '');
+              res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
+              socket.set('strangerSID', '');
+              res.strangerSocket.emit('stranger:disconnected');
+            }
+
             rdb.srem('chat:waiting', reply);
             logger.info('socket', 'Stranger found, ' + reply);
 
-            var strangerSocket = io.sockets.socket(reply);
+            strangerSocket = io.sockets.socket(reply);
             if (isSocketValid(strangerSocket)) {
               if (!isSocketValid(socket)) {
                 emitError(socket);
@@ -68,15 +78,17 @@ module.exports = function (socket) {
               socket.set('strangerSID', reply);
               strangerSocket.set('strangerSID', socket.id);
 
-              user.update({ $inc: {chatCount: 1} });
-              strangerSocket.handshake.user.update({ $incr: {chatCount: 1} });
+              socket.handshake.sw.s().chatCount += 1;
+              socket.handshake.sw.save();
+              strangerSocket.handshake.sw.s().chatCount += 1;
+              strangerSocket.handshake.sw.save();
 
               socket.emit('stranger:res', {
-                fullName: strangerSocket.handshake.user.username,
+                fullName: strangerSocket.handshake.sw.s().fullName,
               });
 
               strangerSocket.emit('stranger:res', {
-                fullName: user.username,
+                fullName: socket.handshake.sw.s().fullName,
               });
             } else {
               if (typeof strangerSocket.id !== 'undefined') {
@@ -88,16 +100,16 @@ module.exports = function (socket) {
               //logger.err('socket', strangerSocket);
             }
           }
-        }
-      });
-    } else {
-      emitError(socket);
-      return;
+        });
+      } else {
+        socket.handshake.sw.destroy();
+        emitError(socket);
+      }
     }
   });
 
   socket.on('stranger:report', function (data) {
-    if (isLoggedIn(socket)) {
+    if (authenticate(socket)) {
       if (data.noStranger) {
         socket.get('lastStrangerIp', function (err, ip) {
           if (err || !ip) {
@@ -225,7 +237,7 @@ module.exports = function (socket) {
 
   // New message to be sent
   socket.on('msg:send', function (data) {
-    if (isLoggedIn(socket)) {
+    if (authenticate(socket)) {
       var msg = '';
       if (typeof data.msg === 'string') {
         msg = data.msg;
@@ -242,7 +254,8 @@ module.exports = function (socket) {
         }
       }
       if (msg.trim()) {
-        user.update({ $inc: {msgCount: 1} });
+        socket.handshake.sw.s().msgCount += 1;
+        socket.handshake.sw.save();
         var res = getStrangerSocket(socket);
 
         if (res.ok) {
@@ -261,7 +274,7 @@ module.exports = function (socket) {
 
   // Typing status
   socket.on('msg:typing', function (data) {
-    if (isLoggedIn(socket)) {
+    if (authenticate(socket)) {
       var res = getStrangerSocket(socket);
 
       if (res.ok) {
@@ -272,8 +285,7 @@ module.exports = function (socket) {
 
   // Socket disconnected.
   socket.on('disconnect', function () {
-    logger.info('socket', 'Socket disconnected, ' +
-                socket.id + ' ' + user.username);
+    logger.info('socket', 'Socket disconnected, ' + socket.id);
     rdb.srem('chat:online', socket.id, rdbLogger);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
     var res = getStrangerSocket(socket);
@@ -282,26 +294,30 @@ module.exports = function (socket) {
       logger.info('socket', 'Stranger disconnected, ' + res.strangerSocket.id);
       res.strangerSocket.set('strangerSID', '');
       // TODO: Somehow keep their ips even if their session is destroyed.
-      /*if (typeof socket.handshake.sw !== 'undefined') {
+      if (typeof socket.handshake.sw !== 'undefined') {
         if (typeof socket.handshake.sw.s() !== 'undefined') {
           res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
         }
-      }*/
+      }
       socket.set('strangerSID', '');
       res.strangerSocket.emit('stranger:disconnected');
     }
   });
+
+//  setInterval(function () {
+//    socket.emit('send:time', {
+//      time: (new Date()).toString()
+//    });
+//  }, 1000);
 };
 
 function getStrangerSocket(socket) {
-  var ok = true
-    , strangerSocket = null
-    , err = null;
+  var ok = true;
+  var strangerSocket = null;
 
-  socket.get('strangerSID', function (err_, sid) {
-    if (err_ || !sid) {
-      //socket.emit('msg:err');
-      err = err_;
+  socket.get('strangerSID', function (err, sid) {
+    if (err || !sid) {
+      socket.emit('msg:err');
       ok = false;
     } else {
       strangerSocket = io.sockets.socket(sid);
@@ -314,14 +330,27 @@ function getStrangerSocket(socket) {
       strangerSocket.emit('system:error');
     }
   }
-  return {ok: ok, strangerSocket: strangerSocket, err: err};
+  return {ok: ok, strangerSocket: strangerSocket};
 }
 
-function isLoggedIn(socket) {
-  if (isSocketValid(socket)) {
-    return true;
+function isActive(session) {
+  return true;
+  /*if (session.msgCount === 0 && session.chatCount >= 3) {
+    logger.err('socket', 'User is not active.');
+    return false;
   }
-  logger.info('socket', 'Socket is not logged in.');
+  return true;*/
+}
+
+function authenticate(socket) {
+  if (typeof socket.handshake.sw.s() !== 'undefined') {
+    if (socket.handshake.sw.s().loggedIn) {
+      return true;
+    }
+  }
+  logger.info('socket', 'Socket not authenticated.');
+  //logger.err('socket', socket.handshake.sw.s());
+  //emitError(socket);
   return false;
 }
 
@@ -353,8 +382,8 @@ function emitError(socket) {
 function isSocketValid(socket) {
   if (typeof socket !== 'undefined' && socket !== null) {
     if (typeof socket.handshake !== 'undefined') {
-      if (typeof socket.handshake.user !== 'undefined') {
-        if (socket.handshake.user) {
+      if (typeof socket.handshake.sw !== 'undefined') {
+        if (typeof socket.handshake.sw.s() !== 'undefined') {
           return true;
         }
       }
@@ -363,3 +392,34 @@ function isSocketValid(socket) {
 
   return false;
 }
+
+/*
+function updateParallelSessions(socket) {
+  var errorHandler = function (err) {
+    if (err) {
+      console.log('Error in parallel update session.');
+    }
+  };
+  if (! socket.handshake.session) {
+    errorHandler(true);
+  }
+  var parallelSocket;
+  for (var sidIndex in socket.handshake.session.sockets) {
+    if (socket.handshake.session.sockets[sidIndex] !== socket.id) {
+      parallelSocket = io.sockets.socket(
+        socket.handshake.session.sockets[sidIndex]
+      );
+      if (parallelSocket) {
+        if (typeof parallelSocket.handshake === 'undefined') {
+          errorHandler(true);
+        } else if (typeof parallelSocket.handshake.session === 'undefined') {
+          errorHandler(true);
+        } else {
+          parallelSocket.handshake.session.reload(errorHandler);
+        }
+      } else {
+        errorHandler(true);
+      }
+    }
+  }
+}*/

@@ -3,7 +3,7 @@ var express = require('express')
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server)
   , redis = require('redis')
-  , volatileConfig = require('volatile-config');
+  , volatileConfig = require('./volatile-config');
 
 /*var pub = redis.createClient();
 var sub = redis.createClient();
