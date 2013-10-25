@@ -78,7 +78,10 @@ exports.signup = function (req, res) {
       to: req.body.email,
       subject: 'تایید عضویت در هورین',
       template: 'email-verification',
-      vars: { verificationUrl: verificationUrl }
+      vars: {
+        verificationUrl: verificationUrl,
+        username: req.body.username
+      }
     };
     setTimeout(function () { sendMail(data); }, 2);
     res.redirect('/verification');

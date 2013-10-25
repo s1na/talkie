@@ -1,14 +1,39 @@
 <div class="page" dir="rtl">
-  <div class="center">
-    <p dir="rtl">
-      سلام،
-      <br/>
-      شما در سایت هورین عضو شده‌اید و این ایمیل جهت تایید هویت
-      شما می‌باشد. برای تایید روی لینک زیر کلیک کنید.
-      <br/>
-      <%= verificationUrl %>
-      <br/>
-      با تشکر،
-    </p>
+  <div class="center"
+    <div style="text-align: center">
+      <a href="http://horin.ir" target="_blank">
+        <img src="http://horin.ir/static/img/logo.png" alt="هورین" height="200" width="200" style="vertical-align:middle" />
+      </a>
+    </div>
+    <div style="text-align: center">
+      <h1 style="color: #79afd7;">
+        هورین
+      </h1>
+    </div>
+    <div style="width: 500px; margin: 0 auto; ">
+      <p dir="rtl">
+        سلام،
+        <br/>
+        شما در سایت هورین عضو شده‌اید و این ایمیل جهت تایید هویت
+        شما می‌باشد. برای تایید روی لینک فعال‌سازی کلیک کنید.
+        <br/>
+      </p>
+      <p dir="rtl">
+        <b> نام کاربری: </b>  <%= username %>
+        <br />
+        لینک فعال‌سازی: 
+        <a href= "<%= verificationUrl %>" >
+          <%= verificationUrl %>
+        </a>
+      </p>
+      <p dir="rtl">
+        <br/>
+        <br />
+        <br />
+        <small>
+        در صورتی که شما، درخواست عضویت در سایت هورین را نداده‌اید، <a href="<%= verificationUrl %>/spam"> اینجا </a> کلیلک کنید تا دیگر از سایت هورین برای شما ایمیلی ارسال نشود.
+        </small>
+      </p>
+    </div>
   </div>
 </div>
