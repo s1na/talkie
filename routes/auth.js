@@ -1,10 +1,10 @@
 
-var config = require('../config')
-    , logger = require('../logger')
-    , db = require('../db')
-    , hash = require('../hash')
-    , User = db.User
-    , sendMail = require('../email').sendMail;
+var config = require('../config'),
+    logger = require('../logger'),
+    db = require('../db'),
+    hash = require('../hash'),
+    User = db.User,
+    sendMail = require('../email').sendMail;
 
 
 exports.auth = function (req, res) {
@@ -175,7 +175,7 @@ exports.login = function (req, res) {
         }
       }
     });
-  };
+  }
 };
 
 exports.exit = function (req, res) {

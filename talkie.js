@@ -11,15 +11,15 @@ var routes = require('./routes'),
   path = require('path'),
   longjohn = require('longjohn');
 
-var config = require('./config')
-  , express = config.express
-  , app = config.app
-  , server = config.server
-  , io = config.io
-  , statistics = require('./statistics')
-  , passport = require('./passport').passport
-  , db = require('./db')
-  , Banned = db.Banned;
+var config = require('./config'),
+  express = config.express,
+  app = config.app,
+  server = config.server,
+  io = config.io,
+  statistics = require('./statistics'),
+  passport = require('./passport').passport,
+  db = require('./db'),
+  Banned = db.Banned;
 
 /**
  * Configuration
@@ -103,7 +103,7 @@ server.listen(app.get('port'), function () {
 
 function isBanned() {
   return function (req, res, next) {
-    if (req.path.indexOf('/static') == 0) {
+    if (req.path.indexOf('/static') === 0) {
       next();
     }
     var ip;

@@ -120,7 +120,7 @@ module.exports = function (socket) {
               if (err) {
                 logger.err('socket', 'in reporting: ' + err);
               } else if (!reported){
-                var reported = new Reported({ip: ip});
+                reported = new Reported({ip: ip});
                 reported.reporters.push(socket.handshake.sw.s().ip);
                 reported.save(function (err, reported) {
                   if (err) {
@@ -133,7 +133,7 @@ module.exports = function (socket) {
                     Banned.findOne({ip: ip}, function (err, banned) {
                       if (err) {
                       } else if (!banned) {
-                        var banned = new Banned(
+                        banned = new Banned(
                           {ip: ip, expires: new Date(Date.now() + banExpiration)}
                         );
                         banned.save(function (err, banned) {
@@ -176,7 +176,7 @@ module.exports = function (socket) {
               if (err) {
                 logger.err('socket', "in reporting: " + err);
               } else if (!reported) {
-                var reported = new Reported({
+                reported = new Reported({
                   ip: ip
                 });
                 reported.reporters.push(socket.handshake.sw.s().ip);
@@ -191,7 +191,7 @@ module.exports = function (socket) {
                     Banned.findOne({ip: ip}, function (err, banned) {
                       if (err) {
                       } else if (!banned) {
-                        var banned = new Banned(
+                        banned = new Banned(
                           {ip: ip, expires: new Date(Date.now() + banExpiration)}
                         );
                         banned.save(function (err, banned) {
@@ -266,7 +266,7 @@ module.exports = function (socket) {
       } else {
         logger.err('socket',
                    'Message was not sent. ' + msg
-                  )
+                  );
         socket.emit('msg:failed');
       }
     }

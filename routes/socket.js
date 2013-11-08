@@ -177,7 +177,7 @@ module.exports = function (socket) {
       } else {
         logger.err('socket',
                    'Message was not sent. ' + msg
-                  )
+                  );
         socket.emit('msg:failed');
       }
     }
@@ -219,9 +219,9 @@ module.exports = function (socket) {
 };
 
 function getStrangerSocket(socket) {
-  var ok = true
-    , strangerSocket = null
-    , err = null;
+  var ok = true,
+    strangerSocket = null,
+    err = null;
 
   socket.get('strangerSID', function (err_, sid) {
     if (err_ || !sid) {
