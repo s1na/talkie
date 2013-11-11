@@ -46,18 +46,28 @@ exports.auth = function (req, res) {
   }
 };
 
+
 exports.signup = function (req, res) {
+  var gender = {
+    'مرد': 'M',
+    'زن': 'W',
+  };
   if (typeof req.body.username !== 'string' ||
       typeof req.body.email !== 'string' ||
-      typeof req.body.password !== 'string') {
+      typeof req.body.password !== 'string' ||
+      typeof req.body.gender !== 'string') {
     res.redirect('/');
   } else if (!req.body.username.trim() ||
              !req.body.email.trim() ||
-             !req.body.password.trim()) {
+             !req.body.password.trim() ||
+             !req.body.password.trim() ||
+             !req.body.gender.trim() ||
+             !(req.body.gender in gender)) {
     res.redirect('/');
   } else {
     var user = new User({
       username: req.body.username,
+      gender: gender[req.body.gender],
       email: req.body.email,
       password: hash.createHash(req.body.password),
       verified: false,

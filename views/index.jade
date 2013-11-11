@@ -15,7 +15,7 @@ block body
           .form-group
             label.sr-only(for='login-username')
             input#login-username.form-control(type='text', name='username',
-              placeholder='نام', ng-maxlength='20', required)
+              placeholder='نام کاربری', ng-maxlength='20', required)
           .form-group(style='margin-right: .1em;')
             label.sr-only(for='login-password')
             input#login-passord.form-control(type='password', name='password',
@@ -42,6 +42,12 @@ block body
             label.sr-only(for='signup-username')
             input#signup-username.form-control.input-lg(type='text', name='username',
               placeholder='نام کاربری', ng-maxlength='20', required)
+          .form-group
+            label.sr-only(for='signup-gender')
+            select#signup-gender.form-control.input-lg(name='gender', 
+              placeholder='جنسیت', required)
+              option زن
+              option مرد
           .form-group
             label.sr-only(for='signup-email')
             input#signup-email.form-control.input-lg(type='email', name='email',
