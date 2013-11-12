@@ -1,0 +1,83 @@
+extends base
+
+block append css
+  link(rel='stylesheet', type='text/css', href='/static/css/common.css')
+  link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.core.css')
+  link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.default.css')
+  style.
+    a:hover {
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: none;
+      text-decoration: none;
+    }
+
+block page_title
+  title هورین - علاقه‌مندی‌ها
+
+block body
+  .row
+    .col-md-8.col-md-offset-2
+      legend
+        p
+          علاقه‌مندی‌ها
+      لطفا موضوع‌های مورد علاقه‌ی خود را انتخاب کنید.
+      br
+
+  .row
+    .col-md-8.col-md-offset-2
+      br
+      .topics-form
+        form(method='post', action='/app/topics', name='topics-form', onsubmit='return validateTopics();', role='form')
+          .row(style='a:hover: font-size: 3em;')
+            each topic in suggestedTopics
+              .col-md-3(style='float: right;')
+                input.thumbnail-checkbox(type='checkbox', name='selectedTopics', value=topic.slug, style='display: none;')
+                a.thumbnail(href='#', onclick='return toggleTopic(this);', style='margin: .5em;')
+                  img(src=(topic.thumb ? topic.thumb : 'http://placehold.it/150&text=' + topic.slug),
+                    alt=topic.title, style='width: 128px; height: 128px;')
+                  .caption
+                    p(style='text-align: center; p:hover: font-size: 3em; margin-top: -.6em; margin-bottom: -1em;')= topic.title
+          .row(style='margin-top: 1em; margin-left: 1em;')
+            button.btn.btn-lg.btn-primary(type='submit', style='float: left; margin-bottom: 2em;')
+              ادامه
+
+
+block append bottom-js
+  script(type='text/javascript', src='/static/lib/alertify.js/lib/alertify.min.js')
+  script(type='text/javascript').
+    function toggleTopic(aElem) {
+      try {
+        var checkboxElem = aElem.previousSibling;
+        if (checkboxElem.checked === true) {
+          checkboxElem.checked = false;
+          aElem.style.borderColor = '#ddd';
+          aElem.style.borderWidth = '1px';
+        } else {
+          checkboxElem.checked = true;
+          aElem.style.borderColor = '#2980b9';
+          aElem.style.borderWidth = '1px';
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    };
+
+    function validateTopics() {
+      var checkboxes = document.getElementsByClassName('thumbnail-checkbox');
+      var it;
+      var checkeds = 0;
+      for (it=0; it < checkboxes.length; it++) {
+        if (checkboxes[it].checked){
+          checkeds++;
+        }
+      }
+      if (checkeds === 0) {
+        alertify.error("لطفا حداقل یک موضوع را انتخاب کنید.");
+        return false;
+      }
+      return true;
+    };

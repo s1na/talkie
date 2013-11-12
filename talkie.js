@@ -6,7 +6,7 @@
 var routes = require('./routes'),
   routesAuth = require('./routes/auth'),
   routesApi = require('./routes/api'),
-  routesChat = require('./routes/chat'),
+  routesApp = require('./routes/app'),
   http = require('http'),
   path = require('path'),
   longjohn = require('longjohn');
@@ -70,18 +70,22 @@ if (app.get('env') === 'production') {
 
 // serve index and view partials
 app.get('/', routes.index);
-//app.post('/auth', routesAuth.auth);
-app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
-                                                    failureRedirect: '/'}));
-app.get('/exit', routesAuth.exit);
-app.get('/chat', routesChat.chat);
 app.get('/partials/:name', routes.partials);
 app.get('/rules', routes.rules);
 app.get('/about', routes.about);
+app.get('/emailtest', routes.emailTest);
+
+//app.post('/auth', routesAuth.auth);
+app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
+                                                    failureRedirect: '/'}));
 app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
 app.get('/verify/:key', routesAuth.verify);
-app.get('/emailtest', routes.emailTest);
+app.get('/exit', routesAuth.exit);
+
+app.get('/chat', routesApp.chat);
+app.get('/app/topics', routesApp.topics);
+app.post('/app/topics', routesApp.topics);
 
 // JSON API
 app.get('/api/version', routesApi.version);
