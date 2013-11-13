@@ -27,6 +27,7 @@ userSchema = new mongoose.Schema({
   username: { type: String, index: {unique: true}},
   firstname: String,
   lastname: String,
+  gender: String,
   email: {type: String, index: {unique: true}},
   password: String,
   verified: Boolean,
@@ -34,13 +35,16 @@ userSchema = new mongoose.Schema({
   msgCount: Number,
   reporters: [String],
   banned: Boolean,
-  banExpiration: Date
+  banExpiration: Date,
+//  friends: [ObjectId],
+  topics: [String]
 });
 
 userSchema.set('autoIndex', false);
 userSchema.methods.validPassword = function (password) {
   return hash.validateHash(this.password, password);
 };
+
 userSchema.methods.report = function (by) {
   if (this.reporters.indexOf(by) === -1) {
     this.reporters.push(by.username);
@@ -69,6 +73,29 @@ userSchema.methods.isBanned = function () {
   } else {
     return false;
   }
+};
+
+/*userSchema.methods.addFriend = function (user) {
+  if (!user) return;
+  if (this.friends.indexOf(user) !== -1) {
+    this.friends.push(user._id);
+  };
+  this.save();
+};
+*/
+userSchema.methods.addTopics = function (topics) {
+  if (!topics || typeof topics === 'undefined') return;
+  if (typeof topics === 'string') {
+    topics = [topics];
+  }
+  for (var it=0; it < topics.length; it++) {
+    console.log(this.topics);
+    console.log(this.topics.indexOf(topics[it]));
+    if (this.topics.indexOf(topics[it]) === -1) {
+      this.topics.push(topics[it]);
+    }
+  }
+  this.save();
 };
 
 // Models

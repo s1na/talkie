@@ -50,7 +50,7 @@ exports.auth = function (req, res) {
 exports.signup = function (req, res) {
   var gender = {
     'مرد': 'M',
-    'زن': 'W',
+    'زن': 'F',
   };
   if (typeof req.body.username !== 'string' ||
       typeof req.body.email !== 'string' ||
@@ -147,7 +147,7 @@ exports.verify = function (req, res) {
                      'couldnt login user after verify.'
                     );
         } else {
-          return res.redirect('/chat');
+          return res.redirect('/app/topics');
         }
       });
     }

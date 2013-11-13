@@ -1,0 +1,54 @@
+doctype 5
+html.fill(ng-app='talkie', lang='fa')
+  head
+    meta(http-equiv='content-type', content='text/html', charset='utf-8')
+    base(href='/')
+    title(ng-bind='title.title') هورین
+    script(src='/socket.io/socket.io.js')
+    block css
+      link(rel='stylesheet', type='text/css', href='/static/css/bootstrap.min.css')
+      link(rel='stylesheet', type='text/css', href='/static/css/chat.css')
+  body.fill(dir='rtl', data-ng-controller='ChatCtrl')
+    include top-nav.jade
+
+    .row.fill(style="margin-left: 0; margin-right: 0;", data-ng-controller='MsgCtrl')
+      .col-xs-2.contact
+        p salam
+      .col-xs-8(style=" height: 100%")
+        br
+        br
+        br
+        //- .message.stranger
+        //-   p ضمن عرض سلام و خسته نباشید خدمت شما دوست عزیز گرامی و دوست داشتنی، بنده متولد هفتم آبان سال ۱۶--۳ هستم
+        //-   //- p salam
+        //- br 
+        //- .message.me
+        //-   p ...
+        //- br
+        //- .message.server 
+        //-   p dididi
+      .col-xs-2(style="")
+        br
+        br
+        br
+        .row
+          .col-xs-12
+            .thumbnail
+              img(src="/static/img/virgin/anon1.jpg", alt="")
+              .caption
+                h3(style="text-align: center") حاشم مشهون
+              p
+                b علاقه‌مند به: 
+                موسیقی، فیلم، علم، سرگرمی، رقص
+              p 
+                b مشترک با شما در:
+                کامپیوتر، بازی‌های رایانه‌ای و روانشناسی
+              button.btn.btn-sm.btn-danger(type="button", data-ng-click='report()', data-ng-disabled="reported") گزارش
+        .row
+          .col-xs-12
+            button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') گفتگو با نفر بعد
+
+      include send-box.jade  
+      //- include loading.jade
+
+  include bottom-js.jade

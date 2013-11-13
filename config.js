@@ -28,6 +28,8 @@ var User = require('./db').User;
 var maxReports = 3;
 var banExpiration = 1000 * 60 * 60 * 24 * 3;
 
+var minMutualInterest = 0;
+
 var emailUsername = volatileConfig.emailUsername;
 var emailPassword = volatileConfig.emailPassword;
 
@@ -131,18 +133,43 @@ io.set('authorization', function (hs, accept) {
   }
 });
 
+// AppConfs
+
+topicsList = [
+  {title: 'ادبیات', slug: 'literature', thumb: '/static/img/literature.png'},
+  {title: 'فیلم', slug: 'film'},
+  {title: 'موسیقی', slug: 'music'},
+  {title: 'علم', slug: 'science'},
+  {title: 'تکنولوژی', slug: 'technology'},
+  {title: 'کتاب', slug: 'book'},
+  {title: 'سیاست', slug: 'politics'},
+  {title: 'مذهبی', slug: 'religion'},
+  {title: 'تجارت', slug: 'commerce'},
+  {title: 'روان‌شناسی', slug: 'psychology'},
+  {title: 'کامپیوتر', slug: 'computer'},
+  {title: 'زبان‌های خارجی', slug: 'foreign-languages'},
+  {title: 'بازی‌های رایانه‌ای', slug: 'computer-games'},
+  {title: 'ورزش', slug: 'sports'},
+  {title: 'گردشگری', slug: 'travel'},
+  {title: 'سرگرمی', slug: 'entertainment'},
+];
+
 // Exports
-module.exports.express = express;
-module.exports.app = app;
-module.exports.server = server;
-module.exports.io = io;
-module.exports.rdb = rdb;
-module.exports.rdbLogger = rdbLogger;
-module.exports.redisStore = redisStore;
-module.exports.secretKey = secretKey;
-module.exports.sessionExpiration = sessionExpiration;
-module.exports.parseCookie = parseCookie;
-module.exports.maxReports = maxReports;
-module.exports.banExpiration = banExpiration;
-module.exports.emailUsername = emailUsername;
-module.exports.emailPassword = emailPassword;
+module.exports = {
+  express: express,
+  app: app,
+  server: server,
+  io: io,
+  rdb: rdb,
+  rdbLogger: rdbLogger,
+  redisStore: redisStore,
+  secretKey: secretKey,
+  sessionExpiration: sessionExpiration,
+  parseCookie: parseCookie,
+  maxReports: maxReports,
+  banExpiration: banExpiration,
+  emailUsername: emailUsername,
+  emailPassword: emailPassword,
+  topicsList: topicsList,
+};
+

@@ -1,0 +1,24 @@
+.container.fill(data-ng-init='init();')
+  .loading(data-ng-show='loading.enable', style='display: block;')
+    .row
+      .col-md-2.col-md-offset-5
+        .spinner.image
+    .row
+      .col-md-4.col-md-offset-4
+        p.text-muted تا یافتن فردی برای چت شکیبا باشید!
+        p.titr در حال یافتن هم صحبتی ناشناس هستیم!
+    .row
+      .col-md-2.col-md-offset-5(style="text-align: center")
+          
+        a(href="/about", target="_blank")
+          small 
+          درباره‌‌ی هورین&nbsp
+        |
+       
+        a(href="http://blog.horin.ir", target="_blank")
+          small 
+          &nbspبلاگ&nbsp
+        |
+        a(href, data-ng-click='exit()')
+          small 
+          &nbspخروج از چت    
