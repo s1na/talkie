@@ -82,7 +82,7 @@ app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
 app.get('/verify/:key', routesAuth.verify);
 app.get('/emailtest', routes.emailTest);
-
+app.get('/test', routes.test);
 // JSON API
 app.get('/api/version', routesApi.version);
 app.get('/api/user-data', routesApi.userData);
