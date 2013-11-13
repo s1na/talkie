@@ -12,22 +12,20 @@ html.fill(ng-app='talkie', lang='fa')
     include top-nav.jade
 
     .row.fill(style="margin-left: 0; margin-right: 0;", data-ng-controller='MsgCtrl')
-      .col-xs-2.contact
+      .col-sm-2.contact
         p salam
-      .col-xs-8(style=" height: 100%")
+      .col-sm-8(style=" height: 100%")
         br
         br
         br
-        //- .message.stranger
-        //-   p ضمن عرض سلام و خسته نباشید خدمت شما دوست عزیز گرامی و دوست داشتنی، بنده متولد هفتم آبان سال ۱۶--۳ هستم
-        //-   //- p salam
-        //- br 
-        //- .message.me
-        //-   p ...
+        .message.stranger
+          p.text-muted ضمن عرض سلام و خسته نباشید خدمت شما دوست عزیز گرامی و دوست داشتنی، بنده متولد هفتم آبان سال ۱۶--۳ هستم. خیلی دوست دارم با شما دوست شم و باهاتون رفیق شم و پر از عشق می گوییم!
+        .message.me(style="float: left")
+          p.text-muted ضمن عرض سلام و خسته نباشید خدمت شما دوست عزیز گرامی و دوست داشتنی، بنده متولد هفتم آبان سال ۱۶--۳ هستم. خیلی دوست دارم با شما دوست شم و باهاتون رفیق شم و پر از عشق می گوییم!
         //- br
         //- .message.server 
-        //-   p dididi
-      .col-xs-2(style="")
+          //- p dididi
+      .col-sm-2(style="")
         br
         br
         br
@@ -37,18 +35,20 @@ html.fill(ng-app='talkie', lang='fa')
               img(src="/static/img/virgin/anon1.jpg", alt="")
               .caption
                 h3(style="text-align: center") حاشم مشهون
-              p
+              p.text-muted
                 b علاقه‌مند به: 
                 موسیقی، فیلم، علم، سرگرمی، رقص
-              p 
-                b مشترک با شما در:
+              p.text-muted
+                b مشترک با شما در: 
                 کامپیوتر، بازی‌های رایانه‌ای و روانشناسی
               button.btn.btn-sm.btn-danger(type="button", data-ng-click='report()', data-ng-disabled="reported") گزارش
         .row
           .col-xs-12
             button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') گفتگو با نفر بعد
-
+            p نسخه‌ی آزمایشی! در صورت مشاهده‌ی ایراد با ما 
+              a(href="/about#contact", target="_blank") تماس 
+              بگیرید.
       include send-box.jade  
-      include loading.jade
+      //- include loading.jade
 
   include bottom-js.jade

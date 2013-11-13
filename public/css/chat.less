@@ -226,8 +226,7 @@ body {
 
 .input {
   height: 30%;
-
-  textarea {
+/*  textarea {
     width: 100%;
     height: 30%;
     border: 2px solid #34495e;
@@ -239,7 +238,7 @@ body {
     &:focus {
       outline-color: transparent;
     }
-  }
+  }*/
 
   button {
     width: 100%;
@@ -262,6 +261,10 @@ body {
   background: @message-background-color;
   border: 3px solid @message-border-color;
   border-radius: 3px;
+  width: 80%;
+  margin: 5px;
+  padding-right: 15px;
+  padding-top: 10px
 }
 
 .message.stranger:after, .message.stranger:before {
@@ -274,33 +277,12 @@ body {
   left: 100%;
 }
 
-
-.message.me:after, .message.me:before {
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  right: 100%;
-}
-
-
-
 .message.stranger:after {
   border-color: rgba(255, 255, 255, 0);
   border-width: 10px;
   top: 50%;
   margin-top: -10px;
   border-left-color: @message-background-color;
-}
-
-.message.me:after {
-  border-color: rgba(255, 255, 255, 0);
-  border-width: 10px;
-  top: 50%;
-  margin-top: -10px;
-  border-right-color: @message-background-color;
 }
 
 .message.stranger:before {
@@ -311,6 +293,13 @@ body {
   border-left-color: @message-border-color;
 }
 
+.message.me:after {
+  border-color: rgba(255, 255, 255, 0);
+  border-width: 10px;
+  top: 50%;
+  margin-top: -10px;
+  border-right-color: @message-background-color;
+}
 
 .message.me:before {
   border-color: rgba(0, 0, 0, 0);
@@ -320,9 +309,12 @@ body {
   border-right-color: @message-border-color;
 }
 
-
-
-
-
-
-
+.message.me:after, .message.me:before {
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  right: 100%;
+}
