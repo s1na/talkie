@@ -89,8 +89,6 @@ userSchema.methods.addTopics = function (topics) {
     topics = [topics];
   }
   for (var it=0; it < topics.length; it++) {
-    console.log(this.topics);
-    console.log(this.topics.indexOf(topics[it]));
     if (this.topics.indexOf(topics[it]) === -1) {
       this.topics.push(topics[it]);
     }

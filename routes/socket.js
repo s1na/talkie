@@ -72,13 +72,30 @@ module.exports = function (socket) {
               user.update({ $inc: {chatCount: 1} });
               strangerSocket.handshake.user.update({ $inc: {chatCount: 1} });
 
-              socket.emit('stranger:res', {
-                fullName: strangerSocket.handshake.user.username,
-              });
-
-              strangerSocket.emit('stranger:res', {
-                fullName: user.username,
-              });
+              var selfTopics = user.topics;
+              var strangerTopics = strangerSocket.handshake.user.topics;
+              var commonTopics = [];
+              for (var i = 0; i < selfTopics.length; i++) {
+                for (var j = 0; j < strangerTopics.length; j++) {
+                  if (selfTopics[i] == strangerTopics[j]) {
+                    commonTopics.push(selfTopics[i]);
+                    selfTopics.splice(selfTopics.indexOf(selfTopics[i]), 1);
+                    strangerTopics.splice(strangerTopics.indexOf(strangerTopics[i]), 1);
+                  }
+                }
+              }
+              var strangerData = {
+                username: strangerSocket.handshake.user.username,
+                commonTopics: commonTopics,
+                strangerTopics: selfTopics
+              };
+              var selfData = {
+                username: user.username,
+                commonTopics: commonTopics,
+                strangerTopics: strangerTopics
+              };
+              socket.emit('stranger:res', strangerData);
+              strangerSocket.emit('stranger:res', selfData);
             } else {
               if (typeof strangerSocket.id !== 'undefined') {
                 rdb.srem('chat:online', strangerSocket.id, rdbLogger);
