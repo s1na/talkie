@@ -16,7 +16,14 @@ exports.index = function (req, res) {
     req.session.touch();
     res.redirect('/chat');
   }
-  res.render('index', {development: req.development});
+  var data = {
+    development: req.development
+  };
+  var flashes = req.flash('error');
+  if (flashes && flashes.length > 0) {
+    data['message'] = flashes[0];
+  }
+  res.render('index', data);
 };
 
 exports.partials = function (req, res) {

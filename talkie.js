@@ -9,7 +9,8 @@ var routes = require('./routes'),
   routesApp = require('./routes/app'),
   http = require('http'),
   path = require('path'),
-  longjohn = require('longjohn');
+  longjohn = require('longjohn'),
+  flash = require('connect-flash');
 
 var config = require('./config'),
   express = config.express,
@@ -40,6 +41,7 @@ app.use(express.session({
   prefix: config.sessionPrefix,
   cookie: { expires: true, maxAge: config.sessionExpiration },
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 //app.use(isBanned());
@@ -77,7 +79,9 @@ app.get('/emailtest', routes.emailTest);
 
 //app.post('/auth', routesAuth.auth);
 app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
-                                                    failureRedirect: '/'}));
+                                                    failureRedirect: '/',
+                                                    failureFlash: true
+                                                  }));
 app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
 app.get('/verify/:key', routesAuth.verify);

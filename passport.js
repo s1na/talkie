@@ -7,13 +7,13 @@ passport.use(new LocalStrategy(
     User.findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+        return done(null, false, { message: 'نام کاربری برای ورود اشتباه است.' });
       }
       if (!user.verified) {
-        return done(null, false, { message: 'Email is not verified.' });
+        return done(null, false, { message: 'ایمیل شما تایید نشده است.' });
       }
       if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
+        return done(null, false, { message: 'رمز عبور اشتباه است.' });
       }
       return done(null, user);
     });
