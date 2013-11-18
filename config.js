@@ -135,24 +135,24 @@ io.set('authorization', function (hs, accept) {
 
 // AppConfs
 
-topicsList = [
-  {title: 'ادبیات', slug: 'literature', thumb: '/static/img/literature.png'},
-  {title: 'فیلم', slug: 'film'},
-  {title: 'موسیقی', slug: 'music'},
-  {title: 'علم', slug: 'science'},
-  {title: 'تکنولوژی', slug: 'technology'},
-  {title: 'کتاب', slug: 'book'},
-  {title: 'سیاست', slug: 'politics'},
-  {title: 'مذهبی', slug: 'religion'},
-  {title: 'تجارت', slug: 'commerce'},
-  {title: 'روان‌شناسی', slug: 'psychology'},
-  {title: 'کامپیوتر', slug: 'computer'},
-  {title: 'زبان‌های خارجی', slug: 'foreign-languages'},
-  {title: 'بازی‌های رایانه‌ای', slug: 'computer-games'},
-  {title: 'ورزش', slug: 'sports'},
-  {title: 'گردشگری', slug: 'travel'},
-  {title: 'سرگرمی', slug: 'entertainment'},
-];
+topicsList = {
+  'literature': {title: 'ادبیات', thumb: '/static/img/literature.png'},
+  'film': {title: 'فیلم'},
+  'music': {title: 'موسیقی'},
+  'science': {title: 'علم'},
+  'technology': {title: 'تکنولوژی'},
+  'book': {title: 'کتاب'},
+  'politics': {title: 'سیاست'},
+  'religion': {title: 'مذهبی'},
+  'commerce': {title: 'تجارت'},
+  'psychology': {title: 'روان‌شناسی'},
+  'computer': {title: 'کامپیوتر'},
+  'foreign-languages': {title: 'زبان‌های خارجی'},
+  'computer-games': {title: 'بازی‌های رایانه‌ای'},
+  'sports': {title: 'ورزش'},
+  'travel': {title: 'گردشگری'},
+  'entertainment': {title: 'سرگرمی'},
+};
 
 // Exports
 module.exports = {
