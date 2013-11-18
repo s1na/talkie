@@ -52,8 +52,22 @@ angular.module('talkie.controllers', []).
 
     $scope.setStranger = function (stranger) {
       $scope.stranger.username = stranger.username;
-      $scope.stranger.commonTopics = stranger.commonTopics;
-      $scope.stranger.otherTopics = stranger.strangerTopics;
+      $scope.stranger.commonTopics = stranger.commonTopics
+      $scope.stranger.otherTopics = stranger.strangerTopics
+      if (stranger.commonTopics &&
+          typeof stranger.commonTopics !== undefined &&
+          stranger.commonTopics.length > 0){
+        $scope.stranger.commonTopicsString = stranger.commonTopics.join('، ');
+      } else {
+        $scope.stranger.commonTopicsString = '';
+      }
+      if (stranger.strangerTopics &&
+          typeof stranger.strangerTopics !== undefined &&
+          stranger.strangerTopics.length > 0){
+        $scope.stranger.otherTopicsString = stranger.strangerTopics.join('، ');
+      } else {
+        $scope.stranger.otherTopicsString = '';
+      }
     };
 
     $scope.report = function () {

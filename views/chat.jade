@@ -32,13 +32,14 @@ html.fill(ng-app='talkie', lang='fa')
               img(src="/static/img/virgin/anon1.jpg", alt="")
               .caption
                 h3(style="text-align: center", data-ng-bind="stranger.username")
-              p.text-muted(data-ng-show='stranger.commonTopics')
-                b علاقه‌مند به: 
-              p.text-muted(data-ng-repeat='topic in stranger.commonTopics')
-                {{ topic }}
-              p.text-muted(data-ng-show='stranger.otherTopics')
+              p.text-muted
+                b علاقه‌مند به:
+              p.text-muted(data-ng-bind="stranger.otherTopicsString")
+              
+              p.text-muted
                 b مشترک با شما در:
-              p.text-muted(data-ng-repeat='stranger.otherTopics')
+              p.text-muted(data-ng-bind='stranger.commonTopicsString')
+              
               
               button.btn.btn-sm.btn-danger(type="button", data-ng-click='report()', data-ng-disabled="reported") گزارش
         .row
