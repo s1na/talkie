@@ -14,11 +14,8 @@ module.exports.topics = function(req, res) {
   if (req.method == 'GET') {
     var suggestedTopics = config.topicsList;
     var selectedTopics = req.user.topics;
-    if (selectedTopics.length > 0) {
-      for (var it=0; it < suggestedTopics.length; it++) {
-        suggestedTopics[it].selected =
-          selectedTopics.indexOf(suggestedTopics[it].slug) !== -1;
-      }
+    for (var it = 0; it < selectedTopics.length; it++) {
+      suggestedTopics[selectedTopics[it]].selected = true;
     }
     res.render('topics', {
       suggestedTopics: suggestedTopics,

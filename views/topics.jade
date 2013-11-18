@@ -32,13 +32,13 @@ block body
       .topics-form
         form(method='post', action='/app/topics', name='topics-form', onsubmit='return validateTopics();', role='form')
           .row(style='a:hover: font-size: 3em;')
-            each topic in suggestedTopics
+            each topic, slug in suggestedTopics
               - var selectedStyle = ' border-color: #2980b9;'
               .col-md-3(style='float: right;')
-                input.thumbnail-checkbox(type='checkbox', name='selectedTopics', value=topic.slug, style='display: none;')
+                input.thumbnail-checkbox(type='checkbox', name='selectedTopics', value=slug, style='display: none;')
                 a.thumbnail(href='#', onclick='return toggleTopic(this);',
                   style=(topic.selected ? 'margin: .5em;' + selectedStyle : 'margin: .5em;'))
-                  img(src=(topic.thumb ? topic.thumb : 'http://placehold.it/150&text=' + topic.slug),
+                  img(src=(topic.thumb ? topic.thumb : 'http://placehold.it/150&text=' + slug),
                     alt=topic.title, style='width: 128px; height: 128px;')
                   .caption
                     p(style='text-align: center; p:hover: font-size: 3em; margin-top: -.6em; margin-bottom: -1em;')= topic.title
