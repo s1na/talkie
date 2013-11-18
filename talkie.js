@@ -50,7 +50,8 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 // app.use(statistics());
-var appPages = ['/chat', '/api/user-data', '/app/topics'];
+var appPages = ['/chat', '/api/user-data', '/app/topics',
+                '/verification', '/verification/resend'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
@@ -77,12 +78,30 @@ app.get('/rules', routes.rules);
 app.get('/about', routes.about);
 
 //app.post('/auth', routesAuth.auth);
-app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
-                                                    failureRedirect: '/',
-                                                    failureFlash: true
-                                                  }));
+app.post('/login', function (req, res, next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    if (!user) {
+      req.flash('error', info.message);
+      return res.redirect('/');
+    }
+    req.login(user, function(err) {
+      if (err) { return next(err); }
+      if (!user.verified) {
+        return res.redirect('/verification');
+      } else {
+        return res.redirect('/chat');
+      }
+    });
+  })(req, res, next);
+});
 app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
+app.post('/verification', routesAuth.verification);
+app.post('/verification/resend', routesAuth.verificationResend);
 app.get('/verify/:key', routesAuth.verify);
 app.get('/exit', routesAuth.exit);
 
@@ -154,6 +173,8 @@ function authenticate(appPages) {
       } else if (req.user.isBanned()) {
         var output = req.user.remainingBanTime();
         res.render('banned', {expireDate: output});
+      } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
+        res.redirect('/verification');
       } else {
         next();
       }

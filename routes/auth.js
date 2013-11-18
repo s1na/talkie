@@ -1,10 +1,13 @@
 
 var config = require('../config'),
+    rdb = config.rdb,
+    rdbLogger = config.rdbLogger,
     logger = require('../logger'),
     db = require('../db'),
     hash = require('../hash'),
     User = db.User,
-    sendMail = require('../email').sendMail;
+    sendMail = require('../email').sendMail,
+    utils = require('../utils');
 
 
 exports.auth = function (req, res) {
@@ -96,12 +99,89 @@ exports.signup = function (req, res) {
       }
     };
     setTimeout(function () { sendMail(data); }, 2);
-    res.redirect('/verification');
+
+    req.login(user, function(err) {
+      if (err) {
+        logger.error('signup', 'Error while logging user in.');
+        logger.error('signup', err);
+      } else {
+        return res.redirect('/verification');
+      }
+    });
+    return res.redirect('/verification');
   }
 };
 
 exports.verification = function (req, res) {
-  res.render('verification', {});
+  if (req.method === 'GET') {
+    var data = {
+      email: req.user.email,
+      message: {},
+    };
+    var info = req.flash('info');
+    var error = req.flash('error');
+    if (info && info.length > 0) {
+      data.message.type = 'info';
+      data.message.text = info[0];
+    } else if (error && error.length > 0) {
+      data.message.type = 'error';
+      data.message.text = error[0];
+    }
+    res.render('verification', data);
+  } else if (req.method === 'POST') {
+    req.user.email = req.body.email;
+    req.user.save();
+    return res.redirect('/verification');
+  }
+};
+
+exports.verificationResend = function (req, res) {
+  var userId = req.user.id;
+  rdb.get('verification:' + userId, function (err, val) {
+    if (err) {
+      logger.err('verification', err);
+    } else if (!val) {
+      var verificationUrl = 'http://horin.ir/verify/' + req.user.id;
+      var data = {
+        to: req.user.email,
+        subject: 'تایید عضویت در هورین',
+        template: 'email-verification',
+        vars: {
+          verificationUrl: verificationUrl,
+          username: req.user.username
+        }
+      };
+      setTimeout(function () { sendMail(data); }, 2);
+      var nextTry = new Date(Date.now() + config.verificationResendExpiration);
+      rdb.set('verification:' + userId, nextTry.toGMTString(), rdbLogger);
+      req.flash('info', 'ایمیل ارسال شد.');
+      return res.redirect('/verification');
+    } else {
+      var nextTry = new Date(val);
+      var now = new Date(Date.now());
+      if (now.getTime() >= nextTry.getTime()) {
+        var verificationUrl = 'http://horin.ir/verify/' + req.user.id;
+        var data = {
+          to: req.user.email,
+          subject: 'تایید عضویت در هورین',
+          template: 'email-verification',
+          vars: {
+            verificationUrl: verificationUrl,
+            username: req.user.username
+          }
+        };
+        setTimeout(function () { sendMail(data); }, 2);
+        nextTry = new Date(Date.now() + config.verificationResendExpiration);
+        rdb.set('verification:' + userId, nextTry.toGMTString(), rdbLogger);
+        req.flash('info', 'ایمیل ارسال شد.');
+        return res.redirect('/verification');
+      } else {
+        var remaining = utils.timeDifference(nextTry);
+        req.flash('error', 'لطفا ' + remaining + ' تلاش کنید.');
+        return res.redirect('/verification');
+      }
+    }
+  });
 };
 
 exports.verify = function (req, res) {

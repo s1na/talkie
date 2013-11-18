@@ -9,9 +9,6 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'نام کاربری برای ورود اشتباه است.' });
       }
-      if (!user.verified) {
-        return done(null, false, { message: 'ایمیل شما تایید نشده است.' });
-      }
       if (!user.validPassword(password)) {
         return done(null, false, { message: 'رمز عبور اشتباه است.' });
       }

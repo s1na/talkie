@@ -9,12 +9,39 @@ block page_title
 block body
   .row
     .col-md-8.col-md-offset-2
+      if message
+        if message.type == 'info'
+          .alert.alert-success= message.text
+        else if message.type == 'error'
+          .alert.alert-danger= message.text
       legend
         p
           تایید کاربر
       یک ایمیل برای شما ارسال شده است، لطفا روی لینک ارسال شده کلیک کنید.
       br
       br
+  .row
+    .col-md-3.col-md-offset-7
+      ایمیل شما:
+      .verification-form(style='display: inline;')
+        form.form-inline(method='post', action='/verification', name='verification-form', role='form')
+          .form-group
+            label.sr-only(for='verification-email')
+            input#verification-email.form-control(type='text', name='email',
+              placeholder='ایمیل شما', ng-maxlength='40', value=email, required)
+          button.btn.btn-primary(type='submit', style='float: left;')
+            تغییر ایمیل
+  .row
+    .col-md-4.col-md-offset-6
+      br
+      small
+        اگر ایمیل خود را اشتباه وارد کرده بودید، پس از اصلاح آن و اعمال تغییرات با زدن بر روی دکمه‌ی 'تغییر ایمیل'
+        دکمه‌ی 'ارسال دوباره' را بزنید.
+      .resend-form(style='display: inline;')
+        form.form-inline(method='post', action='/verification/resend', name='resend-form', role='form')
+          button.btn.btn-success(type='submit', style='float: right;')
+            ارسال دوباره
+
      // یا کلیدی که برای شما فرستاده شده است را اینجا وارد کنید.
       br
       br

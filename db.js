@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
   , hash = require('./hash')
-  , config = require('./config');
+  , config = require('./config')
+  , utils = require('./utils');
 
 // Schemas
 /*reportedSchema = new mongoose.Schema({
@@ -36,7 +37,7 @@ userSchema = new mongoose.Schema({
   reporters: [String],
   banned: Boolean,
   banExpiration: Date,
-//  friends: [ObjectId],
+  friends: [mongoose.Schema.Types.ObjectId],
   topics: [String]
 });
 
@@ -48,7 +49,6 @@ userSchema.methods.validPassword = function (password) {
 userSchema.methods.report = function (by) {
   if (this.reporters.indexOf(by) === -1) {
     this.reporters.push(by.username);
-    console.log(this.reporters);
     if (this.reporters.length % config.maxReports === 0) {
       this.banned = true;
       this.banExpiration = new Date(
@@ -76,27 +76,7 @@ userSchema.methods.isBanned = function () {
 };
 
 userSchema.methods.remainingBanTime = function () {
-  var remaining = new Date(this.expires - new Date(Date.now()));
-  remaining = remaining.getTime();
-
-  var days = Math.floor(remaining / 1000 / 60 / 60 / 24);
-  remaining -= days * 1000 * 60 * 60 * 24;
-
-  var hours = Math.floor(remaining / 1000 / 60 / 60);
-  remaining -= hours * 1000 * 60 * 60;
-
-  var minutes = Math.floor(remaining / 1000 / 60);
-  remaining -= minutes * 1000 * 60;
-
-  var seconds = Math.floor(remaining / 1000);
-
-  var output = '';
-  if (days) output = days + 'روز ';
-  if (hours) output = output + hours + 'ساعت ';
-  if (minutes) output = output + minutes + 'دقیقه ';
-  if (seconds) output = output + seconds + 'ثانیه';
-
-  return output;
+  return utils.timeDifference(this.expires, new Date(Date.now()));
 };
 
 /*userSchema.methods.addFriend = function (user) {
