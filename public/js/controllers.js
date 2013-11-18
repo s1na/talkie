@@ -50,6 +50,12 @@ angular.module('talkie.controllers', []).
       socket.emit('stranger:req');
     };
 
+    $scope.setStranger = function (stranger) {
+      $scope.stranger.username = stranger.username;
+      $scope.stranger.commonTopics = stranger.commonTopics;
+      $scope.stranger.otherTopics = stranger.strangerTopics;
+    };
+
     $scope.report = function () {
       socket.emit('stranger:report', {noStranger: !$scope.stranger.username});
       $scope.reported = true;
@@ -61,10 +67,8 @@ angular.module('talkie.controllers', []).
 
     socket.on('stranger:res', function(data) {
       //userS.setStranger(data.fullName);
-      $scope.stranger.username = data.fullName;
-      $scope.stranger.commonTopics = data.commonTopics;
-      $scope.stranger.otherTopics = data.strangerTopics;
-      titleS.setStranger(data.fullName);
+      $scope.setStranger(data);
+      titleS.setStranger(data);
       loadingS.trigger();
     });
 
@@ -102,9 +106,11 @@ angular.module('talkie.controllers', []).
     });
 
     function clearEnv() {
-      $scope.stranger.username = '';
-      $scope.stranger.commonTopics = [];
-      $scope.stranger.otherTopics = [];
+      $scope.setStranger({
+        username: '',
+        commonTopics: [],
+        otherTopics: [],
+      });
       titleS.setStranger('');
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';
