@@ -30,6 +30,8 @@ var banExpiration = 1000 * 60 * 60 * 24 * 3;
 
 var minMutualInterest = 0;
 
+var verificationResendExpiration = 1000 * 60 * 2;
+
 var emailUsername = volatileConfig.emailUsername;
 var emailPassword = volatileConfig.emailPassword;
 
@@ -168,6 +170,7 @@ module.exports = {
   parseCookie: parseCookie,
   maxReports: maxReports,
   banExpiration: banExpiration,
+  verificationResendExpiration: verificationResendExpiration,
   emailUsername: emailUsername,
   emailPassword: emailPassword,
   topicsList: topicsList,
