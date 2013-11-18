@@ -49,7 +49,3 @@ module.exports.about = function (req, res) {
 module.exports.rules = function (req, res) {
   res.render('rules');
 };
-
-module.exports.test = function(req, res) {
-  res.render('test');
-};

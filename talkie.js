@@ -79,14 +79,13 @@ app.get('/emailtest', routes.emailTest);
 
 //app.post('/auth', routesAuth.auth);
 app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
-                                                    failureRedirect: '/',
+                                                    failureRedirect: '/about',
                                                     failureFlash: true
                                                   }));
 app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
 app.get('/verify/:key', routesAuth.verify);
 app.get('/emailtest', routes.emailTest);
-app.get('/test', routes.test);
 app.get('/exit', routesAuth.exit);
 
 app.get('/chat', routesApp.chat);
@@ -171,6 +170,7 @@ function authenticate(appPages) {
     } else {
       if (typeof req.user === 'undefined' ||
           !req.user) {
+        console.log(req.session);
         res.redirect('/');
       } else if (req.user.isBanned()) {
         var remaining = new Date(req.user.banExpiration - new Date(Date.now()));
