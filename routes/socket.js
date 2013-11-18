@@ -84,6 +84,16 @@ module.exports = function (socket) {
                   }
                 }
               }
+              for (var i = 0; i < selfTopics.length; i++) {
+                selfTopics[i] = config.topicsList[selfTopics[i]].title;
+              }
+              for (var i = 0; i < strangerTopics.length; i++) {
+                strangerTopics[i] =
+                  config.topicsList[strangerTopics[i]].title;
+              }
+              for (var i = 0; i < commonTopics.length; i++) {
+                commonTopics[i] = config.topicsList[commonTopics[i]].title;
+              }
               var strangerData = {
                 username: strangerSocket.handshake.user.username,
                 commonTopics: commonTopics,
