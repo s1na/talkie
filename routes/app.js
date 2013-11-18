@@ -11,10 +11,6 @@ module.exports.chat = function(req, res) {
 };
 
 module.exports.topics = function(req, res) {
-  if (!req.user || typeof req.user === 'undefined') {
-    res.redirect('/');
-    return;
-  }
   if (req.method == 'GET') {
     var suggestedTopics = config.topicsList;
     var selectedTopics = req.user.topics;

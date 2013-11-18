@@ -56,6 +56,7 @@ exports.signup = function (req, res) {
       typeof req.body.email !== 'string' ||
       typeof req.body.password !== 'string' ||
       typeof req.body.gender !== 'string') {
+    req.flash('error', 'لطفا دوباره تلاش بفرمایید.');
     res.redirect('/');
   } else if (!req.body.username.trim() ||
              !req.body.email.trim() ||
@@ -63,6 +64,7 @@ exports.signup = function (req, res) {
              !req.body.password.trim() ||
              !req.body.gender.trim() ||
              !(req.body.gender in gender)) {
+    req.flash('error', 'لطفا دوباره تلاش بفرمایید.');
     res.redirect('/');
   } else {
     var user = new User({
@@ -132,6 +134,7 @@ exports.verify = function (req, res) {
                  err
                 );
     } else if (!user) {
+      req.flash('error', 'کلید فرستاده شده اشتباه می‌باشد.');
       res.redirect('/');
     } else {
       user.update({ verified: true }, function (err, user) {

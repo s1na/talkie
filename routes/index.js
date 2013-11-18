@@ -31,17 +31,6 @@ exports.partials = function (req, res) {
   res.render('partials/' + name);
 };
 
-module.exports.emailTest = function (req, res) {
-  data = {
-    to: 'itz.s1na@gmail.com',
-    subject: 'عضویت',
-    template: 'email-verification',
-    vars: {verificationUrl: 'http://horin.ir/something'}
-  };
-  setTimeout(function () { sendMail(data); }, 2);
-  res.send('Sent');
-};
-
 module.exports.about = function (req, res) {
   res.render('about');
 };
