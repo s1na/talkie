@@ -51,7 +51,7 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.report = function () {
-      socket.emit('stranger:report', {noStranger: !$scope.stranger});
+      socket.emit('stranger:report', {noStranger: !$scope.stranger.username});
       $scope.reported = true;
     };
 
@@ -61,7 +61,9 @@ angular.module('talkie.controllers', []).
 
     socket.on('stranger:res', function(data) {
       //userS.setStranger(data.fullName);
-      $scope.stranger = data.fullName;
+      $scope.stranger.username = data.fullName;
+      $scope.stranger.commonTopics = data.commonTopics;
+      $scope.stranger.otherTopics = data.strangerTopics;
       titleS.setStranger(data.fullName);
       loadingS.trigger();
     });
@@ -71,7 +73,9 @@ angular.module('talkie.controllers', []).
         text: 'نفر مقابل گفتگو را ترک کرد.',
         from: 'server'
       });
-      $scope.stranger = '';
+      $scope.stranger.username = '';
+      $scope.stranger.commonTopics = [];
+      $scope.stranger.otherTopics = [];
       titleS.clear();
     });
 
@@ -98,7 +102,9 @@ angular.module('talkie.controllers', []).
     });
 
     function clearEnv() {
-      $scope.stranger = '';
+      $scope.stranger.username = '';
+      $scope.stranger.commonTopics = [];
+      $scope.stranger.otherTopics = [];
       titleS.setStranger('');
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';

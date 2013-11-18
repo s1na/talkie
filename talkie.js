@@ -78,7 +78,7 @@ app.get('/about', routes.about);
 
 //app.post('/auth', routesAuth.auth);
 app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
-                                                    failureRedirect: '/about',
+                                                    failureRedirect: '/',
                                                     failureFlash: true
                                                   }));
 app.post('/signup', routesAuth.signup);

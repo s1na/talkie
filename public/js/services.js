@@ -9,7 +9,11 @@
 angular.module('talkie.services', []).
   service('userS', ['$http', '$q', function ($http, $q) {
     var user;
-    this.stranger = '';
+    this.stranger = {
+      username: '',
+      commonTopics: [],
+      otherTopics: [],
+    };
 
     this.fetchUserData = function () {
       var defer = $q.defer();
@@ -32,8 +36,10 @@ angular.module('talkie.services', []).
       return user;
     };
 
-    this.setStranger = function (name) {
-      this.stranger = name;
+    this.setStranger = function (name, commonTopics, otherTopics) {
+      this.stranger.username = name;
+      this.stranger.commonTopics = commonTopics;
+      this.stranger.otherTopics = otherTopics;
     };
   }]).
   service('msgS', function () {
@@ -78,11 +84,11 @@ angular.module('talkie.services', []).
     this.unseenMsgs = 0;
 
     this.setStranger = function (stranger) {
-      if (!stranger) {
+      if (!stranger.username) {
         this.title = this.defaultTitle;
       } else {
         this.removeUnseenMsgs();
-        this.title = this.title + ' - ' + stranger;
+        this.title = this.title + ' - ' + stranger.username;
       }
     };
 
