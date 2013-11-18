@@ -138,22 +138,22 @@ io.set('authorization', function (hs, accept) {
 // AppConfs
 
 topicsList = {
-  'literature': {title: 'ادبیات', thumb: '/static/img/literature.png'},
-  'film': {title: 'فیلم'},
-  'music': {title: 'موسیقی'},
-  'science': {title: 'علم'},
-  'technology': {title: 'تکنولوژی'},
-  'book': {title: 'کتاب'},
-  'politics': {title: 'سیاست'},
-  'religion': {title: 'مذهبی'},
-  'commerce': {title: 'تجارت'},
-  'psychology': {title: 'روان‌شناسی'},
-  'computer': {title: 'کامپیوتر'},
-  'foreign-languages': {title: 'زبان‌های خارجی'},
-  'computer-games': {title: 'بازی‌های رایانه‌ای'},
-  'sports': {title: 'ورزش'},
-  'travel': {title: 'گردشگری'},
-  'entertainment': {title: 'سرگرمی'},
+  'literature': {title: 'ادبیات', thumb: '/static/img/topics/literature.png'},
+  'film': {title: 'فیلم', thumb: '/static/img/topics/film.png'},
+  'music': {title: 'موسیقی', thumb: '/static/img/topics/music.png'},
+  'science': {title: 'علم', thumb: '/static/img/topics/science.png'},
+  'technology': {title: 'تکنولوژی', thumb: '/static/img/topics/technology.png'},
+  'book': {title: 'کتاب', thumb: '/static/img/topics/book.png'},
+  'politics': {title: 'سیاست', thumb: '/static/img/topics/politics.png'},
+  'religion': {title: 'مذهبی', thumb: '/static/img/topics/religion.png'},
+  'commerce': {title: 'تجارت', thumb: '/static/img/topics/commerce.png'},
+  'psychology': {title: 'روان‌شناسی', thumb: '/static/img/topics/psychology.png'},
+  'computer': {title: 'کامپیوتر', thumb: '/static/img/topics/computer.png'},
+  'foreign-languages': {title: 'زبان‌های خارجی', thumb: '/static/img/topics/foreign-languages.png'},
+  'computer-games': {title: 'بازی‌های رایانه‌ای', thumb: '/static/img/topics/computer-games.png'},
+  'sports': {title: 'ورزش', thumb: '/static/img/topics/sports.png'},
+  'travel': {title: 'گردشگری', thumb: '/static/img/topics/travel.png'},
+  'entertainment': {title: 'سرگرمی', thumb: '/static/img/topics/entertainment.png'},
 };
 
 // Exports
