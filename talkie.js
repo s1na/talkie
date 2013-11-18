@@ -50,7 +50,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 // app.use(statistics());
-var appPages = ['/chat', '/api/user-data'];
+var appPages = ['/chat', '/api/user-data', '/app/topics'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
@@ -75,7 +75,6 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.get('/rules', routes.rules);
 app.get('/about', routes.about);
-app.get('/emailtest', routes.emailTest);
 
 //app.post('/auth', routesAuth.auth);
 app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
@@ -85,7 +84,6 @@ app.post('/login', passport.authenticate('local', { successRedirect: '/chat',
 app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
 app.get('/verify/:key', routesAuth.verify);
-app.get('/emailtest', routes.emailTest);
 app.get('/exit', routesAuth.exit);
 
 app.get('/chat', routesApp.chat);
@@ -133,26 +131,7 @@ function isBanned() {
           });
           next();
         } else {
-          var remaining = new Date(banned.expires - new Date(Date.now()));
-          remaining = remaining.getTime();
-
-          var days = Math.floor(remaining / 1000 / 60 / 60 / 24);
-          remaining -= days * 1000 * 60 * 60 * 24;
-
-          var hours = Math.floor(remaining / 1000 / 60 / 60);
-          remaining -= hours * 1000 * 60 * 60;
-
-          var minutes = Math.floor(remaining / 1000 / 60);
-          remaining -= minutes * 1000 * 60;
-
-          var seconds = Math.floor(remaining / 1000);
-
-          var output = '';
-          if (days) output = days + 'روز ';
-          if (hours) output = output + hours + 'ساعت ';
-          if (minutes) output = output + minutes + 'دقیقه ';
-          if (seconds) output = output + seconds + 'ثانیه';
-
+          var output = banned.remainingBanTime();
           res.render('banned', {expireDate: output});
         }
       }
@@ -170,29 +149,10 @@ function authenticate(appPages) {
     } else {
       if (typeof req.user === 'undefined' ||
           !req.user) {
-        console.log(req.session);
+        req.flash('error', 'لطفا ابتدا وارد شوید.');
         res.redirect('/');
       } else if (req.user.isBanned()) {
-        var remaining = new Date(req.user.banExpiration - new Date(Date.now()));
-        remaining = remaining.getTime();
-
-        var days = Math.floor(remaining / 1000 / 60 / 60 / 24);
-        remaining -= days * 1000 * 60 * 60 * 24;
-
-        var hours = Math.floor(remaining / 1000 / 60 / 60);
-        remaining -= hours * 1000 * 60 * 60;
-
-        var minutes = Math.floor(remaining / 1000 / 60);
-        remaining -= minutes * 1000 * 60;
-
-        var seconds = Math.floor(remaining / 1000);
-
-        var output = '';
-        if (days) output = days + 'روز ';
-        if (hours) output = output + hours + 'ساعت ';
-        if (minutes) output = output + minutes + 'دقیقه ';
-        if (seconds) output = output + seconds + 'ثانیه';
-
+        var output = req.user.remainingBanTime();
         res.render('banned', {expireDate: output});
       } else {
         next();
