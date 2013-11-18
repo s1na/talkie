@@ -75,12 +75,15 @@ module.exports = function (socket) {
               var selfTopics = user.topics;
               var strangerTopics = strangerSocket.handshake.user.topics;
               var commonTopics = [];
-              for (var i = 0; i < selfTopics.length; i++) {
-                for (var j = 0; j < strangerTopics.length; j++) {
+              for (var i = 0; i < selfTopics.length && selfTopics.length > 0; i++) {
+                for (var j = 0; j < strangerTopics.length && strangerTopics.length > 0; j++) {
                   if (selfTopics[i] == strangerTopics[j]) {
                     commonTopics.push(selfTopics[i]);
                     selfTopics.splice(selfTopics.indexOf(selfTopics[i]), 1);
                     strangerTopics.splice(strangerTopics.indexOf(strangerTopics[i]), 1);
+                    i--;
+                    j--;
+                    continue;
                   }
                 }
               }
