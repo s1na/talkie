@@ -1,0 +1,14 @@
+.col-xs-12(data-ng-show='stranger.username')
+  .thumbnail
+    img(src="/static/img/virgin/anon1.jpg", alt="")
+    .caption
+      h3(style="text-align: center", data-ng-bind="stranger.username")
+    p.text-muted
+      b علاقه‌مند به:
+    p.text-muted(data-ng-bind="stranger.otherTopicsString")
+    
+    p.text-muted
+      b مشترک با شما در:
+    p.text-muted(data-ng-bind='stranger.commonTopicsString')
+    
+    button.btn.btn-sm.btn-danger(type="button", data-ng-click='report()', data-ng-disabled="reported") گزارش
