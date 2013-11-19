@@ -122,6 +122,9 @@ exports.signup = function (req, res) {
 
 exports.verification = function (req, res) {
   if (req.method === 'GET') {
+    if (req.user.verified) {
+      return res.redirect('/chat');
+    }
     var data = {
       email: req.user.email,
       message: {},
@@ -225,6 +228,9 @@ exports.verify = function (req, res) {
       req.flash('error', 'کلید فرستاده شده اشتباه می‌باشد.');
       res.redirect('/');
     } else {
+      if (user.verified) {
+        return res.redirect('/app/topics');
+      }
       user.update({ verified: true }, function (err, user) {
         if (err) {
           logger.err('verify',
