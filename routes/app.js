@@ -3,9 +3,13 @@ var config = require('../config');
 
 module.exports.chat = function(req, res) {
   req.session.cookie.maxAge = config.memberSessionExpiration;
+  if (!req.user.gravatarUrl) {
+    req.user.setGravatarUrl();
+  }
   var data = {
     development: req.development,
     user: req.user,
+    gravatarUrl: req.user.gravatarUrl
   };
   res.render('chat', data);
 };

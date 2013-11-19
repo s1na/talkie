@@ -88,24 +88,45 @@ module.exports = function (socket) {
                 }
               }
               for (var i = 0; i < selfTopics.length; i++) {
-                selfTopics[i] = config.topicsList[selfTopics[i]].title;
+                try {
+                  selfTopics[i] = config.topicsList[selfTopics[i]].title;
+                } catch (err) {
+                  logger.err('Socket', 'Topic doesnt have title.');
+                  logger.err('socket^', err.message);
+                  continue;
+                }
               }
               for (var i = 0; i < strangerTopics.length; i++) {
-                strangerTopics[i] =
-                  config.topicsList[strangerTopics[i]].title;
+                try {
+                  strangerTopics[i] =
+                    config.topicsList[strangerTopics[i]].title;
+                } catch (err) {
+                  logger.err('Socket', 'Topic doesnt have title.');
+                  logger.err('socket^', err.message);
+                  continue;
+                }
               }
               for (var i = 0; i < commonTopics.length; i++) {
+                try {
                 commonTopics[i] = config.topicsList[commonTopics[i]].title;
+                } catch (err) {
+                  logger.err('Socket', 'Topic doesnt have title.');
+                  logger.err('socket^', err.message);
+                  continue;
+                }
               }
+
               var strangerData = {
                 username: strangerSocket.handshake.user.username,
                 commonTopics: commonTopics,
-                strangerTopics: selfTopics
+                strangerTopics: strangerData,
+                gravatarUrl: strangerSocket.handshake.user.gravatarUrl
               };
               var selfData = {
                 username: user.username,
                 commonTopics: commonTopics,
-                strangerTopics: strangerTopics
+                strangerTopics: selfTopics,
+                gravatarUrl: user.gravatarUrl
               };
               socket.emit('stranger:res', strangerData);
               strangerSocket.emit('stranger:res', selfData);

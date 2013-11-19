@@ -54,6 +54,7 @@ angular.module('talkie.controllers', []).
       $scope.stranger.username = stranger.username;
       $scope.stranger.commonTopics = stranger.commonTopics
       $scope.stranger.otherTopics = stranger.strangerTopics
+      $scope.stranger.gravatarUrl = stranger.gravatarUrl;
       if (stranger.commonTopics &&
           typeof stranger.commonTopics !== undefined &&
           stranger.commonTopics.length > 0){
@@ -94,6 +95,7 @@ angular.module('talkie.controllers', []).
       $scope.stranger.username = '';
       $scope.stranger.commonTopics = [];
       $scope.stranger.otherTopics = [];
+      $scope.stranger.gravatarUrl = '';
       titleS.clear();
     });
 
