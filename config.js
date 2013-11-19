@@ -122,6 +122,7 @@ io.set('authorization', function (hs, accept) {
             logger.err('Socket handshake',
                        'No user found with id in passport. ' +
                        session.passport.user);
+            session.destroy();
             accept('Error while handshaking.', false);
           } else {
             hs.user = user;

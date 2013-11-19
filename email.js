@@ -42,6 +42,7 @@ module.exports.sendMail = function (data) {
               logger.err('email',
                          err
                         );
+              logger.err('email^', data.to);
             } else {
               logger.info('email',
                           responseStatus.message
