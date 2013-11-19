@@ -88,14 +88,32 @@ module.exports = function (socket) {
                 }
               }
               for (var i = 0; i < selfTopics.length; i++) {
-                selfTopics[i] = config.topicsList[selfTopics[i]].title;
+                try {
+                  selfTopics[i] = config.topicsList[selfTopics[i]].title;
+                } catch (err) {
+                  logger.err('Socket', 'Topic doesnt have title.');
+                  logger.err('socket^', err.message);
+                  continue;
+                }
               }
               for (var i = 0; i < strangerTopics.length; i++) {
-                strangerTopics[i] =
-                  config.topicsList[strangerTopics[i]].title;
+                try {
+                  strangerTopics[i] =
+                    config.topicsList[strangerTopics[i]].title;
+                } catch (err) {
+                  logger.err('Socket', 'Topic doesnt have title.');
+                  logger.err('socket^', err.message);
+                  continue;
+                }
               }
               for (var i = 0; i < commonTopics.length; i++) {
+                try {
                 commonTopics[i] = config.topicsList[commonTopics[i]].title;
+                } catch (err) {
+                  logger.err('Socket', 'Topic doesnt have title.');
+                  logger.err('socket^', err.message);
+                  continue;
+                }
               }
 
               var strangerData = {
