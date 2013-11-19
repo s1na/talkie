@@ -6,10 +6,14 @@ module.exports.chat = function(req, res) {
   if (!req.user.gravatarUrl) {
     req.user.setGravatarUrl();
   }
+  //var friends = req.user.initOnline();
+  var friendsStr = "[{name: 'sina', state: 'online'}, {name: 'ali', state: 'offline'}\
+    , {name: 'vahid', state: 'offline'}]";
   var data = {
     development: req.development,
     user: req.user,
-    gravatarUrl: req.user.gravatarUrl
+    gravatarUrl: req.user.gravatarUrl,
+    friendsStr: friendsStr,
   };
   res.render('chat', data);
 };

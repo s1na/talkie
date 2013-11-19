@@ -17,6 +17,8 @@ angular.module('talkie.controllers', []).
     $scope.notif = notifS;
     $scope.loading = loadingS;
     $scope.reported = false;
+    $scope.friends = {};
+    $scope.friendshipRequested = false;
 
     $window.onfocus = function () {
       titleS.removeUnseenMsgs();
@@ -76,18 +78,23 @@ angular.module('talkie.controllers', []).
       $scope.reported = true;
     };
 
+    $scope.reqFriendship = function () {
+      socket.emit('friend:req');
+      $scope.friendshipRequested = true;
+    };
+
     $scope.exit = function () {
       $window.location = '/exit';
     };
 
-    socket.on('stranger:res', function(data) {
+    socket.on('stranger:res', function (data) {
       //userS.setStranger(data.fullName);
       $scope.setStranger(data);
       titleS.setStranger(data);
       loadingS.trigger();
     });
 
-    socket.on('stranger:disconnected', function(data) {
+    socket.on('stranger:disconnected', function (data) {
       $scope.msg.msgs.push({
         text: 'نفر مقابل گفتگو را ترک کرد.',
         from: 'server'
@@ -97,6 +104,15 @@ angular.module('talkie.controllers', []).
       $scope.stranger.otherTopics = [];
       $scope.stranger.gravatarUrl = '';
       titleS.clear();
+    });
+
+    socket.on('friend:req', function () {
+      alertify.confirm(
+        'طرف مقابل برای شما درخواست دوستی فرستاده است.',
+        function (res) {
+            socket.emit('friend:res', {response: res});
+        }
+      );
     });
 
     socket.on('system:error', function (data) {

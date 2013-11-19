@@ -8,12 +8,15 @@ html.fill(ng-app='talkie', lang='fa')
     block css
       link(rel='stylesheet', type='text/css', href='/static/css/bootstrap.min.css')
       link(rel='stylesheet', type='text/css', href='/static/css/chat.css')
+      link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.core.css')
+      link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.default.css')
   body.fill(dir='rtl', data-ng-controller='ChatCtrl')
     include top-nav.jade
 
     .row.fill(style="margin-left: 0; margin-right: 0;", data-ng-controller='MsgCtrl')
-      .col-sm-2.contact
-        p salam
+      .col-sm-2.contact(data-ng-init=('friends = ' + friendsStr))
+        .friends
+          .friend(ng-repeat='friend in friends', ng-class='friend.state', ng-bind='friend.name')
 
       .col-sm-8(style=" height: 100%")
         .row.messages-row

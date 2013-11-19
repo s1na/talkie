@@ -1,29 +1,8 @@
 var mongoose = require('mongoose')
-  , hash = require('./hash')
   , config = require('./config')
   , utils = require('./utils');
 
 // Schemas
-/*reportedSchema = new mongoose.Schema({
-  username: String,
-  reporters: [String]
-});
-
-reportedSchema.methods.add = function (by) {
-  if (!by) {
-    console.err('[Report] Reporter has no ip.');
-  } else {
-    if (this.reporters.indexOf(by) === -1) {
-      this.reporters.push(by);
-    }
-  }
-};
-
-bannedSchema = new mongoose.Schema({
-  username: String,
-  expires: Date
-});*/
-
 userSchema = new mongoose.Schema({
   username: { type: String, index: {unique: true}},
   firstname: String,
@@ -39,12 +18,13 @@ userSchema = new mongoose.Schema({
   banExpiration: Date,
   friends: [mongoose.Schema.Types.ObjectId],
   topics: [String],
-  gravatarUrl: String
+  gravatarUrl: String,
+  credits: {type: Number, default: 0},
 });
 
 userSchema.set('autoIndex', true);
 userSchema.methods.validPassword = function (password) {
-  return hash.validateHash(this.password, password);
+  return utils.validateHash(this.password, password);
 };
 
 userSchema.methods.report = function (by) {
@@ -80,14 +60,36 @@ userSchema.methods.remainingBanTime = function () {
   return utils.timeDifference(this.expires, new Date(Date.now()));
 };
 
-/*userSchema.methods.addFriend = function (user) {
-  if (!user) return;
-  if (this.friends.indexOf(user) !== -1) {
-    this.friends.push(user._id);
+userSchema.methods.addFriend = function (userId) {
+  if (!userId ||
+      typeof userId === undefined ||
+      userId === this.id
+     ) return false;
+  if (this.friends.indexOf(userId) === -1) {
+    this.friends.push(userId);
+    this.save();
+    return true;
   };
-  this.save();
+  return false;
 };
-*/
+
+userSchema.methods.removeFriend = function (userId) {
+  if (!userId || typeof userId === undefined) return false;
+  if (this.friends.indexOf(userId) !== -1) {
+    this.friends.splice(this.friends.indexOf(userId), 1);
+    this.save();
+    return true;
+  }
+  return false;
+};
+
+userSchema.methods.initOnline = function () {
+  var friendsStr = '';
+  for (var i = 0; i < this.friends.length; i++) {
+    friendsStr += "'" + this.friends[i];
+  }
+};
+
 userSchema.methods.addTopics = function (topics) {
   if (!topics || typeof topics === 'undefined') return;
   if (typeof topics === 'string') {
@@ -103,16 +105,12 @@ userSchema.methods.addTopics = function (topics) {
 
 userSchema.methods.setGravatarUrl = function () {
   this.gravatarUrl = 'http://gravatar.com/avatar/' +
-    hash.md5(this.email.trim().toLowerCase());
+    utils.md5(this.email.trim().toLowerCase());
   this.save();
 }
 
 // Models
-//Reported = mongoose.model('Reported', reportedSchema);
-//Banned = mongoose.model('Banned', bannedSchema);
 User = mongoose.model('User', userSchema);
 
 // Exports
-//module.exports.Reported = Reported;
-//module.exports.Banned = Banned;
 module.exports.User = User;

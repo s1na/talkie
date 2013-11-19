@@ -37,6 +37,27 @@ body {
   height: 100%;
 }
 
+.friends {
+  margin-top: 4em;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+.friend {
+  display: block;
+  width: 100%;
+  height: 1.5em;
+  border: 1px solid white;
+  &.online {
+    color: green;
+  }
+
+  &.offline {
+    color: blue;
+  }
+}
+
 //http://codemug.com/html/custom-scrollbars-using-css/
 body {
   width: 100%;

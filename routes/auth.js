@@ -4,7 +4,6 @@ var config = require('../config'),
     rdbLogger = config.rdbLogger,
     logger = require('../logger'),
     db = require('../db'),
-    hash = require('../hash'),
     User = db.User,
     sendMail = require('../email').sendMail,
     utils = require('../utils');
@@ -77,7 +76,7 @@ exports.signup = function (req, res) {
       username: req.body.username,
       gender: gender[req.body.gender],
       email: req.body.email,
-      password: hash.createHash(req.body.password),
+      password: utils.createHash(req.body.password),
       verified: false,
     });
     user.save(function (err, user) {

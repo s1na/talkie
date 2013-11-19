@@ -1,4 +1,5 @@
 if development
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')
   script(src='/static/lib/angular/angular.js')
   script(src='/static/lib/angular-socket-io/socket.js')
   script(src='/static/js/app.js')
@@ -7,6 +8,7 @@ if development
   script(src='/static/js/filters.js')
   script(src='/static/js/directives.js')
 else
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')
   script(src='/static/lib/angular/angular.min.js')
   script(src='/static/js/prod.min.js')
 

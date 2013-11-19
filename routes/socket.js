@@ -245,6 +245,42 @@ module.exports = function (socket) {
     }
   });
 
+  // Friendship
+  socket.on('friend:req', function (data) {
+    if (isLoggedIn(socket)) {
+      var res = getStrangerSocket(socket);
+
+      if (res.ok) {
+        res.strangerSocket.emit('friend:req');
+      }
+    } else {
+      emitError(socket);
+      return;
+    }
+  });
+
+  socket.on('friend:res', function (data) {
+    if (isLoggedIn(socket)) {
+      var res = getStrangerSocket(socket);
+
+      if (res.ok) {
+        // Accept
+        if (data['response']) {
+          //user.addFriend(res.strangerSocket.handshake.user.id);
+          //res.strangerSocket.handshake.user.addFriend(user.id);
+        // Deny
+        } else {
+          // Notify stranger.
+        }
+      } else {
+        // Notify user.
+      }
+    } else {
+      emitError(socket);
+      return;
+    }
+  });
+
   // Socket disconnected.
   socket.on('disconnect', function () {
     logger.info('socket', 'Socket disconnected, ' +
