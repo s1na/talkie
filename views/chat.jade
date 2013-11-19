@@ -14,6 +14,7 @@ html.fill(ng-app='talkie', lang='fa')
     .row.fill(style="margin-left: 0; margin-right: 0;", data-ng-controller='MsgCtrl')
       .col-sm-2.contact
         p salam
+
       .col-sm-8(style=" height: 100%")
         br
         br
@@ -22,10 +23,12 @@ html.fill(ng-app='talkie', lang='fa')
           .messages(data-scroll-btm)
             pre.message(ng-repeat='msg in msg.msgs', ng-class='msg.from', ng-bind='msg.text')
 
+
       .col-sm-2
         br
         br
         br
+
         .row
           include right-menu.jade
         .row

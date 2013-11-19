@@ -223,13 +223,6 @@ body {
 
 }
 
-.messages-row {
-  max-height: 90%;
-  margin-top: -15px;
-  position: absolute;
-  width: 98%;
-  height: 80%;
-}
 
 .input {
   height: 30%;
@@ -262,72 +255,104 @@ body {
   }
 
 }
+.messages-row {
+  max-height: 90%;
+  margin-top: -15px;
+  position: absolute;
+  width: 98%;
+  height: 80%;
+}
 
 .message {
-  position: relative;
-  background: @message-background-color;
-  border: 3px solid @message-border-color;
-  border-radius: 3px;
-  width: 80%;
-  margin: 5px;
-  padding-right: 15px;
-  padding-top: 10px
+  margin-top: 10px;
+  margin-bottom: 10px;
+  clear: both;
+  min-width: 20%;
 }
 
 .message.server {
-  border: 3px solid black;
-  width: 100%;
+  position: relative;
+  background: #ffffff;
+  border: 3px solid @message-border-color;
+  border-radius: 1em;
+  padding: 3px;
   margin: 0 auto;
+  width: 80%;
+  text-align: right;
 }
 
-.message.stranger:after, .message.stranger:before {
+.message.me {
+  position: relative;
+  background: #ffffff;
+  border: 3px solid @message-border-color;
+  border-radius: 0.2em;
+  padding: 3px;
+  float: left;
+  margin-left: 30px;
+  width: 80%;
+}
+
+.message.me:after, .message.me:before {
+  right: 100%;
   border: solid transparent;
   content: " ";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  left: 100%;
-}
-
-.message.stranger:after {
-  border-color: rgba(255, 255, 255, 0);
-  border-width: 10px;
-  top: 50%;
-  margin-top: -10px;
-  border-left-color: @message-background-color;
-}
-
-.message.stranger:before {
-  border-color: rgba(0, 0, 0, 0);
-  border-width: 14px;
-  top: 50%;
-  margin-top: -14px;
-  border-left-color: @message-border-color;
 }
 
 .message.me:after {
   border-color: rgba(255, 255, 255, 0);
-  border-width: 10px;
+  border-right-color: #ffffff;
+  border-width: 8px;
   top: 50%;
-  margin-top: -10px;
-  border-right-color: @message-background-color;
+  margin-top: -8px;
 }
 
 .message.me:before {
   border-color: rgba(0, 0, 0, 0);
-  border-width: 14px;
-  top: 50%;
-  margin-top: -14px;
   border-right-color: @message-border-color;
+  border-width: 12px;
+  top: 50%;
+  margin-top: -12px;
 }
 
-.message.me:after, .message.me:before {
+
+.message.stranger {
+  position: relative;
+  background: #ffffff;
+  border: 3px solid @message-border-color;
+  border-radius: 0.3em;
+  padding: 3px;
+  float: right;
+  margin-right: 30px;
+  width: 80%;
+  text-align: right;
+}
+
+.message.stranger:after, .message.stranger:before {
+  left: 100%;
   border: solid transparent;
   content: " ";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  right: 100%;
+}
+
+.message.stranger:after {
+  border-color: rgba(255, 255, 255, 0);
+  border-left-color: #ffffff;
+  border-width: 8px;
+  top: 50%;
+  margin-top: -8px;
+}
+
+.message.stranger:before {
+  border-color: rgba(0, 0, 0, 0);
+  border-left-color: @message-border-color;
+  border-width: 12px;
+  top: 50%;
+  margin-top: -12px;
 }
