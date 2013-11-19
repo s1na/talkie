@@ -1,0 +1,51 @@
+// For more details please see this link
+// http://codemug.com/html/custom-scrollbars-using-css/
+
+.make-ie-scrollbar() {
+  // Internet Explorer's Scrollbar Customization 
+  scrollbar-base-color: #C0C0C0;
+  scrollbar-base-color: #C0C0C0;
+  scrollbar-3dlight-color: #C0C0C0;
+  scrollbar-highlight-color: #C0C0C0;
+  scrollbar-track-color: #EBEBEB;
+  scrollbar-arrow-color: black;
+  scrollbar-shadow-color: #C0C0C0;
+  scrollbar-dark-shadow-color: #C0C0C0;
+}
+
+.make-webkit-scrollbar(){
+  // Google Chrome's Scrollbar Customization
+  ::-webkit-scrollbar { width: 8px; height: 8px;}
+  // ::-webkit-scrollbar-button {  background-color: red; }
+  ::-webkit-scrollbar-track {  background-color: @color-blue}
+  ::-webkit-scrollbar-track-piece { background-color: #ecf0f1 ;}
+  ::-webkit-scrollbar-thumb { height: 50px; background-color: @color-blue ; border-radius: 1em;}
+  // ::-webkit-scrollbar-corner { background-color: red;}
+}
+
+.make-moz-scrollbar(){
+  // Mozila Firefox's Scrollbar Customization
+  @-moz-document url-prefix(http://),url-prefix(https://) {
+    scrollbar {
+      -moz-appearance: none !important;
+      background: rgb(0,255,0) !important;
+    }
+    thumb,scrollbarbutton {
+      -moz-appearance: none !important;
+      background-color: rgb(0,0,255) !important;
+    }
+
+    thumb:hover,scrollbarbutton:hover {
+      -moz-appearance: none !important;
+      background-color: rgb(255,0,0) !important;
+    }
+
+    scrollbarbutton {
+      display: none !important;
+    }
+
+    scrollbar[orient="vertical"] {
+      min-width: 15px !important;
+    }
+  }
+}
