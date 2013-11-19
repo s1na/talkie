@@ -41,7 +41,7 @@ userSchema = new mongoose.Schema({
   topics: [String]
 });
 
-userSchema.set('autoIndex', false);
+userSchema.set('autoIndex', true);
 userSchema.methods.validPassword = function (password) {
   return hash.validateHash(this.password, password);
 };

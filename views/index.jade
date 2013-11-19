@@ -2,6 +2,8 @@ extends base
 
 block append css
   link(rel='stylesheet', type='text/css', href='/static/css/index.css')
+  link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.core.css')
+  link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.default.css')
 
 block body
   .row
@@ -17,11 +19,11 @@ block body
           .form-group
             label.sr-only(for='login-username')
             input#login-username.form-control(type='text', name='username',
-              placeholder='نام کاربری', ng-maxlength='20', required)
+              placeholder='نام کاربری', ng-maxlength='40', required)
           .form-group(style='margin-right: .1em;')
             label.sr-only(for='login-password')
             input#login-passord.form-control(type='password', name='password',
-              placeholder='رمز عبور', ng-maxlength='20', required)
+              placeholder='رمز عبور', ng-maxlength='40', required)
           //-
             .checkbox(disabled)
               input#login-remember-me(type='checkbox', name='rememberMe')
@@ -33,25 +35,29 @@ block body
       legend.
         عضویت در هورین
       .signup-form
-        form(method='post', action='/signup', name='signup-form', role='form')
+        form(method='post', action='/signup', name='signup-form', onsubmit='javascript: return validateSignup();' role='form')
           .form-group
             label.sr-only(for='signup-username')
             input#signup-username.form-control.input-lg(type='text', name='username',
-              placeholder='نام کاربری', ng-maxlength='20', required)
+              placeholder='نام کاربری', ng-maxlength='40', required)
           .form-group
             label.sr-only(for='signup-gender')
-            select#signup-gender.form-control.input-lg(name='gender', 
+            select#signup-gender.form-control.input-lg(name='gender',
               placeholder='جنسیت', required)
               option زن
               option مرد
           .form-group
             label.sr-only(for='signup-email')
             input#signup-email.form-control.input-lg(type='email', name='email',
-              placeholder='ایمیل', ng-maxlength='20', required)
+              placeholder='ایمیل', ng-maxlength='40', required)
           .form-group
             label.sr-only(for='signup-password')
             input#signup-password.form-control.input-lg(type='password', name='password',
-              placeholder='رمز‌عبور', ng-maxlength='20', required)
+              placeholder='رمز‌عبور', ng-maxlength='40', required)
+          .form-group
+            label.sr-only(for='signup-password-confirm')
+            input#signup-password-confirm.form-control.input-lg(type='password', name='passwordConfirm',
+              placeholder='رمز عبور را دوباره بنویسید', ng-maxlength='40', autocomplete='off', required)
           button.btn.btn-default.btn-lg.btn-block(type='submit')
             ثبت
 
@@ -80,6 +86,18 @@ block body
             a(href="/about")
               small درباره‌ی هورین
 
-block prepend bottom-js
+block append bottom-js
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')
   script(type='text/javascript').
     document.getElementById('login-username').focus();
+  script(type='text/javascript').
+    function validateSignup(event) {
+      var pass = document.getElementById('signup-password');
+      var passConfirm = document.getElementById('signup-password-confirm');
+      if (pass.value === passConfirm.value) {
+        return true;
+      } else {
+        alertify.error('رمز عبورهای وارد شده با هم تفاوت دارند.');
+        return false;
+      }
+    };

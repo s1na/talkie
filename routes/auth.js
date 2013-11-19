@@ -58,15 +58,18 @@ exports.signup = function (req, res) {
   if (typeof req.body.username !== 'string' ||
       typeof req.body.email !== 'string' ||
       typeof req.body.password !== 'string' ||
+      typeof req.body.passwordConfirm !== 'string' ||
       typeof req.body.gender !== 'string') {
     req.flash('error', 'لطفا دوباره تلاش بفرمایید.');
     res.redirect('/');
   } else if (!req.body.username.trim() ||
              !req.body.email.trim() ||
              !req.body.password.trim() ||
-             !req.body.password.trim() ||
+             !req.body.passwordConfirm.trim() ||
              !req.body.gender.trim() ||
-             !(req.body.gender in gender)) {
+             !(req.body.gender in gender) ||
+             !(req.body.password === req.body.passwordConfirm)
+            ) {
     req.flash('error', 'لطفا دوباره تلاش بفرمایید.');
     res.redirect('/');
   } else {
@@ -82,33 +85,38 @@ exports.signup = function (req, res) {
         logger.err('Index',
                    'Failed to create user.'
                   );
-      }
-    });
-    req.session.username = req.body.username;
-    req.session.save();
-
-    var verificationUrl = 'http://horin.ir/verify/' + user.id;
-
-    var data = {
-      to: req.body.email,
-      subject: 'تایید عضویت در هورین',
-      template: 'email-verification',
-      vars: {
-        verificationUrl: verificationUrl,
-        username: req.body.username
-      }
-    };
-    setTimeout(function () { sendMail(data); }, 2);
-
-    req.login(user, function(err) {
-      if (err) {
-        logger.error('signup', 'Error while logging user in.');
-        logger.error('signup', err);
+        logger.err('Index^',
+                   err);
+        req.flash('error', 'ساخت کاربر با مشکل برخورد کرد.');
+        return res.redirect('/');
       } else {
+        req.session.username = req.body.username;
+        req.session.save();
+
+        var verificationUrl = 'http://horin.ir/verify/' + user.id;
+
+        var data = {
+          to: req.body.email,
+          subject: 'تایید عضویت در هورین',
+          template: 'email-verification',
+          vars: {
+            verificationUrl: verificationUrl,
+            username: req.body.username
+          }
+        };
+        setTimeout(function () { sendMail(data); }, 2);
+
+        req.login(user, function(err) {
+          if (err) {
+            logger.error('signup', 'Error while logging user in.');
+            logger.error('signup', err);
+          } else {
+            return res.redirect('/verification');
+          }
+        });
         return res.redirect('/verification');
       }
     });
-    return res.redirect('/verification');
   }
 };
 
