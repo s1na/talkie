@@ -119,13 +119,13 @@ module.exports = function (socket) {
               var strangerData = {
                 username: strangerSocket.handshake.user.username,
                 commonTopics: commonTopics,
-                strangerTopics: selfTopics,
+                strangerTopics: strangerData,
                 gravatarUrl: strangerSocket.handshake.user.gravatarUrl
               };
               var selfData = {
                 username: user.username,
                 commonTopics: commonTopics,
-                strangerTopics: strangerTopics,
+                strangerTopics: selfTopics,
                 gravatarUrl: user.gravatarUrl
               };
               socket.emit('stranger:res', strangerData);
