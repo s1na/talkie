@@ -31,5 +31,6 @@ function md5(string) {
 
 module.exports = {
   createHash: createHash,
-  validateHash: validateHash
+  validateHash: validateHash,
+  md5: md5
 };

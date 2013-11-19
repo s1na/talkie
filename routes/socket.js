@@ -97,15 +97,18 @@ module.exports = function (socket) {
               for (var i = 0; i < commonTopics.length; i++) {
                 commonTopics[i] = config.topicsList[commonTopics[i]].title;
               }
+
               var strangerData = {
                 username: strangerSocket.handshake.user.username,
                 commonTopics: commonTopics,
-                strangerTopics: selfTopics
+                strangerTopics: selfTopics,
+                gravatarUrl: strangerSocket.handshake.user.gravatarUrl
               };
               var selfData = {
                 username: user.username,
                 commonTopics: commonTopics,
-                strangerTopics: strangerTopics
+                strangerTopics: strangerTopics,
+                gravatarUrl: user.gravatarUrl
               };
               socket.emit('stranger:res', strangerData);
               strangerSocket.emit('stranger:res', selfData);

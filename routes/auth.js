@@ -238,6 +238,7 @@ exports.verify = function (req, res) {
                     );
         }
       });
+      user.setGravatarUrl();
       req.login(user, function (err) {
         if (err) {
           logger.err('verify',

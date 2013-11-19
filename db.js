@@ -38,7 +38,8 @@ userSchema = new mongoose.Schema({
   banned: Boolean,
   banExpiration: Date,
   friends: [mongoose.Schema.Types.ObjectId],
-  topics: [String]
+  topics: [String],
+  gravatarUrl: String
 });
 
 userSchema.set('autoIndex', true);
@@ -99,6 +100,12 @@ userSchema.methods.addTopics = function (topics) {
   }
   this.save();
 };
+
+userSchema.methods.setGravatarUrl = function () {
+  this.gravatarUrl = 'http://gravatar.com/avatar/' +
+    hash.md5(this.email.trim().toLowerCase());
+  this.save();
+}
 
 // Models
 //Reported = mongoose.model('Reported', reportedSchema);
