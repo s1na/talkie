@@ -16,9 +16,6 @@ html.fill(ng-app='talkie', lang='fa')
         p salam
 
       .col-sm-8(style=" height: 100%")
-        br
-        br
-        br
         .row.messages-row
           .messages(data-scroll-btm)
             pre.message(ng-repeat='msg in msg.msgs', ng-class='msg.from', ng-bind='msg.text')
