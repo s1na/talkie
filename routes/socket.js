@@ -346,10 +346,10 @@ function isLoggedIn(socket) {
 }
 
 function emitError(socket) {
-  if (typeof socket !== 'undefined' || !socket) {
-    if (typeof socket.handshake !== 'undefined' || !socket.handshake) {
-      if (typeof socket.handshake.user !== 'undefined' ||
-          !socket.handshake.user) {
+  if (typeof socket !== 'undefined' && socket) {
+    if (typeof socket.handshake !== 'undefined' && socket.handshake) {
+      if (typeof socket.handshake.user !== 'undefined' &&
+          socket.handshake.user) {
         logger.info('socket', 'Some problem happend, emitting error.');
       } else {
         logger.err('socket', 'Socket lacking user data.');

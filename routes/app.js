@@ -3,17 +3,19 @@ var config = require('../config');
 
 module.exports.chat = function(req, res) {
   req.session.cookie.maxAge = config.memberSessionExpiration;
+  if (req.user.topics.length < 1) {
+    return res.redirect('/app/topics');
+  }
   if (!req.user.gravatarUrl) {
     req.user.setGravatarUrl();
   }
-  //var friends = req.user.initOnline();
-  var friendsStr = "[{name: 'sina', state: 'online'}, {name: 'ali', state: 'offline'}\
-    , {name: 'vahid', state: 'offline'}]";
+  //req.user.initOnline();
+  /*var friendsStr = "[{name: 'sina', state: 'online'}, {name: 'ali', state: 'offline'}\
+    , {name: 'vahid', state: 'offline'}]";*/
   var data = {
     development: req.development,
     user: req.user,
     gravatarUrl: req.user.gravatarUrl,
-    friendsStr: friendsStr,
   };
   res.render('chat', data);
 };
