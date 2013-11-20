@@ -41,22 +41,42 @@ body {
 .friends {
   margin-top: 4em;
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
   display: block;
-  text-align: center;
+  // overflow-y: auto;
+  // overflow-x: auto;
+  // .make-ie-scrollbar;
+  // .make-webkit-scrollbar;
+  // text-align: center;
 }
 
 .friend {
   display: block;
   width: 100%;
-  height: 1.5em;
-  border: 1px solid white;
+  height: 35px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  
+  // border: 1px solid white;
   &.online {
-    color: green;
+    color: white;
+    opacity: 0.9;
   }
 
   &.offline {
-    color: blue;
+    color: black;
+    opacity: 0.8;
   }
+
+  .name {
+    margin-right: 10px;
+  }
+}
+
+.friend:hover {
+  opacity: 1;
+  background-color: gray;
 }
 
 //http://codemug.com/html/custom-scrollbars-using-css/
@@ -187,7 +207,6 @@ body {
   margin-top: -12px;
 }
 
-
 .message.stranger {
   position: relative;
   background: @message-background-color;
@@ -226,3 +245,123 @@ body {
   margin-top: -12px;
 }
 
+.friends-loading {
+  position: fixed;
+  background-color: orange;
+  left: 0;
+  background-color: @loading-background-color;
+  opacity: 0.9;
+  display: block;
+  z-index: 9999;
+
+  .spinner {
+    margin-top: 2em;
+    height: 7em;
+    width: 7em;
+    position:relative;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border: @spinner-size solid @spinner-border-color;
+    border-radius: 100%;
+  }
+
+  .spinner:before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-top: @spinner-size solid @spinner-color;
+    border-left: @spinner-size solid transparent;
+    border-bottom: @spinner-size solid transparent;
+    border-right: @spinner-size solid transparent;
+    border-radius: 100%;
+  }
+
+}
+
+.loading {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: @loading-background-color;
+  opacity: 0.9;
+  display: block;
+  z-index: 9999;
+
+  p {
+    text-align: center;
+  }
+
+  .titr {
+    font-size: 3em;
+    text-align: center;
+  }
+
+  .spinner {
+    margin-top: 2em;
+    height: 7em;
+    width: 7em;
+    position:relative;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border: @spinner-size solid @spinner-border-color;
+    border-radius: 100%;
+  }
+
+  .spinner:before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-top: @spinner-size solid @spinner-color;
+    border-left: @spinner-size solid transparent;
+    border-bottom: @spinner-size solid transparent;
+    border-right: @spinner-size solid transparent;
+    border-radius: 100%;
+  }
+
+}
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
+
+@-moz-keyframes rotation {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(359deg);
+  }
+}
+
+@-o-keyframes rotation {
+  from {
+    -o-transform: rotate(0deg);
+  }
+  to {
+    -o-transform: rotate(359deg);
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

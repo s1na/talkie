@@ -14,10 +14,8 @@ html.fill(ng-app='talkie', lang='fa')
     include top-nav.jade
 
     .row.fill(style="margin-left: 0; margin-right: 0;", data-ng-controller='MsgCtrl')
-      .col-sm-2.contact(data-ng-init=('friends = ' + friendsStr))
-        .friends
-          .friend(ng-repeat='friend in friends', ng-class='friend.state', ng-bind='friend.name')
-
+      // col-sm-2 is in friends.jade
+      include friends.jade
       .col-sm-8(style=" height: 100%")
         .row.messages-row
           .messages(data-scroll-btm)
