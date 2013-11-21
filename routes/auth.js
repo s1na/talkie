@@ -96,11 +96,11 @@ exports.signup = function (req, res) {
                   );
         logger.err('Index^',
                    err);
-        if (err.indexOf('duplicate') !== -1) {
-          if (err.indexOf('$username') !== -1) {
+        if (err.message.indexOf('duplicate') !== -1) {
+          if (err.message.indexOf('$username') !== -1) {
             req.flash('error', 'این نام کاربری قبلا گرفته شده است.');
             return res.redirect('/');
-          } else if (err.indexOf('$email') !== -1) {
+          } else if (err.message.indexOf('$email') !== -1) {
             req.flash('error', 'این ایمیل قبلا ثبت شده است.');
             return res.redirect('/');
           }

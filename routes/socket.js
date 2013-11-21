@@ -19,9 +19,10 @@ module.exports = function (socket) {
     emitError(socket);
     return;
   }
-  // Add online
-
   var user = socket.handshake.user;
+
+  // Add online
+  //backend.addOnline(user, socket);
 
   rdb.sadd('chat:online', socket.id, rdbLogger);
   logger.info('socket',
