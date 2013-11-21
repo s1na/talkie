@@ -35,7 +35,8 @@ block body
             each topic, slug in suggestedTopics
               - var selectedStyle = ' border-color: #2980b9;'
               .col-md-3(style='float: right;')
-                input.thumbnail-checkbox(type='checkbox', name='selectedTopics', value=slug, style='display: none;')
+                input.thumbnail-checkbox(type='checkbox', name='selectedTopics',
+                  value=slug, style='display: none;', (topic.selected ? checked))
                 a.thumbnail(href='#', onclick='return toggleTopic(this);',
                   style=(topic.selected ? 'margin: .5em;' + selectedStyle : 'margin: .5em;'))
                   img(src=(topic.thumb ? topic.thumb : 'http://placehold.it/150&text=' + slug),

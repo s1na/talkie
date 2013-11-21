@@ -59,8 +59,8 @@ exports.signup = function (req, res) {
       typeof req.body.password !== 'string' ||
       typeof req.body.passwordConfirm !== 'string' ||
       typeof req.body.gender !== 'string') {
-    req.flash('error', 'لطفا دوباره تلاش بفرمایید.');
-    res.redirect('/');
+    req.flash('error', 'از پر کردن تمام فیلد‌ها اطمینان حاصل کنید.');
+    return res.redirect('/');
   } else if (!req.body.username.trim() ||
              !req.body.email.trim() ||
              !req.body.password.trim() ||
@@ -69,9 +69,19 @@ exports.signup = function (req, res) {
              !(req.body.gender in gender) ||
              !(req.body.password === req.body.passwordConfirm)
             ) {
-    req.flash('error', 'لطفا دوباره تلاش بفرمایید.');
-    res.redirect('/');
+    req.flash('error', 'از پر کردن تمام فیلد‌ها اطمینان حاصل کنید.');
+    return res.redirect('/');
+  } else if (req.body.email.indexOf('@') === -1 ||
+             req.body.email.indexOf('.', req.body.email.indexOf('@')) === -1) {
+    req.flash('error', 'لطفا ایمیل وارد شده را دوباره بررسی کنید.');
+    return res.redirect('/');
+  } else if (req.body.email.toLowerCase().indexOf('www.') === 0) {
+    req.flash('error',
+              'آدرس ایمیل با www. شروع نمی‌شود. دوباره بررسی بفرمایید.'
+             );
+    return res.redirect();
   } else {
+    req.body.email = req.body.email.toLowerCase();
     var user = new User({
       username: req.body.username,
       gender: gender[req.body.gender],
@@ -86,8 +96,18 @@ exports.signup = function (req, res) {
                   );
         logger.err('Index^',
                    err);
-        req.flash('error', 'ساخت کاربر با مشکل برخورد کرد.');
-        return res.redirect('/');
+        if (err.message.indexOf('duplicate') !== -1) {
+          if (err.message.indexOf('$username') !== -1) {
+            req.flash('error', 'این نام کاربری قبلا گرفته شده است.');
+            return res.redirect('/');
+          } else if (err.message.indexOf('$email') !== -1) {
+            req.flash('error', 'این ایمیل قبلا ثبت شده است.');
+            return res.redirect('/');
+          }
+        } else {
+          req.flash('error', 'ساخت کاربر با مشکل برخورد کرد.');
+          return res.redirect('/');
+        }
       } else {
         req.session.username = req.body.username;
         req.session.save();

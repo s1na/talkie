@@ -2,17 +2,15 @@
  * Serve content over a socket
  */
 
-var config = require('../config');
-var rdb = config.rdb;
-var rdbLogger = config.rdbLogger;
-var io = config.io;
-var maxReports = config.maxReports;
-var banExpiration = config.banExpiration;
-
-var db = require('../db');
-//var Reported = db.Reported;
-
-var logger = require('../logger');
+var config = require('../config')
+  , rdb = config.rdb
+  , rdbLogger = config.rdbLogger
+  , io = config.io
+  , backend = require('../backend')
+  , maxReports = config.maxReports
+  , banExpiration = config.banExpiration
+  , db = require('../db')
+  , logger = require('../logger');
 
 module.exports = function (socket) {
 
@@ -22,6 +20,9 @@ module.exports = function (socket) {
     return;
   }
   var user = socket.handshake.user;
+
+  // Add online
+  //backend.addOnline(user, socket);
 
   rdb.sadd('chat:online', socket.id, rdbLogger);
   logger.info('socket',
@@ -75,21 +76,26 @@ module.exports = function (socket) {
               var selfTopics = user.topics;
               var strangerTopics = strangerSocket.handshake.user.topics;
               var commonTopics = [];
+              var selfTopicsTranslated = [];
+              var strangerTopicsTranslated = [];
               for (var i = 0; i < selfTopics.length && selfTopics.length > 0; i++) {
                 for (var j = 0; j < strangerTopics.length && strangerTopics.length > 0; j++) {
+                  var match = false;
                   if (selfTopics[i] == strangerTopics[j]) {
                     commonTopics.push(selfTopics[i]);
-                    selfTopics.splice(selfTopics.indexOf(selfTopics[i]), 1);
+                    /*selfTopics.splice(selfTopics.indexOf(selfTopics[i]), 1);
                     strangerTopics.splice(strangerTopics.indexOf(strangerTopics[i]), 1);
                     i--;
-                    j--;
+                    j--;*/
                     continue;
                   }
                 }
               }
               for (var i = 0; i < selfTopics.length; i++) {
                 try {
-                  selfTopics[i] = config.topicsList[selfTopics[i]].title;
+                  if (commonTopics.indexOf(selfTopics[i]) === -1) {
+                    selfTopicsTranslated.push(config.topicsList[selfTopics[i]].title);
+                  }
                 } catch (err) {
                   logger.err('Socket', 'Topic doesnt have title.');
                   logger.err('socket^', err.message);
@@ -98,8 +104,11 @@ module.exports = function (socket) {
               }
               for (var i = 0; i < strangerTopics.length; i++) {
                 try {
-                  strangerTopics[i] =
-                    config.topicsList[strangerTopics[i]].title;
+                  if (commonTopics.indexOf(strangerTopics[i]) === -1) {
+                    strangerTopicsTranslated.push(
+                      config.topicsList[strangerTopics[i]].title
+                    );
+                  }
                 } catch (err) {
                   logger.err('Socket', 'Topic doesnt have title.');
                   logger.err('socket^', err.message);
@@ -119,13 +128,13 @@ module.exports = function (socket) {
               var strangerData = {
                 username: strangerSocket.handshake.user.username,
                 commonTopics: commonTopics,
-                strangerTopics: strangerData,
+                strangerTopics: strangerTopicsTranslated,
                 gravatarUrl: strangerSocket.handshake.user.gravatarUrl
               };
               var selfData = {
                 username: user.username,
                 commonTopics: commonTopics,
-                strangerTopics: selfTopics,
+                strangerTopics: selfTopicsTranslated,
                 gravatarUrl: user.gravatarUrl
               };
               socket.emit('stranger:res', strangerData);
@@ -338,10 +347,10 @@ function isLoggedIn(socket) {
 }
 
 function emitError(socket) {
-  if (typeof socket !== 'undefined' || !socket) {
-    if (typeof socket.handshake !== 'undefined' || !socket.handshake) {
-      if (typeof socket.handshake.user !== 'undefined' ||
-          !socket.handshake.user) {
+  if (typeof socket !== 'undefined' && socket) {
+    if (typeof socket.handshake !== 'undefined' && socket.handshake) {
+      if (typeof socket.handshake.user !== 'undefined' &&
+          socket.handshake.user) {
         logger.info('socket', 'Some problem happend, emitting error.');
       } else {
         logger.err('socket', 'Socket lacking user data.');
