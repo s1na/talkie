@@ -7,12 +7,12 @@
       p.text-muted
         b علاقه‌مند به:
       p.text-muted(data-ng-bind="stranger.otherTopicsString")
-    
+
     .common-topics(data-ng-show='stranger.commonTopics.length > 0')
       p.text-muted
         b مشترک با شما در:
       p.text-muted(data-ng-bind='stranger.commonTopicsString')
-    
+
     button.btn.btn-sm.btn-danger(type="button", data-ng-click='report()',
       data-ng-disabled="reported", style='margin: 0 auto;') گزارش
     button.btn.btn-sm.btn-success(type='button',
