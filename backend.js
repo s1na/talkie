@@ -76,6 +76,15 @@ var addOnline = function (user, socket) {
 
 var remOnline = function (user, sid) {
   if (sid === 'all') {
+    isOnline(user, function (online, sockets) {
+      if (online) {
+        var friendSocket;
+        for (var i = 0; i < sockets.length; i++) {
+          friendSocket = io.sockets.socket(sockets[i]);
+          friendSocket.emit('system:error');
+        }
+      }
+    });
     rdb.del('users:sockets:' + user.id);
   } else {
     rdb.lrem('users:sockets:' + user.id, '0', sid);

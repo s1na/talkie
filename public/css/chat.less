@@ -44,6 +44,7 @@ body {
   margin-right: 0;
   margin-left: 0;
   display: block;
+  cursor: pointer;
   // overflow-y: auto;
   // overflow-x: auto;
   // .make-ie-scrollbar;
@@ -65,8 +66,8 @@ body {
   }
 
   &.offline {
-    color: black;
-    opacity: 0.8;
+    color: #95a5a6;
+    opacity: 0.7;
   }
 
   .name {
@@ -74,9 +75,14 @@ body {
   }
 }
 
-.friend:hover {
+.friend.online:hover {
   opacity: 1;
-  background-color: gray;
+  background-color: #34495e;
+}
+
+.friend.offline:hover {
+  opacity: 0.8;
+  background-color: #34495e;
 }
 
 //http://codemug.com/html/custom-scrollbars-using-css/

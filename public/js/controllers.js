@@ -110,7 +110,6 @@ angular.module('talkie.controllers', []).
     socket.on('friends:update', function (data) {
       $scope.waitingForFriends = false;
       for (var i = 0; i < data.length; i++) {
-        console.log(data[i].state);
         if (data[i] in $scope.friends) {
           $scope.friends[data[i].name].state = data[i].state;
         } else {
