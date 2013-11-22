@@ -57,15 +57,19 @@ module.exports = function (socket) {
           if (!reply) {
             rdb.sadd('chat:waiting', socket.id);
           } else {
-            rdb.srem('chat:waiting', reply);
-            logger.info('socket', 'Stranger found, ' + reply);
-
             var strangerSocket = io.sockets.socket(reply);
             if (isSocketValid(strangerSocket)) {
               if (!isSocketValid(socket)) {
                 emitError(socket);
                 return;
               }
+              if (strangerSocket.handshake.user.id === user.id) {
+                rdb.sadd('chat:waiting', socket.id);
+                return;
+              }
+              rdb.srem('chat:waiting', reply);
+              logger.info('socket', 'Stranger found, ' + reply);
+
               socket.set('strangerSID', reply);
               strangerSocket.set('strangerSID', socket.id);
 

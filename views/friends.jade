@@ -1,5 +1,7 @@
 .col-sm-2.contact
   .friends
+    p(data-ng-show='friends.length < 1')
+      دوستی برای نمایش وجود ندارد.
     .friend(data-ng-repeat='friend in friends', data-ng-class='friend.state')
-      img(src="/static/img/virgin/anon1.jpg", width="35px", height="35px")
+      img(data-ng-src="{{ friend.gravatarUrl }}", width="35px", height="35px")
       span.name {{ friend.name }}
