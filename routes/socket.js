@@ -185,15 +185,7 @@ module.exports = function (socket) {
 
         if (res.ok) {
           if (isSocketValid(res.strangerSocket)) {
-            User.findById(uid, function (err, user_) {
-              if (err) {
-                logger.err('report', err);
-              } else if (!user_) {
-                logger.err('report', 'Cant get user for report.');
-              } else {
-                user_.report(user);
-              }
-            });
+            res.strangerSocket.handshake.user.report(user);
           } else {
             logger.err('socket', 'stranger socket not valid for report.');
           }
