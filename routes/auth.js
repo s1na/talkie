@@ -1,12 +1,13 @@
 
-var config = require('../config'),
-    rdb = config.rdb,
-    rdbLogger = config.rdbLogger,
-    logger = require('../logger'),
-    db = require('../db'),
-    User = db.User,
-    sendMail = require('../email').sendMail,
-    utils = require('../utils');
+var config = require('../config')
+  , rdb = config.rdb
+  , rdbLogger = config.rdbLogger
+  , logger = require('../logger')
+  , db = require('../db')
+  , User = db.User
+  , sendMail = require('../email').sendMail
+  , utils = require('../utils')
+  , backend = require('../backend');
 
 
 exports.auth = function (req, res) {
@@ -313,6 +314,9 @@ exports.exit = function (req, res) {
     }
     req.session.destroy();
   }*/
+  if (req.user && typeof req.user !== 'undefined') {
+    backend.remOnline(req.user, 'all');
+  }
   req.logout();
   res.redirect('/');
 };

@@ -18,6 +18,7 @@ angular.module('talkie.controllers', []).
     $scope.loading = loadingS;
     $scope.reported = false;
     $scope.friends = {};
+    $scope.waitingForFriends = true;
     $scope.friendshipRequested = false;
 
     $window.onfocus = function () {
@@ -106,6 +107,18 @@ angular.module('talkie.controllers', []).
       titleS.clear();
     });
 
+    socket.on('friends:update', function (data) {
+      $scope.waitingForFriends = false;
+      for (var i = 0; i < data.length; i++) {
+        console.log(data[i].state);
+        if (data[i] in $scope.friends) {
+          $scope.friends[data[i].name].state = data[i].state;
+        } else {
+          $scope.friends[data[i].name] = data[i];
+        }
+      }
+    });
+
     socket.on('friend:req', function () {
       alertify.confirm(
         'طرف مقابل برای شما درخواست دوستی فرستاده است.',
@@ -113,6 +126,10 @@ angular.module('talkie.controllers', []).
             socket.emit('friend:res', {response: res});
         }
       );
+    });
+
+    socket.on('friend:dec', function () {
+      alertify.log('طرف مقابل درخواست دوستی شما را نپذیرفتند.');
     });
 
     socket.on('system:error', function (data) {

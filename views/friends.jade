@@ -1,5 +1,5 @@
-.col-sm-2.contact(data-ng-init=('friends = ' + friendsStr))
+.col-sm-2.contact
   .friends
     .friend(data-ng-repeat='friend in friends', data-ng-class='friend.state')
-      img(src="/static/img/virgin/anon1.jpg", width="35px", height="35px") 
+      img(src="/static/img/virgin/anon1.jpg", width="35px", height="35px")
       span.name {{ friend.name }}

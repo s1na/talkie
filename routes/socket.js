@@ -22,9 +22,8 @@ module.exports = function (socket) {
   var user = socket.handshake.user;
 
   // Add online
-  //backend.addOnline(user, socket);
+  backend.addOnline(user, socket);
 
-  rdb.sadd('chat:online', socket.id, rdbLogger);
   logger.info('socket',
               'New socket, ' + socket.id + ' ' + user.username
              );
@@ -141,7 +140,6 @@ module.exports = function (socket) {
               strangerSocket.emit('stranger:res', selfData);
             } else {
               if (typeof strangerSocket.id !== 'undefined') {
-                rdb.srem('chat:online', strangerSocket.id, rdbLogger);
                 strangerSocket.disconnect('Weird Socket');
               }
               rdb.sadd('chat:waiting', socket.id);
@@ -275,11 +273,12 @@ module.exports = function (socket) {
       if (res.ok) {
         // Accept
         if (data['response']) {
-          //user.addFriend(res.strangerSocket.handshake.user.id);
-          //res.strangerSocket.handshake.user.addFriend(user.id);
+          user.addFriend(res.strangerSocket.handshake.user.id);
+          res.strangerSocket.handshake.user.addFriend(user.id);
         // Deny
         } else {
           // Notify stranger.
+          res.strangerSocket.emit('friend:dec');
         }
       } else {
         // Notify user.
@@ -294,8 +293,8 @@ module.exports = function (socket) {
   socket.on('disconnect', function () {
     logger.info('socket', 'Socket disconnected, ' +
                 socket.id + ' ' + user.username);
-    rdb.srem('chat:online', socket.id, rdbLogger);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
+    backend.remOnline(user, socket.id);
     var res = getStrangerSocket(socket);
 
     if (res.ok) {

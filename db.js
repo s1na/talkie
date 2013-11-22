@@ -60,34 +60,31 @@ userSchema.methods.remainingBanTime = function () {
   return utils.timeDifference(this.expires, new Date(Date.now()));
 };
 
-userSchema.methods.addFriend = function (userId) {
-  if (!userId ||
-      typeof userId === undefined ||
-      userId === this.id
+userSchema.methods.addFriend = function (uid) {
+  if (!uid ||
+      typeof uid === undefined ||
+      uid === this.uid
      ) return false;
-  if (this.friends.indexOf(userId) === -1) {
-    this.friends.push(userId);
+  if (this.friends.indexOf(uid) === -1) {
+    this.friends.push(uid);
     this.save();
     return true;
   };
   return false;
 };
 
-userSchema.methods.removeFriend = function (userId) {
-  if (!userId || typeof userId === undefined) return false;
-  if (this.friends.indexOf(userId) !== -1) {
-    this.friends.splice(this.friends.indexOf(userId), 1);
+userSchema.methods.removeFriend = function (uid) {
+  if (!uid || typeof uid === undefined) return false;
+  if (this.friends.indexOf(uid) !== -1) {
+    this.friends.splice(this.friends.indexOf(uid), 1);
     this.save();
     return true;
   }
   return false;
 };
 
-userSchema.methods.initOnline = function () {
-  var friendsStr = '';
-  for (var i = 0; i < this.friends.length; i++) {
-    friendsStr += "'" + this.friends[i];
-  }
+userSchema.methods.getFriends = function (cb) {
+  this.model('User').find().where('_id').in(this.friends).exec(cb);
 };
 
 userSchema.methods.addTopics = function (topics) {
