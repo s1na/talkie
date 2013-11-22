@@ -14,12 +14,14 @@ block body
         .alert.alert-danger= message
       legend.
         برای یافتن فردی جهت چت تصادفی، وارد شوید!
+      p
+        اگر عضو هستید، با ایمیل و رمز عبور خود وارد شوید.
       .login-form
         form.form-inline(method='post', action='/login', name='login-form', role='form')
           .form-group
-            label.sr-only(for='login-username')
-            input#login-username.form-control(type='text', name='username',
-              placeholder='نام کاربری', ng-maxlength='40', required)
+            label.sr-only(for='login-email')
+            input#login-email.form-control(type='email', name='email',
+              placeholder='ایمیل', ng-maxlength='40', required)
           .form-group(style='margin-right: .1em;')
             label.sr-only(for='login-password')
             input#login-passord.form-control(type='password', name='password',
@@ -37,10 +39,18 @@ block body
         عضویت در هورین
       .signup-form
         form(method='post', action='/signup', name='signup-form', onsubmit='javascript: return validateSignup();' role='form')
-          .form-group
-            label.sr-only(for='signup-username')
-            input#signup-username.form-control.input-lg(type='text', name='username',
-              placeholder='نام کاربری', ng-maxlength='40', required)
+          .row
+            .col-md-6.col-md-push-6
+              .form-group
+                label.sr-only(for='signup-firstname')
+                input#signup-firstname.form-control.input-lg(type='text', name='firstname',
+                  placeholder='نام', ng-maxlength='40', required)
+            .col-md-6.col-md-pull-6
+              .form-group
+                label.sr-only(for='signup-lastname')
+                input#signup-lastname.form-control.input-lg(type='text', name='lastname',
+                  placeholder='نام خوانوادگی', ng-maxlength='40', required)
+
           .form-group
             label.sr-only(for='signup-gender')
             select#signup-gender.form-control.input-lg(name='gender',
@@ -90,13 +100,34 @@ block body
 block append bottom-js
   script(src='/static/lib/alertify.js/lib/alertify.min.js')
   script(type='text/javascript').
-    document.getElementById('login-username').focus();
+    document.getElementById('login-email').focus();
+
   script(type='text/javascript').
     function validateSignup(event) {
       var pass = document.getElementById('signup-password');
       var passConfirm = document.getElementById('signup-password-confirm');
+
+      var firstname = document.getElementById('signup-firstname');
+      var lastname = document.getElementById('signup-lastname');
+
       if (pass.value === passConfirm.value) {
-        return true;
+        if (firstname.value && lastname.value) {
+          var firstMatch = firstname.value.match(/^[\u0600-\u06FF\ \‌]+$/);
+          var lastMatch = lastname.value.match(/^[\u0600-\06FF\ \‌]+$/);
+          if (firstMatch && lastMatch) {
+            return true;
+          } else {
+            alertify.error(
+              'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+              );
+            return false;
+          }
+        } else {
+          alertify.error(
+            'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+            );
+          return false;
+        }
       } else {
         alertify.error('رمز عبورهای وارد شده با هم تفاوت دارند.');
         return false;

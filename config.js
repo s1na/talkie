@@ -66,6 +66,7 @@ var db = mongoose.connection;
 db.on('error', function (err) {
   logger.err('mongoose connection',
              'Error while connecting to mongodb.');
+  logger.err('mongoose connection^', err);
   throw "MongoDB connection error.";
 });
 

@@ -55,25 +55,28 @@ exports.signup = function (req, res) {
     'مرد': 'M',
     'زن': 'F',
   };
-  if (typeof req.body.username !== 'string' ||
+  if (typeof req.body.firstname !== 'string' ||
+      typeof req.body.lastname !== 'string' ||
       typeof req.body.email !== 'string' ||
       typeof req.body.password !== 'string' ||
       typeof req.body.passwordConfirm !== 'string' ||
       typeof req.body.gender !== 'string') {
     req.flash('error', 'از پر کردن تمام فیلد‌ها اطمینان حاصل کنید.');
     return res.redirect('/');
-  } else if (!req.body.username.trim() ||
+  } else if (!req.body.firstname.trim() ||
+             !req.body.lastname.trim() ||
              !req.body.email.trim() ||
-             !req.body.password.trim() ||
-             !req.body.passwordConfirm.trim() ||
+             req.body.password.length === 0 ||
+             req.body.passwordConfirm.length === 0 ||
              !req.body.gender.trim() ||
-             !(req.body.gender in gender) ||
-             !(req.body.password === req.body.passwordConfirm)
+             !(req.body.gender in gender)
             ) {
     req.flash('error', 'از پر کردن تمام فیلد‌ها اطمینان حاصل کنید.');
     return res.redirect('/');
-  } else if (req.body.email.indexOf('@') === -1 ||
-             req.body.email.indexOf('.', req.body.email.indexOf('@')) === -1) {
+  } else if (req.body.password !== req.body.passwordConfirm) {
+    req.flash('error', 'رمز‌های عبور وارد شده با یکدیگر همخوانی ندارند.');
+    return res.redirect('/');
+  } else if (!req.body.email.toLowerCase().match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)) {
     req.flash('error', 'لطفا ایمیل وارد شده را دوباره بررسی کنید.');
     return res.redirect('/');
   } else if (req.body.email.toLowerCase().indexOf('www.') === 0) {
@@ -82,9 +85,19 @@ exports.signup = function (req, res) {
              );
     return res.redirect();
   } else {
+    var firstMatch = req.body.firstname.match(/^[\u0600-\u06FF\ \‌]+$/);
+    var lastMatch = req.body.lastname.match(/^[\u0600-\u06FF\ \‌]+$/);
+    if (!(firstMatch && lastMatch)) {
+      req.flash('error',
+        'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+      );
+      return res.redirect('/');
+    }
+
     req.body.email = req.body.email.toLowerCase();
     var user = new User({
-      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       gender: gender[req.body.gender],
       email: req.body.email,
       password: utils.createHash(req.body.password),
@@ -110,9 +123,6 @@ exports.signup = function (req, res) {
           return res.redirect('/');
         }
       } else {
-        req.session.username = req.body.username;
-        req.session.save();
-
         var verificationUrl = 'http://horin.ir/verify/' + user.id;
 
         var data = {
@@ -121,7 +131,7 @@ exports.signup = function (req, res) {
           template: 'email-verification',
           vars: {
             verificationUrl: verificationUrl,
-            username: req.body.username
+            name: req.body.name
           }
         };
         setTimeout(function () { sendMail(data); }, 2);
@@ -179,7 +189,7 @@ exports.verificationResend = function (req, res) {
         template: 'email-verification',
         vars: {
           verificationUrl: verificationUrl,
-          username: req.user.username
+          name: req.user.name
         }
       };
       setTimeout(function () { sendMail(data); }, 2);
@@ -198,7 +208,7 @@ exports.verificationResend = function (req, res) {
           template: 'email-verification',
           vars: {
             verificationUrl: verificationUrl,
-            username: req.user.username
+            name: req.user.name
           }
         };
         setTimeout(function () { sendMail(data); }, 2);
@@ -216,28 +226,6 @@ exports.verificationResend = function (req, res) {
 };
 
 exports.verify = function (req, res) {
-  /*if (typeof req.session === 'undefined') {
-    res.redirect('/');
-  } else if (typeof req.session.username !== 'string') {
-    res.redirect('/');
-  } else {
-    User.findOne({username: req.session.username}, function (err, user) {
-      if (err || !user) {
-        logger.err('Index',
-                   'Couldnt get user to validate.'
-                  );
-      } else {
-        user.update({validated: true}, function (err, user) {
-          if (err || !user) {
-            logger.err('index',
-                       'Coulnt set validated to true in validation.'
-                      );
-          }
-        });
-      }
-    });
-  }
-  res.redirect('/chat');*/
   var key = req.params.key;
   User.findOne({ _id: key }, function (err, user) {
     if (err) {
@@ -272,37 +260,45 @@ exports.verify = function (req, res) {
   });
 };
 
-exports.login = function (req, res) {
-  if (
-    typeof req.body.username !== 'string' ||
-    typeof req.body.password !== 'string' ||
-    !req.body.username.trim() ||
-    !req.body.password.trim()
-  ) {
-    logger.err('login',
-               'Invalid username given.'
-              );
-    res.redirect('/');
-  } else {
-    User.findOne({username: req.body.username}, function (err, user) {
-      if (err || !username) {
-        logger.info('login',
-                    'Couldnt find username.'
-                   );
+exports.setName = function (req, res) {
+  if (req.method === 'GET') {
+    if (req.user.name) {
+      return res.redirect('/chat');
+    }
+    var data = {};
+    var flashes = req.flash('error');
+    if (flashes && flashes.length > 0) {
+      data['message'] = flashes[0];
+    }
+    res.render('set-name', data);
+  } else if (req.method === 'POST') {
+    if (!req.body.firstname ||
+        !req.body.lastname ||
+        typeof req.body.firstname !== 'string' ||
+        typeof req.body.lastname !== 'string' ||
+        !req.body.firstname.trim() ||
+        !req.body.lastname.trim()) {
+      req.flash('error', 'لطفا دوباره تمام فیلد‌ها را بررسی کنید.');
+      return res.redirect('set-name');
+    } else {
+      if (!req.user || typeof req.user === 'undefined') {
+        return res.redirect('/');
       } else {
-        if (user.verified) {
-          if (req.body.password === user.password) {
-            req.session.loggedIn = true;
-            req.session.username = user.username;
-            res.redirect('/chat');
-          } else {
-            res.redirect('/');
-          }
+        var firstMatch = req.body.firstname.match(/^[\u0600-\u06FF\ \‌]+$/);
+        var lastMatch = req.body.lastname.match(/^[\u0600-\u06FF\ \‌]+$/);
+        if (firstMatch && lastMatch) {
+          req.user.firstname = req.body.firstname;
+          req.user.lastname = req.body.lastname;
+          req.user.save();
+          return res.redirect('/chat');
         } else {
-          res.redirect('/verification');
+          req.flash('error',
+            'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+          );
+          return res.redirect('/set-name');
         }
       }
-    });
+    }
   }
 };
 

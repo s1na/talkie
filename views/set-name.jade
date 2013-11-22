@@ -1,0 +1,63 @@
+extends base
+
+block append css
+  link(rel='stylesheet', type='text/css', href='/static/css/common.css')
+
+block page_title
+  title هورین - تغییر نام
+
+block body
+  .row
+    .col-md-8.col-md-offset-2
+      if message
+        .alert.alert-danger= message
+      legend
+        p
+          تخصیص نام
+      در راستای تغییراتی که در هورین رخ داده است، از کاربران نام آن‌ها گرفته می‌شود. همچنین از این
+      به بعد از ایمیل برای ورود به سایت استفاده باید کرد.
+      br
+      br
+  .row
+    .col-md-5.col-md-offset-5
+      نام:
+      .set-name-form(style='display: inline;')
+        form.form-inline(method='post', action='/set-name', name='set-name-form', role='form')
+          .row
+            .col-md-4.col-md-push-8
+              .form-group
+                label.sr-only(for='set-name-firstname')
+                input#set-name-firstname.form-control(type='text', name='firstname',
+                  placeholder='نام', ng-maxlength='40', required)
+            .col-md-4
+              .form-group
+                label.sr-only(for='set-name-lastname')
+                input#set-name-lastname.form-control(type='text', name='lastname',
+                  placeholder='نام خوانوادگی', ng-maxlength='40', required)
+            .col-md-1.col-md-pull-6
+              button.btn.btn-primary(type='submit', style='float: left;')
+                تخصیص نام
+
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')
+  script(type='text/javascript').
+    function validateForm() {
+      var firstname = document.getElementById('set-name-firstname');
+      var lastname = document.getElementById('set-name-lastname');
+      if (firstname.value && lastname.value) {
+        var firstMatch = firstname.value.match(/^[\u0600-\u06FF\ \‌]+$/);
+        var lastMatch = lastname.value.match(/^[\u0600-\u06FF\ \‌]+$/);
+        if (firstMatch && lastMatch) {
+          return true;
+        } else {
+          alertify.error(
+            'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+            );
+          return false;
+        }
+      } else {
+        alertify.error(
+          'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+          );
+        return false;
+      }
+    }

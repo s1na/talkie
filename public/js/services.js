@@ -10,7 +10,7 @@ angular.module('talkie.services', []).
   service('userS', ['$http', '$q', function ($http, $q) {
     var user;
     this.stranger = {
-      username: '',
+      name: '',
       commonTopics: [],
       otherTopics: [],
     };
@@ -37,7 +37,7 @@ angular.module('talkie.services', []).
     };
 
     this.setStranger = function (name, commonTopics, otherTopics) {
-      this.stranger.username = name;
+      this.stranger.name = name;
       this.stranger.commonTopics = commonTopics;
       this.stranger.otherTopics = otherTopics;
     };
@@ -84,11 +84,11 @@ angular.module('talkie.services', []).
     this.unseenMsgs = 0;
 
     this.setStranger = function (stranger) {
-      if (!stranger.username) {
+      if (!stranger.name) {
         this.title = this.defaultTitle;
       } else {
         this.removeUnseenMsgs();
-        this.title = this.title + ' - ' + stranger.username;
+        this.title = this.title + ' - ' + stranger.name;
       }
     };
 

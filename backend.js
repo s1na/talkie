@@ -44,7 +44,7 @@ var addOnline = function (user, socket) {
           isOnline(friend, function (online, sockets) {
             if (online) {
               friends.push({
-                name: friend.username,
+                name: friend.name,
                 gravatarUrl: friend.gravatarUrl,
                 state: 'online'
               });
@@ -52,14 +52,14 @@ var addOnline = function (user, socket) {
               for (var j = 0; j < sockets.length; j++) {
                 friendSocket = io.sockets.socket(sockets[j]);
                 friendSocket.emit('friends:update', [{
-                  name: user.username,
+                  name: user.name,
                   gravatarUrl: user.gravatarUrl,
                   state: 'online',
                 }]);
               }
             } else {
               friends.push({
-                name: friend.username,
+                name: friend.name,
                 gravatarUrl: friend.gravatarUrl,
                 state: 'offline'
               });
@@ -103,7 +103,7 @@ var remOnline = function (user, sid) {
               for (var j = 0; j < sockets.length; j++) {
                 friendSocket = io.sockets.socket(sockets[j]);
                 friendSocket.emit('friends:update', [{
-                  name: user.username,
+                  name: user.name,
                   gravatarUrl: user.gravatarUrl,
                   state: 'offline',
                 }]);

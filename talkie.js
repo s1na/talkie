@@ -92,6 +92,8 @@ app.post('/login', function (req, res, next) {
       if (err) { return next(err); }
       if (!user.verified) {
         return res.redirect('/verification');
+      } else if (!user.name) {
+        return res.redirect('/set-name');
       } else {
         return res.redirect('/chat');
       }
@@ -103,6 +105,8 @@ app.get('/verification', routesAuth.verification);
 app.post('/verification', routesAuth.verification);
 app.post('/verification/resend', routesAuth.verificationResend);
 app.get('/verify/:key', routesAuth.verify);
+app.get('/set-name', routesAuth.setName);
+app.post('/set-name', routesAuth.setName);
 app.get('/exit', routesAuth.exit);
 
 app.get('/chat', routesApp.chat);
@@ -174,7 +178,10 @@ function authenticate(appPages) {
         var output = req.user.remainingBanTime();
         res.render('banned', {expireDate: output});
       } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
-        res.redirect('/verification');
+        return res.redirect('/verification');
+      } else if (!req.user.name && req.path.indexOf('/set-name') !== 0) {
+        console.log('set-name');
+        return res.redirect('/set-name');
       } else {
         next();
       }

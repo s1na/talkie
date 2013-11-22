@@ -13,7 +13,7 @@ userSchema = new mongoose.Schema({
   verified: Boolean,
   chatCount: Number,
   msgCount: Number,
-  reporters: [String],
+  reporters: [mongoose.Schema.Types.ObjectId],
   banned: Boolean,
   banExpiration: Date,
   friends: [mongoose.Schema.Types.ObjectId],
@@ -23,13 +23,22 @@ userSchema = new mongoose.Schema({
 });
 
 userSchema.set('autoIndex', true);
+
+userSchema.virtual('name').get(function () {
+  if (typeof this.firstname === 'undefined' &&
+      typeof this.lastname === 'undefined') {
+    return '';
+  }
+  return this.firstname + ' ' + this.lastname;
+});
+
 userSchema.methods.validPassword = function (password) {
   return utils.validateHash(this.password, password);
 };
 
 userSchema.methods.report = function (by) {
   if (this.reporters.indexOf(by) === -1) {
-    this.reporters.push(by.username);
+    this.reporters.push(by.id);
     if (this.reporters.length % config.maxReports === 0) {
       this.banned = true;
       this.banExpiration = new Date(

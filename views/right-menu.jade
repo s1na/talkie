@@ -1,8 +1,8 @@
-.col-xs-12(data-ng-show='stranger.username')
+.col-xs-12(data-ng-show='stranger.name')
   .thumbnail
     img(data-ng-src='{{ stranger.gravatarUrl + "?s=190" }}', alt="Avatar")
     .caption
-      h3(style="text-align: center", data-ng-bind="stranger.username")
+      h3(style="text-align: center", data-ng-bind="stranger.name")
     .other-topics(data-ng-show='stranger.otherTopics.length > 0')
       p.text-muted
         b علاقه‌مند به:

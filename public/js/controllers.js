@@ -54,7 +54,7 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.setStranger = function (stranger) {
-      $scope.stranger.username = stranger.username;
+      $scope.stranger.name = stranger.name;
       $scope.stranger.commonTopics = stranger.commonTopics
       $scope.stranger.otherTopics = stranger.strangerTopics
       $scope.stranger.gravatarUrl = stranger.gravatarUrl;
@@ -75,7 +75,7 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.report = function () {
-      socket.emit('stranger:report', {noStranger: !$scope.stranger.username});
+      socket.emit('stranger:report', {noStranger: !$scope.stranger.name});
       $scope.reported = true;
     };
 
@@ -100,7 +100,7 @@ angular.module('talkie.controllers', []).
         text: 'نفر مقابل گفتگو را ترک کرد.',
         from: 'server'
       });
-      $scope.stranger.username = '';
+      $scope.stranger.name = '';
       $scope.stranger.commonTopics = [];
       $scope.stranger.otherTopics = [];
       $scope.stranger.gravatarUrl = '';
@@ -155,7 +155,7 @@ angular.module('talkie.controllers', []).
 
     function clearEnv() {
       $scope.setStranger({
-        username: '',
+        name: '',
         commonTopics: [],
         otherTopics: [],
       });
