@@ -116,9 +116,44 @@ var remOnline = function (user, sid) {
   });
 };
 
+var updateFriends = function (user, data) {
+  isOnline(user, function (online, sockets) {
+    if (online) {
+      var friendSocket;
+      for (var i = 0; i < sockets.length; i++) {
+        friendSocket = io.sockets.socket(sockets[i]);
+        friendSocket.emit('friends:update', data);
+      }
+    }
+  });
+};
+
+var addFriendUpdate = function (firstUser, secondUser) {
+  var ok = firstUser.addFriend(secondUser.id);
+  if (ok) {
+    ok = secondUser.addFriend(firstUser.id);
+    if (ok) {
+      updateFriends(firstUser, [{
+        name: secondUser.name,
+        gravatarUrl: secondUser.gravatarUrl,
+        state: 'online',
+      }]);
+
+      updateFriends(secondUser, [{
+        name: firstUser.name,
+        gravatarUrl: firstUser.gravatarUrl,
+        state: 'online'
+      }]);
+    } else {
+      firstUser.remFriend(secondUser.id);
+    }
+  }
+};
+
 module.exports = {
   getSocketById: getSocketById,
   isOnline: isOnline,
   addOnline: addOnline,
   remOnline: remOnline,
+  addFriendUpdate: addFriendUpdate,
 };
