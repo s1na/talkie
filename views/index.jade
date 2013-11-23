@@ -15,9 +15,10 @@ block body
       legend.
         برای یافتن فردی جهت چت تصادفی، وارد شوید!
       p
-        اگر عضو هستید، با ایمیل و رمز عبور خود وارد شوید.
+        small
+          اگر عضو هستید، با ایمیل و رمز عبور خود وارد شوید.
       .login-form
-        form.form-inline(method='post', action='/login', name='login-form', role='form')
+        form(method='post', action='/login', name='login-form', role='form')
           .form-group
             label.sr-only(for='login-email')
             input#login-email.form-control(type='email', name='email',
@@ -35,7 +36,7 @@ block body
             ورود
         small
         br
-      legend.
+      legend#register.
         عضویت در هورین
       .signup-form
         form(method='post', action='/signup', name='signup-form', onsubmit='javascript: return validateSignup();' role='form')
@@ -49,7 +50,7 @@ block body
               .form-group
                 label.sr-only(for='signup-lastname')
                 input#signup-lastname.form-control.input-lg(type='text', name='lastname',
-                  placeholder='نام خوانوادگی', ng-maxlength='40', required)
+                  placeholder='نام خانوادگی', ng-maxlength='40', required)
 
           .form-group
             label.sr-only(for='signup-gender')
