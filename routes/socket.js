@@ -267,12 +267,14 @@ module.exports = function (socket) {
       if (res.ok) {
         // Accept
         if (data['response']) {
-          user.addFriend(res.strangerSocket.handshake.user.id);
-          res.strangerSocket.handshake.user.addFriend(user.id);
+          backend.addFriendUpdate(user, res.strangerSocket.handshake.user);
+          /*user.addFriend(res.strangerSocket.handshake.user.id);
+          res.strangerSocket.handshake.user.addFriend(user.id);*/
+          res.strangerSocket.emit('friend:res', {response: 'acc'});
         // Deny
         } else {
           // Notify stranger.
-          res.strangerSocket.emit('friend:dec');
+          res.strangerSocket.emit('friend:res', {response: 'dec'});
         }
       } else {
         // Notify user.

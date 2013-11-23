@@ -110,10 +110,10 @@ angular.module('talkie.controllers', []).
     socket.on('friends:update', function (data) {
       $scope.waitingForFriends = false;
       for (var i = 0; i < data.length; i++) {
-        if (data[i] in $scope.friends) {
-          $scope.friends[data[i].name].state = data[i].state;
+        if (data[i].gravatarUrl in $scope.friends) {
+          $scope.friends[data[i].gravatarUrl].state = data[i].state;
         } else {
-          $scope.friends[data[i].name] = data[i];
+          $scope.friends[data[i].gravatarUrl] = data[i];
         }
       }
     });
@@ -127,8 +127,12 @@ angular.module('talkie.controllers', []).
       );
     });
 
-    socket.on('friend:dec', function () {
-      alertify.log('طرف مقابل درخواست دوستی شما را نپذیرفتند.');
+    socket.on('friend:res', function (data) {
+      if (data.response === 'acc') {
+        alertify.log('هم‌صحبت شما با درخواست دوستی شما موافقت نمود.');
+      } else if (data.response === 'dec') {
+        alertify.log('هم‌صحبت شما درخواست دوستی شما را نپذیرفت.');
+      }
     });
 
     socket.on('system:error', function (data) {

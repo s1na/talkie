@@ -38,7 +38,7 @@ userSchema.methods.validPassword = function (password) {
 
 userSchema.methods.report = function (by) {
   if (this.reporters.indexOf(by) === -1) {
-    this.reporters.push(by.id);
+    this.reporters.push(mongoose.Types.ObjectId(by.id));
     if (this.reporters.length % config.maxReports === 0) {
       this.banned = true;
       this.banExpiration = new Date(
@@ -77,12 +77,13 @@ userSchema.methods.addFriend = function (uid) {
   if (this.friends.indexOf(uid) === -1) {
     this.friends.push(uid);
     this.save();
+
     return true;
   };
   return false;
 };
 
-userSchema.methods.removeFriend = function (uid) {
+userSchema.methods.remFriend = function (uid) {
   if (!uid || typeof uid === undefined) return false;
   if (this.friends.indexOf(uid) !== -1) {
     this.friends.splice(this.friends.indexOf(uid), 1);
