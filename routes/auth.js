@@ -55,6 +55,9 @@ exports.signup = function (req, res) {
     'مرد': 'M',
     'زن': 'F',
   };
+  if (typeof req.body.email.toLowerCase() === 'undefined') {
+    logger.err(req.body.email);
+  }
   if (typeof req.body.firstname !== 'string' ||
       typeof req.body.lastname !== 'string' ||
       typeof req.body.email !== 'string' ||

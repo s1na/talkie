@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy({
   callbackURL: config.siteUrl + '/auth/google/callback',
   },
   function (accessToken, refreshToken, profile, done) {
-    User.findOne({id: profile.id}).where({'provider.provider': 'google'}).
+    User.findOne({id: profile.id}).where('provider.provider').equals('google').
       exec(function (err, user) {
       if (err) {
         logger.err('passport', err);

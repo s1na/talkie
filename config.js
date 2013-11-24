@@ -12,7 +12,7 @@ var client = redis.createClient();*/
 var rdb = redis.createClient();
 var RedisStore = require('connect-redis')(express);
 
-var siteUrl = 'localhost';
+var siteUrl = volatileConfig.siteUrl;
 
 var secretKey = volatileConfig.secretKey;
 var sessionPrefix = 'sess:';
