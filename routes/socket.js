@@ -55,7 +55,11 @@ module.exports = function (socket) {
           }
 
           if (!reply) {
-            rdb.sadd('chat:waiting', socket.id);
+            if (isSocketValid(socket)) {
+              rdb.sadd('chat:waiting', socket.id);
+            } else {
+              socket.disconnect('Weird Socket');
+            }
           } else {
             var strangerSocket = io.sockets.socket(reply);
             if (isSocketValid(strangerSocket)) {
@@ -146,7 +150,11 @@ module.exports = function (socket) {
               if (typeof strangerSocket.id !== 'undefined') {
                 strangerSocket.disconnect('Weird Socket');
               }
-              rdb.sadd('chat:waiting', socket.id);
+              if (isSocketValid(socket)) {
+                rdb.sadd('chat:waiting', socket.id);
+              } else {
+                socket.disconnect('Weird Socket');
+              }
               logger.err('socket', 'Found stranger has no handshake. Still looking.');
               //logger.err('socket', strangerSocket);
             }

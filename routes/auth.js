@@ -79,7 +79,12 @@ exports.signup = function (req, res) {
   } else if (!req.body.email.toLowerCase().match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)) {
     req.flash('error', 'لطفا ایمیل وارد شده را دوباره بررسی کنید.');
     return res.redirect('/');
-  } else if (req.body.email.toLowerCase().indexOf('www.') === 0) {
+  } else if (typeof req.body.email.toLowerCase() === 'undefined' ||
+             req.body.email.toLowerCase().indexOf('www.') === 0) {
+    if (typeof req.body.email.toLowerCase() === 'undefined') {
+      logger.err('auth', 'Email lower case undefined');
+      logger.err('auth^', req.body.email);
+    }
     req.flash('error',
               'آدرس ایمیل با www. شروع نمی‌شود. دوباره بررسی بفرمایید.'
              );
