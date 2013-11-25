@@ -10,16 +10,21 @@ userSchema = new mongoose.Schema({
   gender: String,
   email: {type: String, index: {unique: true}},
   password: String,
-  verified: Boolean,
-  chatCount: Number,
-  msgCount: Number,
+  verified: {type: Boolean, default: false},
+  chatCount: {type: Number, default: 0},
+  msgCount: {type: Number, default: 0},
   reporters: [mongoose.Schema.Types.ObjectId],
-  banned: Boolean,
+  banned: {type: Boolean, default: false},
   banExpiration: Date,
   friends: [mongoose.Schema.Types.ObjectId],
   topics: [String],
   gravatarUrl: String,
   credits: {type: Number, default: 0},
+  provided: {type: Boolean, default: false},
+  provider: {
+    provider: String,
+    id: String,
+  }
 });
 
 userSchema.set('autoIndex', true);

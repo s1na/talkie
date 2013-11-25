@@ -78,6 +78,7 @@ app.get('/rules', routes.rules);
 app.get('/about', routes.about);
 
 //app.post('/auth', routesAuth.auth);
+
 app.post('/login', function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
     if (err) {
@@ -88,7 +89,7 @@ app.post('/login', function (req, res, next) {
       req.flash('error', info.message);
       return res.redirect('/');
     }
-    req.login(user, function(err) {
+    req.login(user, function (err) {
       if (err) { return next(err); }
       if (!user.verified) {
         return res.redirect('/verification');
@@ -100,6 +101,7 @@ app.post('/login', function (req, res, next) {
     });
   })(req, res, next);
 });
+
 app.post('/signup', routesAuth.signup);
 app.get('/verification', routesAuth.verification);
 app.post('/verification', routesAuth.verification);
@@ -107,6 +109,29 @@ app.post('/verification/resend', routesAuth.verificationResend);
 app.get('/verify/:key', routesAuth.verify);
 app.get('/set-name', routesAuth.setName);
 app.post('/set-name', routesAuth.setName);
+app.get('/auth/google', passport.authenticate('google', {
+  scope: ['https://www.googleapis.com/auth/userinfo.profile']
+}));
+
+app.get('/auth/google/callback', function (req, res, next) {
+  passport.authenticate('google', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    req.login(user, function (err) {
+      if (err) {
+        logger.err('passport', err);
+        return next(err);
+      } else if (!user.topics.length) {
+        return res.redirect('/app/topics');
+      } else {
+        return res.redirect('/chat');
+      }
+    });
+  })(req, res, next);
+});
+
 app.get('/exit', routesAuth.exit);
 
 app.get('/chat', routesApp.chat);

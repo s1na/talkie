@@ -104,6 +104,7 @@ angular.module('talkie.controllers', []).
       $scope.stranger.commonTopics = [];
       $scope.stranger.otherTopics = [];
       $scope.stranger.gravatarUrl = '';
+      $scope.friendshipRequested = false;
       titleS.clear();
     });
 
@@ -167,6 +168,7 @@ angular.module('talkie.controllers', []).
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';
       $scope.reported = false;
+      $scope.friendshipRequested = false;
     }
   }]).
   controller('MsgCtrl', ['$scope', 'socket', 'userS',

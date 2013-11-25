@@ -75,42 +75,44 @@ var addOnline = function (user, socket) {
 };
 
 var remOnline = function (user, sid) {
-  if (sid === 'all') {
-    isOnline(user, function (online, sockets) {
-      if (online) {
-        var friendSocket;
+  isOnline(user, function (online, sockets) {
+    if (online) {
+      if (sid === 'all') {
+        var socket;
         for (var i = 0; i < sockets.length; i++) {
-          friendSocket = io.sockets.socket(sockets[i]);
-          friendSocket.emit('system:error');
+          socket = io.sockets.socket(sockets[i]);
+          socket.emit('system:error');
         }
-      }
-    });
-    rdb.del('users:sockets:' + user.id);
-  } else {
-    rdb.lrem('users:sockets:' + user.id, '0', sid);
-  }
-
-  user.getFriends(function (err, results) {
-    if (err) {
-      logger.err('backend', 'Error in getting friends.');
-      logger.err('backend^', err);
-    } else {
-      for (var i = 0; i < results.length; i++) {
-        (function (user, friend) {
-          isOnline(friend, function (online, sockets) {
-            if (online) {
-              var friendSocket;
-              for (var j = 0; j < sockets.length; j++) {
-                friendSocket = io.sockets.socket(sockets[j]);
-                friendSocket.emit('friends:update', [{
-                  name: user.name,
-                  gravatarUrl: user.gravatarUrl,
-                  state: 'offline',
-                }]);
+        rdb.del('users:sockets:' + user.id);
+      } else {
+        rdb.lrem('users:sockets:' + user.id, '0', sid);
+        if (sockets.length < 2) {
+          user.getFriends(function (err, results) {
+            if (err) {
+              logger.err('backend', 'Error in getting friends.');
+              logger.err('backend^', err);
+            } else {
+              for (var i = 0; i < results.length; i++) {
+                (function (user, friend) {
+                  isOnline(friend, function (online, sockets) {
+                    if (online) {
+                      var friendSocket;
+                      for (var j = 0; j < sockets.length; j++) {
+                        friendSocket = io.sockets.socket(sockets[j]);
+                        friendSocket.emit('friends:update', [{
+                          name: user.name,
+                          gravatarUrl: user.gravatarUrl,
+                          state: 'offline',
+                        }]);
+                      }
+                    }
+                  });
+                })(user, results[i]);
               }
             }
           });
-        })(user, results[i]);
+        }
+
       }
     }
   });

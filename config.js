@@ -12,6 +12,8 @@ var client = redis.createClient();*/
 var rdb = redis.createClient();
 var RedisStore = require('connect-redis')(express);
 
+var siteUrl = volatileConfig.siteUrl;
+
 var secretKey = volatileConfig.secretKey;
 var sessionPrefix = 'sess:';
 var sessionExpiration = 1000 * 60 * 60 * 2;
@@ -34,6 +36,10 @@ var verificationResendExpiration = 1000 * 60 * 2;
 
 var emailUsername = volatileConfig.emailUsername;
 var emailPassword = volatileConfig.emailPassword;
+
+// OAuth providers info
+var googleClientId = volatileConfig.googleClientId;
+var googleClientSecret = volatileConfig.googleClientSecret;
 
 // Redis and session configuration
 rdb.select(3, redis.print);
@@ -167,6 +173,7 @@ module.exports = {
   rdb: rdb,
   rdbLogger: rdbLogger,
   redisStore: redisStore,
+  siteUrl: siteUrl,
   secretKey: secretKey,
   sessionExpiration: sessionExpiration,
   parseCookie: parseCookie,
@@ -176,5 +183,7 @@ module.exports = {
   emailUsername: emailUsername,
   emailPassword: emailPassword,
   topicsList: topicsList,
+  googleClientId: googleClientId,
+  googleClientSecret: googleClientSecret,
 };
 
