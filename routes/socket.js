@@ -131,18 +131,20 @@ module.exports = function (socket) {
                   continue;
                 }
               }
-
+              var isFriend = user.isFriend(strangerSocket.handshake.user.id);
               var strangerData = {
                 name: strangerSocket.handshake.user.name,
                 commonTopics: commonTopics,
                 strangerTopics: strangerTopicsTranslated,
-                gravatarUrl: strangerSocket.handshake.user.gravatarUrl
+                gravatarUrl: strangerSocket.handshake.user.gravatarUrl,
+                isFriend: isFriend
               };
               var selfData = {
                 name: user.name,
                 commonTopics: commonTopics,
                 strangerTopics: selfTopicsTranslated,
-                gravatarUrl: user.gravatarUrl
+                gravatarUrl: user.gravatarUrl,
+                isFriend: isFriend
               };
               socket.emit('stranger:res', strangerData);
               strangerSocket.emit('stranger:res', selfData);

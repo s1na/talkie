@@ -41,6 +41,9 @@ var emailPassword = volatileConfig.emailPassword;
 var googleClientId = volatileConfig.googleClientId;
 var googleClientSecret = volatileConfig.googleClientSecret;
 
+var facebookClientId = volatileConfig.facebookClientId;
+var facebookClientSecret = volatileConfig.facebookClientSecret;
+
 // Redis and session configuration
 rdb.select(3, redis.print);
 /*pub.select(3, redis.print);

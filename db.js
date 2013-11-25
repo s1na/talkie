@@ -21,10 +21,12 @@ userSchema = new mongoose.Schema({
   gravatarUrl: String,
   credits: {type: Number, default: 0},
   provided: {type: Boolean, default: false},
-  provider: {
+  providers: [{
     provider: String,
     id: String,
-  }
+    link: String,
+    avatar: String,
+  }]
 });
 
 userSchema.set('autoIndex', true);
@@ -42,9 +44,9 @@ userSchema.methods.validPassword = function (password) {
 };
 
 userSchema.methods.report = function (by) {
-  if (this.reporters.indexOf(by) === -1) {
+  if (this.reporters.indexOf(mongoose.Types.ObjectId(by)) === -1) {
     this.reporters.push(mongoose.Types.ObjectId(by.id));
-    if (this.reporters.length % config.maxReports === 0) {
+    if (this.reporters.length >= config.maxReports) {
       this.banned = true;
       this.banExpiration = new Date(
         Date.now() +
@@ -72,6 +74,14 @@ userSchema.methods.isBanned = function () {
 
 userSchema.methods.remainingBanTime = function () {
   return utils.timeDifference(this.expires, new Date(Date.now()));
+};
+
+userSchema.methods.isFriend = function(uid) {
+  if (this.friends.indexOf(mongoose.Types.ObjectId(uid)) === -1) {
+    return false;
+  } else {
+    return true;
+  }
 };
 
 userSchema.methods.addFriend = function (uid) {

@@ -20,7 +20,8 @@ var config = require('./config'),
   statistics = require('./statistics'),
   passport = require('./passport').passport,
   db = require('./db'),
-  Banned = db.Banned;
+  Banned = db.Banned,
+  backend = require('./backend');
 
 /**
  * Configuration
@@ -132,6 +133,26 @@ app.get('/auth/google/callback', function (req, res, next) {
   })(req, res, next);
 });
 
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback', function (req, res, next) {
+  passport.authenticate('facebook', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    req.login(user, function (err) {
+      if (err) {
+        logger.err('passport', err);
+        return next(err);
+      } else if (!user.topics.length) {
+        return res.redirect('/app/topics');
+      } else {
+        return res.redirect('/chat');
+      }
+    });
+  })(req, res, next);
+});
+
 app.get('/exit', routesAuth.exit);
 
 app.get('/chat', routesApp.chat);
@@ -201,6 +222,7 @@ function authenticate(appPages) {
         res.redirect('/');
       } else if (req.user.isBanned()) {
         var output = req.user.remainingBanTime();
+        backend.remOnline(user, 'all');
         res.render('banned', {expireDate: output});
       } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
         return res.redirect('/verification');

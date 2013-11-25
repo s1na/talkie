@@ -13,6 +13,8 @@ angular.module('talkie.services', []).
       name: '',
       commonTopics: [],
       otherTopics: [],
+      gravatarUrl: '',
+      isFriend: false
     };
 
     this.fetchUserData = function () {
@@ -36,10 +38,13 @@ angular.module('talkie.services', []).
       return user;
     };
 
-    this.setStranger = function (name, commonTopics, otherTopics) {
+    this.setStranger = function (name, commonTopics, otherTopics,
+                                 gravatarUrl, isFriend) {
       this.stranger.name = name;
       this.stranger.commonTopics = commonTopics;
       this.stranger.otherTopics = otherTopics;
+      this.stranger.gravatarUrl = gravatarUrl;
+      this.stranger.isFriend = isFriend;
     };
   }]).
   service('msgS', function () {

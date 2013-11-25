@@ -58,6 +58,7 @@ angular.module('talkie.controllers', []).
       $scope.stranger.commonTopics = stranger.commonTopics
       $scope.stranger.otherTopics = stranger.strangerTopics
       $scope.stranger.gravatarUrl = stranger.gravatarUrl;
+      $scope.stranger.isFriend = stranger.isFriend;
       if (stranger.commonTopics &&
           typeof stranger.commonTopics !== undefined &&
           stranger.commonTopics.length > 0){
@@ -104,6 +105,7 @@ angular.module('talkie.controllers', []).
       $scope.stranger.commonTopics = [];
       $scope.stranger.otherTopics = [];
       $scope.stranger.gravatarUrl = '';
+      $scope.stranger.isFriend = false;
       $scope.friendshipRequested = false;
       titleS.clear();
     });
@@ -163,6 +165,8 @@ angular.module('talkie.controllers', []).
         name: '',
         commonTopics: [],
         otherTopics: [],
+        gravatarUrl: '',
+        isFriend: false
       });
       titleS.setStranger('');
       $scope.msg.msgs = [];

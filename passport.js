@@ -2,7 +2,8 @@ var config = require('./config')
   , User = require('./db').User
   , passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy
-  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+  , FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
@@ -28,31 +29,58 @@ passport.use(new GoogleStrategy({
   callbackURL: config.siteUrl + '/auth/google/callback',
   },
   function (accessToken, refreshToken, profile, done) {
-    User.findOne({id: profile.id}).where('provider.provider').equals('google').
-      exec(function (err, user) {
+    var data = profile._json;
+    User.findOne({email: data.email}, function (err, user) {
       if (err) {
         logger.err('passport', err);
       } else if (!user) {
-        console.log(profile);
-        /*var user = User({
+        var user = User({
           firstname: profile.name.givenName,
           lastname: profile.name.lastName,
-          username: profile.displayName,
-          email: profile.emails[0].value,
-          verified: true,
+          gender: data.gender === 'male' ? 'M' : 'F',
+          email: data.email,
+          verified: data.verified_email,
           provided: true,
-          provider: {
+          providers: [{
             name: 'google',
-            id: profile.id
-          }
+            id: profile.id,
+            link: data.link,
+            avatar: data.picture
+          }]
         });
-        user.save()*/
+        user.save()
+        return done(null, user);
       } else if (user) {
+        var providerAdded = false;
+        for (var i = 0; i < user.providers.length; i++) {
+          if (user.providers[i].provider === 'google') {
+            providerAdded = true;
+            break;
+          }
+        }
+        if (!providerAdded) {
+          user.providers.push({
+            provider: 'google',
+            id: data.id,
+            link: data.link,
+            avatar: data.avatar,
+          });
+        }
         return done(null, user);
       }
     });
-    return done(err, user);
-}));
+  }
+));
+
+/*passport.use(new FacebookStrategy({
+  clientID: config.facebookClientId,
+  clientSecret: config.facebookClientSecret,
+  callbackURL: config.siteUrl + '/auth/facebook/callback',
+  },
+  function (accessToken, refreshToken, profile, done) {
+    console.log(profile);
+  }
+));*/
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
