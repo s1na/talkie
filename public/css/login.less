@@ -1,7 +1,9 @@
 @import "common.less";
-span
-{
-	font-family:bmitra,Arial;
+body,div,span,p,input,label,small{
+	font-family:@main-font-family;
+}
+small{
+	font-size:1.7em;
 }
 body div
 {
@@ -70,6 +72,9 @@ body
 	color:#ffffff;
 	line-height:2.5em;
 	right:0%;
+	width: 100%;
+	height: 100%;
+
 }
 .signUpLogo
 {
@@ -97,10 +102,10 @@ body
 	height:200%;
 	width:100%;
 	top:0%;
-        -webkit-transition: top 0.5s linear;
-	-moz-transition: top 0.5s linear;
-	-o-transition: top 0.5s linear;
-	transition: top 0.5s linear;
+        -webkit-transition: top 0.4s ease;
+	-moz-transition: top 0.4s ease;
+	-o-transition: top 0.4s ease;
+	transition: top 0.4s ease;
 }
 .abnormalPanel
 {
@@ -108,8 +113,127 @@ body
 	height:200%;
 	width:100%;
 	top:-100%;
-        -webkit-transition: top 0.5s linear;
-	-moz-transition: top 0.5s linear;
-	-o-transition: top 0.5s linear;
-	transition: top 0.5s linear;
+        -webkit-transition: top 0.4s ease;
+	-moz-transition: top 0.4s ease;
+	-o-transition: top 0.4s ease;
+	transition: top 0.4s ease;
+}
+#logoText{
+	font-family:@main-font-family;
+	font-size:5em;
+	color: #79afd7;
+	top: 0.7em;	
+}
+#loginPlate{
+	top: 5%; 
+	height: 90%; 
+	background-color: #2c3e50; 
+	overflow: hidden; 
+	padding: 0px;
+}
+#loginNav{
+	margin: 0px; 
+	padding: 0px; 
+	left: 0%;
+}
+#mainLogin{
+	position: absolute;
+	height: 50%;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	background-color: #000000;
+}
+.abs{
+	position:absolute;
+}
+#google{
+	width: 50%;
+	height: 100%;
+	top: 0%;
+	left: 0%;
+	background-color: #d64136;
+}
+#facebook{
+	width: 50%;
+	height: 100%;
+	top: 0%; 
+	left: 50%; 
+	background-color: #3a589b;
+}
+#twitter{
+	position: absolute;
+	width: 50%; 
+	height: 100%; 
+	top: 0%; 
+	left: 0%; 
+	background-color: #0b85d5;	
+}
+#email{
+	width: 50%; 
+	height: 100%; 
+	top: 0%; 
+	left: 50%; 
+	background-color: #7f8c8d;	
+}
+#signUp{
+	width: 100%; 
+	height: 30%; 
+	left: 0px; 
+	top: 70%; 
+	margin: 0px; 
+	padding: 0px; 
+	background-color: #2c3e50;
+}
+#loginField{
+	height: 50%;
+	top: 50%; 
+	left: 0%; 
+	width: 100%; 
+	background-color: #2c3e50;
+}
+#backBtn{
+	width: 100%; 
+	left: 0%; 
+	background-color: #7f8c8d; 
+	height: 10%;
+}
+#fieldPlate{
+	height: 80%;
+	top: 20%;
+	left: 0%;
+	width: 100%;
+	overflow-y:auto;
+}
+#bigTitle{
+	font-size: 4em;
+	color: #ffffff;
+	width: 100%;
+}
+.desLines{
+	font-size: 1.7em; 
+	color: #ffffff;
+	width: 100%;
+}
+#siteNav{
+	height: 95%; 
+	top: 5%; 
+	width: 98%; 
+	left: 1%;
+}
+#navi{
+	left: 0%; 
+	bottom: 5%; 
+	margin: 0px; 
+	padding: 0px;
+}
+#siteTitle{
+	
+}
+#desc{
+	text-align:right;
+	font-size:2em;
+	color:#ffffff;
+	width:85%;
+	right:15%;
 }
