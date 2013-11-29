@@ -52,7 +52,8 @@ app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 // app.use(statistics());
 var appPages = ['/chat', '/api/user-data', '/app/topics',
-                '/verification', '/verification/resend'];
+                '/verification', '/verification/resend',
+                '/set-name'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);

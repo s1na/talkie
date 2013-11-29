@@ -91,7 +91,7 @@ exports.signup = function (req, res) {
     req.flash('error',
               'آدرس ایمیل با www. شروع نمی‌شود. دوباره بررسی بفرمایید.'
              );
-    return res.redirect();
+    return res.redirect('/');
   } else {
     var firstMatch = req.body.firstname.match(/^[\u0600-\u06FF\ \‌]+$/);
     var lastMatch = req.body.lastname.match(/^[\u0600-\u06FF\ \‌]+$/);
