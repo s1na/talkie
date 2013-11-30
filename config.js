@@ -44,6 +44,9 @@ var googleClientSecret = volatileConfig.googleClientSecret;
 var facebookClientId = volatileConfig.facebookClientId;
 var facebookClientSecret = volatileConfig.facebookClientSecret;
 
+var twitterConsumerKey = volatileConfig.twitterConsumerKey;
+var twitterConsumerSecret = volatileconfig.twitterConsumerSecret;
+
 // Redis and session configuration
 rdb.select(3, redis.print);
 /*pub.select(3, redis.print);

@@ -112,7 +112,8 @@ app.get('/verify/:key', routesAuth.verify);
 app.get('/set-name', routesAuth.setName);
 app.post('/set-name', routesAuth.setName);
 app.get('/auth/google', passport.authenticate('google', {
-  scope: ['https://www.googleapis.com/auth/userinfo.profile']
+  scope: ['https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/userinfo.email']
 }));
 
 app.get('/auth/google/callback', function (req, res, next) {
@@ -137,6 +138,26 @@ app.get('/auth/google/callback', function (req, res, next) {
 app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback', function (req, res, next) {
   passport.authenticate('facebook', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    req.login(user, function (err) {
+      if (err) {
+        logger.err('passport', err);
+        return next(err);
+      } else if (!user.topics.length) {
+        return res.redirect('/app/topics');
+      } else {
+        return res.redirect('/chat');
+      }
+    });
+  })(req, res, next);
+});
+
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback', function (req, res, next) {
+  passport.authenticate('twitter', function (err, user, info) {
     if (err) {
       logger.err('passport', info);
       return next(err);

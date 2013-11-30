@@ -3,7 +3,8 @@ var config = require('./config')
   , passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
-  , FacebookStrategy = require('passport-facebook').Strategy;
+  , FacebookStrategy = require('passport-facebook').Strategy
+  , TwitterStrategy = require('passport-twitter').Strategy;
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
@@ -78,6 +79,16 @@ passport.use(new GoogleStrategy({
   callbackURL: config.siteUrl + '/auth/facebook/callback',
   },
   function (accessToken, refreshToken, profile, done) {
+    console.log(profile);
+  }
+));*/
+
+/*passport.use(new TwitterStrategy({
+    consumerKey: config.twitterConsumerKey,
+    consumerSecret: config.twitterConsumerSecret,
+    callbackURL: config.siteUrl + "/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, done) {
     console.log(profile);
   }
 ));*/
