@@ -45,7 +45,7 @@ var facebookClientId = volatileConfig.facebookClientId;
 var facebookClientSecret = volatileConfig.facebookClientSecret;
 
 var twitterConsumerKey = volatileConfig.twitterConsumerKey;
-var twitterConsumerSecret = volatileconfig.twitterConsumerSecret;
+var twitterConsumerSecret = volatileConfig.twitterConsumerSecret;
 
 // Redis and session configuration
 rdb.select(3, redis.print);
@@ -191,5 +191,7 @@ module.exports = {
   topicsList: topicsList,
   googleClientId: googleClientId,
   googleClientSecret: googleClientSecret,
+  twitterConsumerKey: twitterConsumerKey,
+  twitterConsumerSecret: twitterConsumerSecret,
 };
 

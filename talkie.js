@@ -21,7 +21,8 @@ var config = require('./config'),
   passport = require('./passport').passport,
   db = require('./db'),
   Banned = db.Banned,
-  backend = require('./backend');
+  backend = require('./backend'),
+  utils = require('./utils');
 
 /**
  * Configuration
@@ -53,7 +54,7 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 // app.use(statistics());
 var appPages = ['/chat', '/api/user-data', '/app/topics',
                 '/verification', '/verification/resend',
-                '/set-name'];
+                '/missing-data'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
@@ -81,27 +82,54 @@ app.get('/about', routes.about);
 
 //app.post('/auth', routesAuth.auth);
 
+app.post('/auth/mobile', routesAuth.authMobile);
+app.get('/auth/mobile', routesAuth.authMobile);
+
+app.options('/login', function (req, res, next) {
+  utils.setCORS(req, res);
+  return res(200);
+});
+
 app.post('/login', function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
+    var isMobile = utils.isMobile(req);
+    if (isMobile) {
+      utils.setCORS(req, res);
+    }
     if (err) {
       logger.err('passport', info);
       return next(err);
     }
     if (!user) {
-      req.flash('error', info.message);
-      return res.redirect('/');
+      if (isMobile) {
+        return res.json({okay: false, message: info.message});
+      } else {
+        req.flash('error', info.message);
+        return res.redirect('/');
+      }
     }
     req.login(user, function (err) {
-      if (err) { return next(err); }
+      if (err) {
+        return next(err);
+      }
       if (!user.verified) {
         return res.redirect('/verification');
       } else if (!user.name) {
-        return res.redirect('/set-name');
+        return res.redirect('/missing-data');
       } else {
-        return res.redirect('/chat');
+        if (isMobile) {
+          return res.json({okay: true});
+        } else {
+          return res.redirect('/chat');
+        }
       }
     });
   })(req, res, next);
+});
+
+app.options('/signup', function (req, res, next) {
+  utils.setCORS(req, res);
+  return res(200);
 });
 
 app.post('/signup', routesAuth.signup);
@@ -109,8 +137,8 @@ app.get('/verification', routesAuth.verification);
 app.post('/verification', routesAuth.verification);
 app.post('/verification/resend', routesAuth.verificationResend);
 app.get('/verify/:key', routesAuth.verify);
-app.get('/set-name', routesAuth.setName);
-app.post('/set-name', routesAuth.setName);
+app.get('/missing-data', routesAuth.missingData);
+app.post('/missing-data', routesAuth.missingData);
 app.get('/auth/google', passport.authenticate('google', {
   scope: ['https://www.googleapis.com/auth/userinfo.profile',
           'https://www.googleapis.com/auth/userinfo.email']
@@ -248,9 +276,8 @@ function authenticate(appPages) {
         res.render('banned', {expireDate: output});
       } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
         return res.redirect('/verification');
-      } else if (!req.user.name && req.path.indexOf('/set-name') !== 0) {
-        console.log('set-name');
-        return res.redirect('/set-name');
+      } else if (req.user.isMissingData() && req.path.indexOf('/missing-data') !== 0) {
+        return res.redirect('/missing-data');
       } else {
         next();
       }

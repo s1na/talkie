@@ -26,6 +26,16 @@ userSchema = new mongoose.Schema({
     id: String,
     link: String,
     avatar: String,
+    name: String,
+    screen_name: String,
+    description: String,
+    location: String,
+    followers_count: Number,
+    friends_count: Number,
+    statuses_count: Number,
+    listed_count: Number,
+    favourites_count: Number,
+    created_at: String,
   }]
 });
 
@@ -129,7 +139,38 @@ userSchema.methods.setGravatarUrl = function () {
   this.gravatarUrl = 'http://gravatar.com/avatar/' +
     utils.md5(this.email.trim().toLowerCase());
   this.save();
-}
+};
+
+userSchema.methods.isMissingData = function () {
+  if (!this.email || typeof this.email === 'undefined') {
+    this.verified = false;
+    this.save();
+    return true;
+  } else if (!this.name || typeof this.name === 'undefined' ||
+             !this.firstname.match(/^[\u0600-\u06FF\ \‌]+$/) ||
+             !this.lastname.match(/^[\u0600-\u06FF\ \‌]+$/)) {
+    return true;
+  } else if (!this.gender || typeof this.gender === 'undefined') {
+    return true;
+  }
+  return false;
+};
+
+userSchema.methods.missingData = function () {
+  var attrList = [];
+  if (!this.email || typeof this.email === 'undefined') {
+    attrList.push('email');
+  }
+  if (!this.name || typeof this.name === 'undefined' ||
+      !this.firstname.match(/^[\u0600-\u06FF\ \‌]+$/) ||
+      !this.lastname.match(/^[\u0600-\u06FF\ \‌]+$/)) {
+    attrList.push('name');
+  }
+  if (!this.gender || typeof this.gender === 'undefined') {
+    attrList.push('gender');
+  }
+  return attrList;
+};
 
 // Models
 User = mongoose.model('User', userSchema);

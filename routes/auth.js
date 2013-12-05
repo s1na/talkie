@@ -268,17 +268,18 @@ exports.verify = function (req, res) {
   });
 };
 
-exports.setName = function (req, res) {
+exports.missingData = function (req, res) {
   if (req.method === 'GET') {
-    if (req.user.name) {
+    var attrList = req.user.missingData();
+    if (attrList.length === 0) {
       return res.redirect('/chat');
     }
-    var data = {};
+    var data = {attrList: attrList,};
     var flashes = req.flash('error');
     if (flashes && flashes.length > 0) {
       data['message'] = flashes[0];
     }
-    res.render('set-name', data);
+    res.render('missing-data', data);
   } else if (req.method === 'POST') {
     if (!req.body.firstname ||
         !req.body.lastname ||
@@ -287,7 +288,7 @@ exports.setName = function (req, res) {
         !req.body.firstname.trim() ||
         !req.body.lastname.trim()) {
       req.flash('error', 'لطفا دوباره تمام فیلد‌ها را بررسی کنید.');
-      return res.redirect('set-name');
+      return res.redirect('missing-data');
     } else {
       if (!req.user || typeof req.user === 'undefined') {
         return res.redirect('/');
@@ -303,7 +304,7 @@ exports.setName = function (req, res) {
           req.flash('error',
             'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
           );
-          return res.redirect('/set-name');
+          return res.redirect('/missing-data');
         }
       }
     }
@@ -323,4 +324,17 @@ exports.exit = function (req, res) {
   }
   req.logout();
   res.redirect('/');
+};
+
+exports.authMobile = function (req, res) {
+  console.log(req.body.email);
+  res.set('Access-Control-Allow-Credentials', true);
+  res.set('Access-Control-Allow-Origin', req.headers.origin);
+  res.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.set('Access-Control-Allow-Headers',
+             'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  /*res.set('Access-Control-Allow-Headers', 'http://localhost');
+  res.set('Access-Control-Allow-Headers', 'x-requested-with');
+  res.set('Access-Control-Allow-Methods', 'POST, GET');*/
+  return res.jsonp({status: true});
 };

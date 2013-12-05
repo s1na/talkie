@@ -66,6 +66,7 @@ passport.use(new GoogleStrategy({
             link: data.link,
             avatar: data.avatar,
           });
+          user.save();
         }
         return done(null, user);
       }
@@ -89,7 +90,63 @@ passport.use(new GoogleStrategy({
     callbackURL: config.siteUrl + "/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
-    console.log(profile);
+    var data = profile._json;
+    User.findOne({email: data.email}, function (err, user) {
+      if (err) {
+        logger.err('passport', err);
+      } else if (!user) {
+        var user = User({
+          email: data.screen_name.toLowerCase() + '@twitterdummymail.com',
+          provided: true,
+          providers: [{
+            name: 'twitter',
+            id: profile.id,
+            link: data.url,
+            avatar: data.profile_image_url,
+            name: data.name,
+            screen_name: data.screen_name,
+            description: data.description,
+            location: data.location,
+            followers_count: data.followers_count,
+            friends_count: data.friends_count,
+            listed_count: data.listed_count,
+            created_at: data.created_at,
+            favourites_count: data.favourites_count,
+            statuses_count: data.statuses_count,
+          }]
+        });
+        user.save()
+        return done(null, user);
+      } else if (user) {
+        var providerAdded = false;
+        for (var i = 0; i < user.providers.length; i++) {
+          if (user.providers[i].provider === 'twitter') {
+            providerAdded = true;
+            break;
+          }
+        }
+        if (!providerAdded) {
+          user.providers.push({
+            name: 'twitter',
+            id: profile.id,
+            link: data.url,
+            avatar: data.profile_image_url,
+            name: data.name,
+            screen_name: data.screen_name,
+            description: data.description,
+            location: data.location,
+            followers_count: data.followers_count,
+            friends_count: data.friends_count,
+            listed_count: data.listed_count,
+            created_at: data.created_at,
+            favourites_count: data.favourites_count,
+            statuses_count: data.statuses_count,
+          });
+          user.save();
+        }
+        return done(null, user);
+      }
+    });
   }
 ));*/
 
