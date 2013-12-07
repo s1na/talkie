@@ -3,6 +3,7 @@ var config = require('../config');
 
 module.exports.chat = function(req, res) {
   req.session.cookie.maxAge = config.memberSessionExpiration;
+  req.session.save();
   if (req.user.topics.length < 1) {
     return res.redirect('/app/topics');
   }

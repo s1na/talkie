@@ -323,6 +323,7 @@ exports.exit = function (req, res) {
     backend.remOnline(req.user, 'all');
   }
   req.logout();
+  req.session.destroy();
   res.redirect('/');
 };
 

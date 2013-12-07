@@ -102,7 +102,10 @@ app.post('/login', function (req, res, next) {
     }
     if (!user) {
       if (isMobile) {
-        return res.json({okay: false, message: info.message});
+        return res.json({
+          okay: false, message: info.message,
+          sessionID: req.sessionID,
+        });
       } else {
         req.flash('error', info.message);
         return res.redirect('/');
@@ -118,7 +121,10 @@ app.post('/login', function (req, res, next) {
         return res.redirect('/missing-data');
       } else {
         if (isMobile) {
-          return res.json({okay: true});
+          return res.json({
+            okay: true,
+            sessionID: req.sessionID,
+          });
         } else {
           return res.redirect('/chat');
         }
