@@ -295,6 +295,15 @@ module.exports = function (socket) {
     }
   });
 
+  // Mobile connections
+  socket.on('mobile:self:data:req', function () {
+    var data = {
+      name: user.name,
+      gravatarUrl: user.gravatarUrl
+    };
+    socket.emit('mobile:self:data:res', data);
+  });
+
   // Socket disconnected.
   socket.on('disconnect', function () {
     logger.info('socket', 'Socket disconnected, ' +
