@@ -22,17 +22,16 @@ module.exports = function (socket) {
   var user = socket.handshake.user;
 
   // Add online
-  //backend.addOnline(user, socket);
+  backend.addOnline(user, socket);
 
-  rdb.sadd('chat:online', socket.id, rdbLogger);
   logger.info('socket',
-              'New socket, ' + socket.id + ' ' + user.username
+              'New socket, ' + socket.id + ' ' + user.email
              );
 
   // Looking for a new stranger.
   socket.on('stranger:req', function (data) {
     logger.info('socket',
-                'Socket requested, ' + socket.id + ' ' + user.username
+                'Socket requested, ' + socket.id + ' ' + user.email
                );
 
     if (isLoggedIn(socket)) {
@@ -49,24 +48,32 @@ module.exports = function (socket) {
 
           if (res.ok) {
             res.strangerSocket.set('strangerSID', '');
-            res.strangerSocket.set('lastStranger', user.username);
+            res.strangerSocket.set('lastStranger', user.id);
             //res.strangerSocket.set('lastStrangerIp', socket.handshake.sw.s().ip);
             socket.set('strangerSID', '');
             res.strangerSocket.emit('stranger:disconnected');
           }
 
           if (!reply) {
-            rdb.sadd('chat:waiting', socket.id);
+            if (isSocketValid(socket)) {
+              rdb.sadd('chat:waiting', socket.id);
+            } else {
+              socket.disconnect('Weird Socket');
+            }
           } else {
-            rdb.srem('chat:waiting', reply);
-            logger.info('socket', 'Stranger found, ' + reply);
-
             var strangerSocket = io.sockets.socket(reply);
             if (isSocketValid(strangerSocket)) {
               if (!isSocketValid(socket)) {
                 emitError(socket);
                 return;
               }
+              if (strangerSocket.handshake.user.id === user.id) {
+                rdb.sadd('chat:waiting', socket.id);
+                return;
+              }
+              rdb.srem('chat:waiting', reply);
+              logger.info('socket', 'Stranger found, ' + reply);
+
               socket.set('strangerSID', reply);
               strangerSocket.set('strangerSID', socket.id);
 
@@ -124,27 +131,32 @@ module.exports = function (socket) {
                   continue;
                 }
               }
-
+              var isFriend = user.isFriend(strangerSocket.handshake.user.id);
               var strangerData = {
-                username: strangerSocket.handshake.user.username,
+                name: strangerSocket.handshake.user.name,
                 commonTopics: commonTopics,
                 strangerTopics: strangerTopicsTranslated,
-                gravatarUrl: strangerSocket.handshake.user.gravatarUrl
+                gravatarUrl: strangerSocket.handshake.user.gravatarUrl,
+                isFriend: isFriend
               };
               var selfData = {
-                username: user.username,
+                name: user.name,
                 commonTopics: commonTopics,
                 strangerTopics: selfTopicsTranslated,
-                gravatarUrl: user.gravatarUrl
+                gravatarUrl: user.gravatarUrl,
+                isFriend: isFriend
               };
               socket.emit('stranger:res', strangerData);
               strangerSocket.emit('stranger:res', selfData);
             } else {
               if (typeof strangerSocket.id !== 'undefined') {
-                rdb.srem('chat:online', strangerSocket.id, rdbLogger);
                 strangerSocket.disconnect('Weird Socket');
               }
-              rdb.sadd('chat:waiting', socket.id);
+              if (isSocketValid(socket)) {
+                rdb.sadd('chat:waiting', socket.id);
+              } else {
+                socket.disconnect('Weird Socket');
+              }
               logger.err('socket', 'Found stranger has no handshake. Still looking.');
               //logger.err('socket', strangerSocket);
             }
@@ -160,12 +172,12 @@ module.exports = function (socket) {
   socket.on('stranger:report', function (data) {
     if (isLoggedIn(socket)) {
       if (data.noStranger) {
-        socket.get('lastStranger', function (err, username) {
-          if (err || !username) {
+        socket.get('lastStranger', function (err, uid) {
+          if (err || !uid) {
             logger.err('socket', 'No last stranger available.');
             if (err) logger.err('socket', err);
           } else {
-            User.findOne({ username: username }, function (err, user_) {
+            User.findById(uid, function (err, user_) {
               if (err) {
                 logger.err('report',
                            err);
@@ -183,17 +195,7 @@ module.exports = function (socket) {
 
         if (res.ok) {
           if (isSocketValid(res.strangerSocket)) {
-            User.findOne(
-              { username: res.strangerSocket.handshake.user.username },
-              function (err, user_) {
-                if (err) {
-                  logger.err('report', err);
-                } else if (!user_) {
-                  logger.err('report', 'Cant get user for report.');
-                } else {
-                  user_.report(user);
-                }
-              });
+            res.strangerSocket.handshake.user.report(user);
           } else {
             logger.err('socket', 'stranger socket not valid for report.');
           }
@@ -275,11 +277,14 @@ module.exports = function (socket) {
       if (res.ok) {
         // Accept
         if (data['response']) {
-          //user.addFriend(res.strangerSocket.handshake.user.id);
-          //res.strangerSocket.handshake.user.addFriend(user.id);
+          backend.addFriendUpdate(user, res.strangerSocket.handshake.user);
+          /*user.addFriend(res.strangerSocket.handshake.user.id);
+          res.strangerSocket.handshake.user.addFriend(user.id);*/
+          res.strangerSocket.emit('friend:res', {response: 'acc'});
         // Deny
         } else {
           // Notify stranger.
+          res.strangerSocket.emit('friend:res', {response: 'dec'});
         }
       } else {
         // Notify user.
@@ -293,15 +298,15 @@ module.exports = function (socket) {
   // Socket disconnected.
   socket.on('disconnect', function () {
     logger.info('socket', 'Socket disconnected, ' +
-                socket.id + ' ' + user.username);
-    rdb.srem('chat:online', socket.id, rdbLogger);
+                socket.id + ' ' + user.email);
     rdb.srem('chat:waiting', socket.id, rdbLogger);
+    backend.remOnline(user, socket.id);
     var res = getStrangerSocket(socket);
 
     if (res.ok) {
       logger.info('socket', 'Stranger disconnected, ' + res.strangerSocket.id);
       res.strangerSocket.set('strangerSID', '');
-      res.strangerSocket.set('lastStranger', user.username);
+      res.strangerSocket.set('lastStranger', user.id);
       // TODO: Somehow keep their ips even if their session is destroyed.
       /*if (typeof socket.handshake.sw !== 'undefined') {
         if (typeof socket.handshake.sw.s() !== 'undefined') {

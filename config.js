@@ -12,10 +12,12 @@ var client = redis.createClient();*/
 var rdb = redis.createClient();
 var RedisStore = require('connect-redis')(express);
 
+var siteUrl = volatileConfig.siteUrl;
+
 var secretKey = volatileConfig.secretKey;
 var sessionPrefix = 'sess:';
 var sessionExpiration = 1000 * 60 * 60 * 2;
-var memberSessionExpiration = 1000 * 60 * 60 * 24 * 2;
+var memberSessionExpiration = 1000 * 60 * 60 * 24 * 5;
 var parseCookie = express.cookieParser(secretKey);
 var sessionSingleton = require('./singleton').SessionSingleton.getInstance();
 
@@ -34,6 +36,16 @@ var verificationResendExpiration = 1000 * 60 * 2;
 
 var emailUsername = volatileConfig.emailUsername;
 var emailPassword = volatileConfig.emailPassword;
+
+// OAuth providers info
+var googleClientId = volatileConfig.googleClientId;
+var googleClientSecret = volatileConfig.googleClientSecret;
+
+var facebookClientId = volatileConfig.facebookClientId;
+var facebookClientSecret = volatileConfig.facebookClientSecret;
+
+var twitterConsumerKey = volatileConfig.twitterConsumerKey;
+var twitterConsumerSecret = volatileConfig.twitterConsumerSecret;
 
 // Redis and session configuration
 rdb.select(3, redis.print);
@@ -66,6 +78,7 @@ var db = mongoose.connection;
 db.on('error', function (err) {
   logger.err('mongoose connection',
              'Error while connecting to mongodb.');
+  logger.err('mongoose connection^', err);
   throw "MongoDB connection error.";
 });
 
@@ -90,50 +103,56 @@ io.configure('production', function () {
 });
 io.set('polling duration', 20);
 io.set('authorization', function (hs, accept) {
-  if (hs.headers.cookie) {
+  var sessionID;
+  if (hs.query && typeof hs.query !== 'undefined' &&
+      typeof hs.query['connect.sid'] !== 'undefined') {
+    sessionID = hs.query['connect.sid'];
+  } else if (hs.headers.cookie &&
+             typeof hs.headers.cookie !== 'undefined') {
     var sessionID;
     parseCookie(hs, null, function (data) {
       sessionID = hs.signedCookies['connect.sid'];
     });
-    hs.sessionStore = redisStore;
-    if (!sessionID) {
-      accept('[Handshake] has no socket.', false);
-    }
-    hs.sessionID = sessionID;
-    redisStore.get(sessionID, function (err, session) {
-      if (err || !session) {
-        logger.err('Socket handshake',
-                   'Couldnt get session ' + err);
-        accept('Error while handshaking.', false);
-      } else if (typeof session.passport === 'undefined' ||
-                 typeof session.passport.user === 'undefined' ||
-                 ! session.passport.user) {
-        logger.err('Socket handshake',
-                   'Couldnt get user data from passport.');
-        accept('Error while handshaking.', false);
-      } else {
-        //hs.sw = new sessionSingleton.getSession(hs, session);
-        User.findOne({ _id: session.passport.user }, function (err, user) {
-          if (err) {
-            logger.err('Socket handshake',
-                       err);
-            accept('Error while handshaking.', false);
-          } else if (!user) {
-            logger.err('Socket handshake',
-                       'No user found with id in passport. ' +
-                       session.passport.user);
-            session.destroy();
-            accept('Error while handshaking.', false);
-          } else {
-            hs.user = user;
-            accept(null, true);
-          }
-        });
-      }
-    });
   } else {
     return accept('No cookie found', false);
   }
+
+  hs.sessionStore = redisStore;
+  if (!sessionID) {
+    accept('[Handshake] has no socket.', false);
+  }
+  hs.sessionID = sessionID;
+  redisStore.get(sessionID, function (err, session) {
+    if (err || !session) {
+      logger.err('Socket handshake',
+                 'Couldnt get session ' + err);
+      accept('Error while handshaking.', false);
+    } else if (typeof session.passport === 'undefined' ||
+               typeof session.passport.user === 'undefined' ||
+               ! session.passport.user) {
+      logger.err('Socket handshake',
+                 'Couldnt get user data from passport.');
+      accept('Error while handshaking.', false);
+    } else {
+      //hs.sw = new sessionSingleton.getSession(hs, session);
+      User.findOne({ _id: session.passport.user }, function (err, user) {
+        if (err) {
+          logger.err('Socket handshake',
+                     err);
+          accept('Error while handshaking.', false);
+        } else if (!user) {
+          logger.err('Socket handshake',
+                     'No user found with id in passport. ' +
+                     session.passport.user);
+          session.destroy();
+          accept('Error while handshaking.', false);
+        } else {
+          hs.user = user;
+          accept(null, true);
+        }
+      });
+    }
+  });
 });
 
 // AppConfs
@@ -166,8 +185,10 @@ module.exports = {
   rdb: rdb,
   rdbLogger: rdbLogger,
   redisStore: redisStore,
+  siteUrl: siteUrl,
   secretKey: secretKey,
   sessionExpiration: sessionExpiration,
+  memberSessionExpiration: memberSessionExpiration,
   parseCookie: parseCookie,
   maxReports: maxReports,
   banExpiration: banExpiration,
@@ -175,5 +196,9 @@ module.exports = {
   emailUsername: emailUsername,
   emailPassword: emailPassword,
   topicsList: topicsList,
+  googleClientId: googleClientId,
+  googleClientSecret: googleClientSecret,
+  twitterConsumerKey: twitterConsumerKey,
+  twitterConsumerSecret: twitterConsumerSecret,
 };
 

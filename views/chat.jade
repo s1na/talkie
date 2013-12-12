@@ -31,6 +31,8 @@ html.fill(ng-app='talkie', lang='fa')
           include right-menu.jade
         .row
           .col-xs-12
+            button.btn.btn-danger.btn-lg.btn-block(type='button', data-ng-show='!stranger.name',
+              data-ng-click='report()', data-ng-disabled='reported') گزارش نفر قبل
             button.btn.btn-primary.btn-lg.btn-block(type="button", data-ng-click='findStranger()') گفتگو با نفر بعد
             p نسخه‌ی آزمایشی! در صورت مشاهده‌ی ایراد با ما 
               a(href="/about#contact", target="_blank") تماس 

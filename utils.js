@@ -56,9 +56,30 @@ var timeDifference = function (first, second) {
   return output;
 }
 
+var isMobile = function (req) {
+  if (req.headers['x-phonegap']) {
+    return true;
+  }
+  return false;
+};
+
+var setCORS = function (req, res) {
+  res.set('Access-Control-Allow-Credentials', true);
+  res.set('Access-Control-Allow-Origin', req.headers.origin);
+  res.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.set(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept,\
+    Accept-Version, Content-Length, Content-MD5,\
+    Content-Type, Date, X-Api-Version, X-Phonegap'
+  );
+};
+
 module.exports = {
   createHash: createHash,
   validateHash: validateHash,
   md5: md5,
   timeDifference: timeDifference,
+  setCORS: setCORS,
+  isMobile: isMobile,
 };

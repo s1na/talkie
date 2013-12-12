@@ -4,33 +4,59 @@ var mongoose = require('mongoose')
 
 // Schemas
 userSchema = new mongoose.Schema({
-  username: { type: String, index: {unique: true}},
+  username: String,
   firstname: String,
   lastname: String,
   gender: String,
   email: {type: String, index: {unique: true}},
   password: String,
-  verified: Boolean,
-  chatCount: Number,
-  msgCount: Number,
-  reporters: [String],
-  banned: Boolean,
+  verified: {type: Boolean, default: false},
+  chatCount: {type: Number, default: 0},
+  msgCount: {type: Number, default: 0},
+  reporters: [mongoose.Schema.Types.ObjectId],
+  banned: {type: Boolean, default: false},
   banExpiration: Date,
   friends: [mongoose.Schema.Types.ObjectId],
   topics: [String],
   gravatarUrl: String,
   credits: {type: Number, default: 0},
+  provided: {type: Boolean, default: false},
+  providers: [{
+    provider: String,
+    id: String,
+    link: String,
+    avatar: String,
+    name: String,
+    screen_name: String,
+    description: String,
+    location: String,
+    followers_count: Number,
+    friends_count: Number,
+    statuses_count: Number,
+    listed_count: Number,
+    favourites_count: Number,
+    created_at: String,
+  }]
 });
 
 userSchema.set('autoIndex', true);
+
+userSchema.virtual('name').get(function () {
+  if (typeof this.firstname === 'undefined' &&
+      typeof this.lastname === 'undefined') {
+    return '';
+  }
+  return this.firstname + ' ' + this.lastname;
+});
+
 userSchema.methods.validPassword = function (password) {
   return utils.validateHash(this.password, password);
 };
 
 userSchema.methods.report = function (by) {
-  if (this.reporters.indexOf(by) === -1) {
-    this.reporters.push(by.username);
-    if (this.reporters.length % config.maxReports === 0) {
+  if (this.reporters.indexOf(mongoose.Types.ObjectId(by)) === -1) {
+    this.reporters.push(mongoose.Types.ObjectId(by.id));
+    if (this.reporters.length >= config.maxReports) {
       this.banned = true;
       this.banExpiration = new Date(
         Date.now() +
@@ -60,34 +86,40 @@ userSchema.methods.remainingBanTime = function () {
   return utils.timeDifference(this.expires, new Date(Date.now()));
 };
 
-userSchema.methods.addFriend = function (userId) {
-  if (!userId ||
-      typeof userId === undefined ||
-      userId === this.id
+userSchema.methods.isFriend = function(uid) {
+  if (this.friends.indexOf(mongoose.Types.ObjectId(uid)) === -1) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+userSchema.methods.addFriend = function (uid) {
+  if (!uid ||
+      typeof uid === undefined ||
+      uid === this.uid
      ) return false;
-  if (this.friends.indexOf(userId) === -1) {
-    this.friends.push(userId);
+  if (this.friends.indexOf(uid) === -1) {
+    this.friends.push(uid);
     this.save();
+
     return true;
   };
   return false;
 };
 
-userSchema.methods.removeFriend = function (userId) {
-  if (!userId || typeof userId === undefined) return false;
-  if (this.friends.indexOf(userId) !== -1) {
-    this.friends.splice(this.friends.indexOf(userId), 1);
+userSchema.methods.remFriend = function (uid) {
+  if (!uid || typeof uid === undefined) return false;
+  if (this.friends.indexOf(uid) !== -1) {
+    this.friends.splice(this.friends.indexOf(uid), 1);
     this.save();
     return true;
   }
   return false;
 };
 
-userSchema.methods.initOnline = function () {
-  var friendsStr = '';
-  for (var i = 0; i < this.friends.length; i++) {
-    friendsStr += "'" + this.friends[i];
-  }
+userSchema.methods.getFriends = function (cb) {
+  this.model('User').find().where('_id').in(this.friends).exec(cb);
 };
 
 userSchema.methods.addTopics = function (topics) {
@@ -107,7 +139,38 @@ userSchema.methods.setGravatarUrl = function () {
   this.gravatarUrl = 'http://gravatar.com/avatar/' +
     utils.md5(this.email.trim().toLowerCase());
   this.save();
-}
+};
+
+userSchema.methods.isMissingData = function () {
+  if (!this.email || typeof this.email === 'undefined') {
+    this.verified = false;
+    this.save();
+    return true;
+  } else if (!this.name || typeof this.name === 'undefined' ||
+             !this.firstname.match(/^[\u0600-\u06FF\ \‌]+$/) ||
+             !this.lastname.match(/^[\u0600-\u06FF\ \‌]+$/)) {
+    return true;
+  } else if (!this.gender || typeof this.gender === 'undefined') {
+    return true;
+  }
+  return false;
+};
+
+userSchema.methods.missingData = function () {
+  var attrList = [];
+  if (!this.email || typeof this.email === 'undefined') {
+    attrList.push('email');
+  }
+  if (!this.name || typeof this.name === 'undefined' ||
+      !this.firstname.match(/^[\u0600-\u06FF\ \‌]+$/) ||
+      !this.lastname.match(/^[\u0600-\u06FF\ \‌]+$/)) {
+    attrList.push('name');
+  }
+  if (!this.gender || typeof this.gender === 'undefined') {
+    attrList.push('gender');
+  }
+  return attrList;
+};
 
 // Models
 User = mongoose.model('User', userSchema);

@@ -18,6 +18,7 @@ angular.module('talkie.controllers', []).
     $scope.loading = loadingS;
     $scope.reported = false;
     $scope.friends = {};
+    $scope.waitingForFriends = true;
     $scope.friendshipRequested = false;
 
     $window.onfocus = function () {
@@ -53,10 +54,11 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.setStranger = function (stranger) {
-      $scope.stranger.username = stranger.username;
+      $scope.stranger.name = stranger.name;
       $scope.stranger.commonTopics = stranger.commonTopics
       $scope.stranger.otherTopics = stranger.strangerTopics
       $scope.stranger.gravatarUrl = stranger.gravatarUrl;
+      $scope.stranger.isFriend = stranger.isFriend;
       if (stranger.commonTopics &&
           typeof stranger.commonTopics !== undefined &&
           stranger.commonTopics.length > 0){
@@ -74,7 +76,7 @@ angular.module('talkie.controllers', []).
     };
 
     $scope.report = function () {
-      socket.emit('stranger:report', {noStranger: !$scope.stranger.username});
+      socket.emit('stranger:report', {noStranger: !$scope.stranger.name});
       $scope.reported = true;
     };
 
@@ -99,11 +101,24 @@ angular.module('talkie.controllers', []).
         text: 'نفر مقابل گفتگو را ترک کرد.',
         from: 'server'
       });
-      $scope.stranger.username = '';
+      $scope.stranger.name = '';
       $scope.stranger.commonTopics = [];
       $scope.stranger.otherTopics = [];
       $scope.stranger.gravatarUrl = '';
+      $scope.stranger.isFriend = false;
+      $scope.friendshipRequested = false;
       titleS.clear();
+    });
+
+    socket.on('friends:update', function (data) {
+      $scope.waitingForFriends = false;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].gravatarUrl in $scope.friends) {
+          $scope.friends[data[i].gravatarUrl].state = data[i].state;
+        } else {
+          $scope.friends[data[i].gravatarUrl] = data[i];
+        }
+      }
     });
 
     socket.on('friend:req', function () {
@@ -113,6 +128,14 @@ angular.module('talkie.controllers', []).
             socket.emit('friend:res', {response: res});
         }
       );
+    });
+
+    socket.on('friend:res', function (data) {
+      if (data.response === 'acc') {
+        alertify.log('هم‌صحبت شما با درخواست دوستی شما موافقت نمود.');
+      } else if (data.response === 'dec') {
+        alertify.log('هم‌صحبت شما درخواست دوستی شما را نپذیرفت.');
+      }
     });
 
     socket.on('system:error', function (data) {
@@ -139,14 +162,17 @@ angular.module('talkie.controllers', []).
 
     function clearEnv() {
       $scope.setStranger({
-        username: '',
+        name: '',
         commonTopics: [],
         otherTopics: [],
+        gravatarUrl: '',
+        isFriend: false
       });
       titleS.setStranger('');
       $scope.msg.msgs = [];
       $scope.msg.curMsg = '';
       $scope.reported = false;
+      $scope.friendshipRequested = false;
     }
   }]).
   controller('MsgCtrl', ['$scope', 'socket', 'userS',

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <url>
+    <loc>http://horin.ir/</loc>
+    <priority>1</priority>
+  </url>
+
+  <url>
+    <loc>http://horin.ir/rules</loc>
+    <priority>0.3</priority>
+
+  </url>
+
+  <url>
+    <loc>http://horin.ir/about</loc>
+    <priority>1</priority>
+  </url>
+
+  <url>
+    <loc>http://horin.ir/about#contact</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://horin.ir/about#browsers</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://horin.ir/about#FAQs</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://blog.horin.ir/</loc>
+    <priority>1</priority>
+  </url>
+
+</urlset>

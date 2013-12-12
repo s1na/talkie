@@ -13,7 +13,7 @@
         input#chat-input.input-lg.form-control.col-lg-12(
           type='text',
           data-ng-model='msg.curMsg',
-          data-ng-disabled='loading.enable',
+          data-ng-disabled='!stranger.name',
           data-ret-pressed='sendMsg();',
           data-ng-change='typing()',
           data-get-focus='!loading.enable'

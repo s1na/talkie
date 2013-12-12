@@ -162,3 +162,39 @@ html
         span.toolbarText(style='position: absolute; right: 0%; bottom: 5%;', dir='rtl', align='right')
           | تمام حقوق این سایت متعلق به هورین میباشد.
 
+block append bottom-js
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')
+  script(type='text/javascript').
+    document.getElementById('login-email').focus();
+
+  script(type='text/javascript').
+    function validateSignup(event) {
+      var pass = document.getElementById('signup-password');
+      var passConfirm = document.getElementById('signup-password-confirm');
+
+      var firstname = document.getElementById('signup-firstname');
+      var lastname = document.getElementById('signup-lastname');
+
+      if (pass.value === passConfirm.value) {
+        if (firstname.value && lastname.value) {
+          var firstMatch = firstname.value.match(/^[\u0600-\u06FF\ \‌]+$/);
+          var lastMatch = lastname.value.match(/^[\u0600-\06FF\ \‌]+$/);
+          if (firstMatch && lastMatch) {
+            return true;
+          } else {
+            alertify.error(
+              'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+              );
+            return false;
+          }
+        } else {
+          alertify.error(
+            'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+            );
+          return false;
+        }
+      } else {
+        alertify.error('رمز عبورهای وارد شده با هم تفاوت دارند.');
+        return false;
+      }
+    };

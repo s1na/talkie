@@ -1,20 +1,20 @@
-.col-xs-12(data-ng-show='stranger.username')
+.col-xs-12(data-ng-show='stranger.name')
   .thumbnail
     img(data-ng-src='{{ stranger.gravatarUrl + "?s=190" }}', alt="Avatar")
     .caption
-      h3(style="text-align: center", data-ng-bind="stranger.username")
+      h3(style="text-align: center", data-ng-bind="stranger.name")
     .other-topics(data-ng-show='stranger.otherTopics.length > 0')
       p.text-muted
         b علاقه‌مند به:
       p.text-muted(data-ng-bind="stranger.otherTopicsString")
-    
+
     .common-topics(data-ng-show='stranger.commonTopics.length > 0')
       p.text-muted
         b مشترک با شما در:
       p.text-muted(data-ng-bind='stranger.commonTopicsString')
-    
+
     button.btn.btn-sm.btn-danger(type="button", data-ng-click='report()',
       data-ng-disabled="reported", style='margin: 0 auto;') گزارش
     button.btn.btn-sm.btn-success(type='button',
-      data-ng-click='reqFriendship()',
+      data-ng-click='reqFriendship()', data-ng-show='!stranger.isFriend',
       data-ng-disabled='friendshipRequested', style='margin-right: .5em;') درخواست دوستی

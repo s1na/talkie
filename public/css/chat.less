@@ -44,6 +44,7 @@ body {
   margin-right: 0;
   margin-left: 0;
   display: block;
+  cursor: pointer;
   // overflow-y: auto;
   // overflow-x: auto;
   // .make-ie-scrollbar;
@@ -57,7 +58,7 @@ body {
   height: 35px;
   margin-top: 3px;
   margin-bottom: 3px;
-  
+
   // border: 1px solid white;
   &.online {
     color: white;
@@ -65,8 +66,8 @@ body {
   }
 
   &.offline {
-    color: black;
-    opacity: 0.8;
+    color: #95a5a6;
+    opacity: 0.7;
   }
 
   .name {
@@ -74,9 +75,14 @@ body {
   }
 }
 
-.friend:hover {
+.friend.online:hover {
   opacity: 1;
-  background-color: gray;
+  background-color: #34495e;
+}
+
+.friend.offline:hover {
+  opacity: 0.8;
+  background-color: #34495e;
 }
 
 //http://codemug.com/html/custom-scrollbars-using-css/
@@ -245,8 +251,16 @@ body {
   margin-top: -12px;
 }
 
+.container-non-responsive {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 1170px;
+}
 .friends-loading {
   position: fixed;
+
   background-color: orange;
   left: 0;
   background-color: @loading-background-color;

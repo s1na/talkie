@@ -16,7 +16,10 @@
     "passport-local": "~0.1.6",
     "nodemailer": "~0.5.3",
     "email-templates": "~0.1.0",
-    "connect-flash": "~0.1.1"
+    "connect-flash": "~0.1.1",
+    "passport-google-oauth": "~0.1.5",
+    "passport-facebook": "~1.0.2",
+    "passport-twitter": "~1.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -1,12 +1,13 @@
 
-var config = require('../config'),
-    rdb = config.rdb,
-    rdbLogger = config.rdbLogger,
-    logger = require('../logger'),
-    db = require('../db'),
-    User = db.User,
-    sendMail = require('../email').sendMail,
-    utils = require('../utils');
+var config = require('../config')
+  , rdb = config.rdb
+  , rdbLogger = config.rdbLogger
+  , logger = require('../logger')
+  , db = require('../db')
+  , User = db.User
+  , sendMail = require('../email').sendMail
+  , utils = require('../utils')
+  , backend = require('../backend');
 
 
 exports.auth = function (req, res) {
@@ -54,36 +55,57 @@ exports.signup = function (req, res) {
     'مرد': 'M',
     'زن': 'F',
   };
-  if (typeof req.body.username !== 'string' ||
+  if (typeof req.body.email.toLowerCase() === 'undefined') {
+    logger.err(req.body.email);
+  }
+  if (typeof req.body.firstname !== 'string' ||
+      typeof req.body.lastname !== 'string' ||
       typeof req.body.email !== 'string' ||
       typeof req.body.password !== 'string' ||
       typeof req.body.passwordConfirm !== 'string' ||
       typeof req.body.gender !== 'string') {
     req.flash('error', 'از پر کردن تمام فیلد‌ها اطمینان حاصل کنید.');
     return res.redirect('/');
-  } else if (!req.body.username.trim() ||
+  } else if (!req.body.firstname.trim() ||
+             !req.body.lastname.trim() ||
              !req.body.email.trim() ||
-             !req.body.password.trim() ||
-             !req.body.passwordConfirm.trim() ||
+             req.body.password.length === 0 ||
+             req.body.passwordConfirm.length === 0 ||
              !req.body.gender.trim() ||
-             !(req.body.gender in gender) ||
-             !(req.body.password === req.body.passwordConfirm)
+             !(req.body.gender in gender)
             ) {
     req.flash('error', 'از پر کردن تمام فیلد‌ها اطمینان حاصل کنید.');
     return res.redirect('/');
-  } else if (req.body.email.indexOf('@') === -1 ||
-             req.body.email.indexOf('.', req.body.email.indexOf('@')) === -1) {
+  } else if (req.body.password !== req.body.passwordConfirm) {
+    req.flash('error', 'رمز‌های عبور وارد شده با یکدیگر همخوانی ندارند.');
+    return res.redirect('/');
+  } else if (!req.body.email.toLowerCase().match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)) {
     req.flash('error', 'لطفا ایمیل وارد شده را دوباره بررسی کنید.');
     return res.redirect('/');
-  } else if (req.body.email.toLowerCase().indexOf('www.') === 0) {
+  } else if (typeof req.body.email.toLowerCase() === 'undefined' ||
+             req.body.email.toLowerCase().indexOf('www.') === 0) {
+    if (typeof req.body.email.toLowerCase() === 'undefined') {
+      logger.err('auth', 'Email lower case undefined');
+      logger.err('auth^', req.body.email);
+    }
     req.flash('error',
               'آدرس ایمیل با www. شروع نمی‌شود. دوباره بررسی بفرمایید.'
              );
-    return res.redirect();
+    return res.redirect('/');
   } else {
+    var firstMatch = req.body.firstname.match(/^[\u0600-\u06FF\ \‌]+$/);
+    var lastMatch = req.body.lastname.match(/^[\u0600-\u06FF\ \‌]+$/);
+    if (!(firstMatch && lastMatch)) {
+      req.flash('error',
+        'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+      );
+      return res.redirect('/');
+    }
+
     req.body.email = req.body.email.toLowerCase();
     var user = new User({
-      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       gender: gender[req.body.gender],
       email: req.body.email,
       password: utils.createHash(req.body.password),
@@ -109,9 +131,6 @@ exports.signup = function (req, res) {
           return res.redirect('/');
         }
       } else {
-        req.session.username = req.body.username;
-        req.session.save();
-
         var verificationUrl = 'http://horin.ir/verify/' + user.id;
 
         var data = {
@@ -120,7 +139,7 @@ exports.signup = function (req, res) {
           template: 'email-verification',
           vars: {
             verificationUrl: verificationUrl,
-            username: req.body.username
+            name: req.body.name
           }
         };
         setTimeout(function () { sendMail(data); }, 2);
@@ -178,7 +197,7 @@ exports.verificationResend = function (req, res) {
         template: 'email-verification',
         vars: {
           verificationUrl: verificationUrl,
-          username: req.user.username
+          name: req.user.name
         }
       };
       setTimeout(function () { sendMail(data); }, 2);
@@ -197,7 +216,7 @@ exports.verificationResend = function (req, res) {
           template: 'email-verification',
           vars: {
             verificationUrl: verificationUrl,
-            username: req.user.username
+            name: req.user.name
           }
         };
         setTimeout(function () { sendMail(data); }, 2);
@@ -215,28 +234,6 @@ exports.verificationResend = function (req, res) {
 };
 
 exports.verify = function (req, res) {
-  /*if (typeof req.session === 'undefined') {
-    res.redirect('/');
-  } else if (typeof req.session.username !== 'string') {
-    res.redirect('/');
-  } else {
-    User.findOne({username: req.session.username}, function (err, user) {
-      if (err || !user) {
-        logger.err('Index',
-                   'Couldnt get user to validate.'
-                  );
-      } else {
-        user.update({validated: true}, function (err, user) {
-          if (err || !user) {
-            logger.err('index',
-                       'Coulnt set validated to true in validation.'
-                      );
-          }
-        });
-      }
-    });
-  }
-  res.redirect('/chat');*/
   var key = req.params.key;
   User.findOne({ _id: key }, function (err, user) {
     if (err) {
@@ -271,37 +268,46 @@ exports.verify = function (req, res) {
   });
 };
 
-exports.login = function (req, res) {
-  if (
-    typeof req.body.username !== 'string' ||
-    typeof req.body.password !== 'string' ||
-    !req.body.username.trim() ||
-    !req.body.password.trim()
-  ) {
-    logger.err('login',
-               'Invalid username given.'
-              );
-    res.redirect('/');
-  } else {
-    User.findOne({username: req.body.username}, function (err, user) {
-      if (err || !username) {
-        logger.info('login',
-                    'Couldnt find username.'
-                   );
+exports.missingData = function (req, res) {
+  if (req.method === 'GET') {
+    var attrList = req.user.missingData();
+    if (attrList.length === 0) {
+      return res.redirect('/chat');
+    }
+    var data = {attrList: attrList,};
+    var flashes = req.flash('error');
+    if (flashes && flashes.length > 0) {
+      data['message'] = flashes[0];
+    }
+    res.render('missing-data', data);
+  } else if (req.method === 'POST') {
+    if (!req.body.firstname ||
+        !req.body.lastname ||
+        typeof req.body.firstname !== 'string' ||
+        typeof req.body.lastname !== 'string' ||
+        !req.body.firstname.trim() ||
+        !req.body.lastname.trim()) {
+      req.flash('error', 'لطفا دوباره تمام فیلد‌ها را بررسی کنید.');
+      return res.redirect('missing-data');
+    } else {
+      if (!req.user || typeof req.user === 'undefined') {
+        return res.redirect('/');
       } else {
-        if (user.verified) {
-          if (req.body.password === user.password) {
-            req.session.loggedIn = true;
-            req.session.username = user.username;
-            res.redirect('/chat');
-          } else {
-            res.redirect('/');
-          }
+        var firstMatch = req.body.firstname.match(/^[\u0600-\u06FF\ \‌]+$/);
+        var lastMatch = req.body.lastname.match(/^[\u0600-\u06FF\ \‌]+$/);
+        if (firstMatch && lastMatch) {
+          req.user.firstname = req.body.firstname;
+          req.user.lastname = req.body.lastname;
+          req.user.save();
+          return res.redirect('/chat');
         } else {
-          res.redirect('/verification');
+          req.flash('error',
+            'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'
+          );
+          return res.redirect('/missing-data');
         }
       }
-    });
+    }
   }
 };
 
@@ -313,6 +319,23 @@ exports.exit = function (req, res) {
     }
     req.session.destroy();
   }*/
+  if (req.user && typeof req.user !== 'undefined') {
+    backend.remOnline(req.user, 'all');
+  }
   req.logout();
+  req.session.destroy();
   res.redirect('/');
+};
+
+exports.authMobile = function (req, res) {
+  console.log(req.body.email);
+  res.set('Access-Control-Allow-Credentials', true);
+  res.set('Access-Control-Allow-Origin', req.headers.origin);
+  res.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.set('Access-Control-Allow-Headers',
+             'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  /*res.set('Access-Control-Allow-Headers', 'http://localhost');
+  res.set('Access-Control-Allow-Headers', 'x-requested-with');
+  res.set('Access-Control-Allow-Methods', 'POST, GET');*/
+  return res.jsonp({status: true});
 };

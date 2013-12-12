@@ -20,7 +20,9 @@ var config = require('./config'),
   statistics = require('./statistics'),
   passport = require('./passport').passport,
   db = require('./db'),
-  Banned = db.Banned;
+  Banned = db.Banned,
+  backend = require('./backend'),
+  utils = require('./utils');
 
 /**
  * Configuration
@@ -51,7 +53,8 @@ app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 // app.use(statistics());
 var appPages = ['/chat', '/api/user-data', '/app/topics',
-                '/verification', '/verification/resend'];
+                '/verification', '/verification/resend',
+                '/missing-data'];
 app.use(authenticate(appPages));
 //app.use(express.favicon(path.join(__dirname, 'public/img/fav.gif')));
 app.use(app.router);
@@ -78,31 +81,134 @@ app.get('/rules', routes.rules);
 app.get('/about', routes.about);
 
 //app.post('/auth', routesAuth.auth);
+
+app.post('/auth/mobile', routesAuth.authMobile);
+app.get('/auth/mobile', routesAuth.authMobile);
+
+app.options('/login', function (req, res, next) {
+  utils.setCORS(req, res);
+  return res(200);
+});
+
 app.post('/login', function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
+    var isMobile = utils.isMobile(req);
+    if (isMobile) {
+      utils.setCORS(req, res);
+    }
     if (err) {
       logger.err('passport', info);
       return next(err);
     }
     if (!user) {
-      req.flash('error', info.message);
-      return res.redirect('/');
+      if (isMobile) {
+        return res.json({
+          okay: false, message: info.message,
+          sessionID: req.sessionID,
+        });
+      } else {
+        req.flash('error', info.message);
+        return res.redirect('/');
+      }
     }
-    req.login(user, function(err) {
-      if (err) { return next(err); }
+    req.login(user, function (err) {
+      if (err) {
+        return next(err);
+      }
       if (!user.verified) {
         return res.redirect('/verification');
+      } else if (!user.name) {
+        return res.redirect('/missing-data');
+      } else {
+        if (isMobile) {
+          return res.json({
+            okay: true,
+            sessionID: req.sessionID,
+          });
+        } else {
+          return res.redirect('/chat');
+        }
+      }
+    });
+  })(req, res, next);
+});
+
+app.options('/signup', function (req, res, next) {
+  utils.setCORS(req, res);
+  return res(200);
+});
+
+app.post('/signup', routesAuth.signup);
+app.get('/verification', routesAuth.verification);
+app.post('/verification', routesAuth.verification);
+app.post('/verification/resend', routesAuth.verificationResend);
+app.get('/verify/:key', routesAuth.verify);
+app.get('/missing-data', routesAuth.missingData);
+app.post('/missing-data', routesAuth.missingData);
+app.get('/auth/google', passport.authenticate('google', {
+  scope: ['https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/userinfo.email']
+}));
+
+app.get('/auth/google/callback', function (req, res, next) {
+  passport.authenticate('google', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    req.login(user, function (err) {
+      if (err) {
+        logger.err('passport', err);
+        return next(err);
+      } else if (!user.topics.length) {
+        return res.redirect('/app/topics');
       } else {
         return res.redirect('/chat');
       }
     });
   })(req, res, next);
 });
-app.post('/signup', routesAuth.signup);
-app.get('/verification', routesAuth.verification);
-app.post('/verification', routesAuth.verification);
-app.post('/verification/resend', routesAuth.verificationResend);
-app.get('/verify/:key', routesAuth.verify);
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback', function (req, res, next) {
+  passport.authenticate('facebook', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    req.login(user, function (err) {
+      if (err) {
+        logger.err('passport', err);
+        return next(err);
+      } else if (!user.topics.length) {
+        return res.redirect('/app/topics');
+      } else {
+        return res.redirect('/chat');
+      }
+    });
+  })(req, res, next);
+});
+
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback', function (req, res, next) {
+  passport.authenticate('twitter', function (err, user, info) {
+    if (err) {
+      logger.err('passport', info);
+      return next(err);
+    }
+    req.login(user, function (err) {
+      if (err) {
+        logger.err('passport', err);
+        return next(err);
+      } else if (!user.topics.length) {
+        return res.redirect('/app/topics');
+      } else {
+        return res.redirect('/chat');
+      }
+    });
+  })(req, res, next);
+});
+
 app.get('/exit', routesAuth.exit);
 
 app.get('/chat', routesApp.chat);
@@ -172,9 +278,12 @@ function authenticate(appPages) {
         res.redirect('/');
       } else if (req.user.isBanned()) {
         var output = req.user.remainingBanTime();
+        backend.remOnline(user, 'all');
         res.render('banned', {expireDate: output});
       } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
-        res.redirect('/verification');
+        return res.redirect('/verification');
+      } else if (req.user.isMissingData() && req.path.indexOf('/missing-data') !== 0) {
+        return res.redirect('/missing-data');
       } else {
         next();
       }
