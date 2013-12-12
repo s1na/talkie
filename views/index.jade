@@ -97,37 +97,37 @@ html
                 #mainLogin
                   div.abs(style='width: 100%; height: 70%; top: 0%;')
                     div.abs(style='width: 100%; height: 30%; top: 0%; background-color: #2c3e50;')
-                      span.signUpText(align='right', dir='rtl', style='right: 2%; color: #D9D9D9;')
+                      span.signUpText(align='right', dir='rtl', style='right: 2%; color: #D9D9D9;text-align:right;')
                         | ورود با استفاده از :
                     div(style='position: absolute; width: 100%; height: 70%; top: 30%; background-color: #000000;')
                       div(style='position: absolute; width: 100%; height: 50%; top: 0%;')
                         #google.conn.abs
                           .innerSignUp
                             img.signUpLogo(src='/static/img/google.png')
-                            span.signUpText(align='right')
+                            span.signUpText(align='right',style='text-align:right;')
                               | گوگل
                         #facebook.conn.abs
                           .innerSignUp
                             img.signUpLogo(src='/static/img/facebook.png')
-                            span.signUpText(align='right')
+                            span.signUpText(align='right',style='text-align:right;')
                               | فیسبوک
                       div(style='position: absolute; width: 100%; height: 50%; top: 50%;')
                         #twitter.conn.abs
                           .innerSignUp
                             img.signUpLogo(src='/static/img/twitter.png')
-                            span.signUpText(align='right')
+                            span.signUpText(align='right',style='text-align:right;')
                               | توییتر
                         #email.conn.abs(onclick='goTop("email")')
                           .innerSignUp
                             img.signUpLogo(src='/static/img/email.png')
-                            span.signUpText(align='right')
+                            span.signUpText(align='right',style='text-align:right;')
                               | ایمیل
                   #signUp.conn.abs(onclick='goTop("signUp")')
-                    span.signUpText(align='center', style='font-size: 4.5em; width: 100%; height: 100%;')
+                    span.signUpText(align='center', style='font-size: 4.5em; width: 100%; height: 100%;text-align:center;')
                       | ثبت نام
                 #loginField.abs
                   #backBtn.conn.abs(onclick='goBottom()')
-                    span.signUpText(align='center', style='width: 100%; top: -0.6em;')
+                    span.signUpText(align='center', style='width: 100%; top: -0.7em;text-align:center;')
                       | بازگشت
                   div#fieldPlate.abs(style="width:100%;margin:0px;lef:0px;")
                     .row(style="width:100%;margin:0px;")
@@ -136,7 +136,7 @@ html
         .col-xs-7(style='height: 90%; top: 5%;')
           .row.abs(style='height: 20%; top: 0%;width:100%')
             .col-xs-9.col-xs-offset-2(dir='rtl', style='top: 40%; height: 100%;')
-              span#bigTitle.col-xs-12(align='right')
+              span#bigTitle.col-xs-12(align='right' , style='text-align:right')
                 | دوستای جدید پیدا کن!
           .row.abs(style='height: 70%; top: 30%;width:50%;right:10%;')
             .row(style="height:100%;" dir="rtl")
@@ -159,7 +159,7 @@ html
           | |
           a(href='/about')
             span.toolbarText درباره هورین
-        span.toolbarText(style='position: absolute; right: 0%; bottom: 5%;', dir='rtl', align='right')
+        span.toolbarText(style='position: absolute; right: 0%; bottom: 5%;text-align:right;', dir='rtl', align='right')
           | تمام حقوق این سایت متعلق به هورین میباشد.
 
 block append bottom-js
