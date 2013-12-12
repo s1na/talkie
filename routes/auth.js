@@ -11,8 +11,8 @@ var config = require('../config')
 
 
 exports.auth = function (req, res) {
-  if (req.session.loggedIn) {
-    res.redirect('/chat');
+  if (req.user) {
+    res.redirect('/');
   } else {
     if (typeof req.body.fullName !== 'string') {
       if (typeof req.body.fullName !== 'undefined') {
@@ -45,7 +45,7 @@ exports.auth = function (req, res) {
     }
     req.session.ip = ip;
     req.session.save();
-    res.redirect('/chat');
+    res.redirect('/');
   }
 };
 
@@ -161,7 +161,7 @@ exports.signup = function (req, res) {
 exports.verification = function (req, res) {
   if (req.method === 'GET') {
     if (req.user.verified) {
-      return res.redirect('/chat');
+      return res.redirect('/');
     }
     var data = {
       email: req.user.email,
@@ -272,7 +272,7 @@ exports.missingData = function (req, res) {
   if (req.method === 'GET') {
     var attrList = req.user.missingData();
     if (attrList.length === 0) {
-      return res.redirect('/chat');
+      return res.redirect('/');
     }
     var data = {attrList: attrList,};
     var flashes = req.flash('error');
@@ -299,7 +299,7 @@ exports.missingData = function (req, res) {
           req.user.firstname = req.body.firstname;
           req.user.lastname = req.body.lastname;
           req.user.save();
-          return res.redirect('/chat');
+          return res.redirect('/');
         } else {
           req.flash('error',
             'نام و نام خوانوادگی فقط می‌توانند از حروف الفبا تشکیل شده باشند.'

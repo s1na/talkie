@@ -52,7 +52,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 // app.use(statistics());
-var appPages = ['/chat', '/api/user-data', '/app/topics',
+var appPages = ['/', '/api/user-data', '/app/topics',
                 '/verification', '/verification/resend',
                 '/missing-data'];
 app.use(authenticate(appPages));
@@ -126,7 +126,7 @@ app.post('/login', function (req, res, next) {
             sessionID: req.sessionID,
           });
         } else {
-          return res.redirect('/chat');
+          return res.redirect('/');
         }
       }
     });
@@ -163,7 +163,7 @@ app.get('/auth/google/callback', function (req, res, next) {
       } else if (!user.topics.length) {
         return res.redirect('/app/topics');
       } else {
-        return res.redirect('/chat');
+        return res.redirect('/');
       }
     });
   })(req, res, next);
@@ -183,7 +183,7 @@ app.get('/auth/facebook/callback', function (req, res, next) {
       } else if (!user.topics.length) {
         return res.redirect('/app/topics');
       } else {
-        return res.redirect('/chat');
+        return res.redirect('/');
       }
     });
   })(req, res, next);
@@ -203,7 +203,7 @@ app.get('/auth/twitter/callback', function (req, res, next) {
       } else if (!user.topics.length) {
         return res.redirect('/app/topics');
       } else {
-        return res.redirect('/chat');
+        return res.redirect('/');
       }
     });
   })(req, res, next);
@@ -272,20 +272,38 @@ function authenticate(appPages) {
     if (appPages.indexOf(req.path) == -1) {
       next();
     } else {
-      if (typeof req.user === 'undefined' ||
-          !req.user) {
-        req.flash('error', 'لطفا ابتدا وارد شوید.');
-        res.redirect('/');
-      } else if (req.user.isBanned()) {
-        var output = req.user.remainingBanTime();
-        backend.remOnline(user, 'all');
-        res.render('banned', {expireDate: output});
-      } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
-        return res.redirect('/verification');
-      } else if (req.user.isMissingData() && req.path.indexOf('/missing-data') !== 0) {
-        return res.redirect('/missing-data');
+      if (req.path === '/') {
+        if (req.user) {
+          if (req.user.isBanned()) {
+            var output = req.user.remainingBanTime();
+            backend.remOnline(user, 'all');
+            res.render('banned', {expireDate: output});
+          } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
+            return res.redirect('/verification');
+          } else if (req.user.isMissingData() && req.path.indexOf('/missing-data') !== 0) {
+            return res.redirect('/missing-data');
+          } else {
+            next();
+          }
+        } else {
+          next();
+        }
       } else {
-        next();
+        if (typeof req.user === 'undefined' ||
+            !req.user) {
+          req.flash('error', 'لطفا ابتدا وارد شوید.');
+          res.redirect('/');
+        } else if (req.user.isBanned()) {
+          var output = req.user.remainingBanTime();
+          backend.remOnline(user, 'all');
+          res.render('banned', {expireDate: output});
+        } else if (!req.user.verified && req.path.indexOf('/verification') !== 0) {
+          return res.redirect('/verification');
+        } else if (req.user.isMissingData() && req.path.indexOf('/missing-data') !== 0) {
+          return res.redirect('/missing-data');
+        } else {
+          next();
+        }
       }
     }
   };
