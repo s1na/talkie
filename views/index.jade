@@ -1,102 +1,166 @@
-extends base
+!!! 5
+html
+  head
+    meta(http-equiv='content-type', content='text/html', charset='utf-8')
+    meta(name='keywords', lang='en', content='Horin,Horin Chat, Random Chat')
+    meta(name='keywords', lang='fa', content='هورین,هورین چت,چت, چت رندم,چت تصادفی, چت ناشناس', charset='utf-8')
+    meta(name='description', content='وبسایت چت تصادفی', charset='utf-8')
+    meta(name='subject', content="با افراد جدید، در مورد موضوعات مختلف چت کن!");
+    link#home-css(rel='stylesheet', href='/static/css/login.css', type='text/css', media='all')
+    link#bootstrp(rel='stylesheet', href='/static/css/bootstrap.min.css', type='text/css', media='all')
+    meta(http-equiv='content-type', con='con', tent='text/html; charset=utf-8')
+    title هورین
+    script(type='text/javascript')
+      function goTop(esender){
+         var temp='';
+        if(esender=='signUp'){
+          temp+='  <div class="signup-form">'
+          temp+='    <form class="form-horizontal" method="post" dir="rtl" action="/signup" name="signup-form" onsubmit="javascript: return validateSignup();" role="form">'
+          temp+='      <div class="row" dir="rtl">'
+          temp+='        <div class="col-xs-5">'
+          temp+='          <div class="form-group" >'
+          temp+='            <label for="signup-lastname" class="sr-only"></label>'
+          temp+='            <input id="signup-lastname" type="text" name="lastname" placeholder="نام خانوادگی" ng-maxlength="40" required="" class="form-control input-lg">'
+          temp+='          </div>'
+          temp+='        </div>'
+          temp+='        <div class="col-xs-5 col-xs-offset-2">'
+          temp+='          <div class="form-group" >'
+          temp+='            <label for="signup-firstname" class="sr-only"></label>'
+          temp+='            <input id="signup-firstname" type="text" name="firstname" placeholder="نام" ng-maxlength="40" required="" class="form-control input-lg">'
+          temp+='          </div>'
+          temp+='        </div>'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <label for="signup-gender" class="sr-only"></label>'
+          temp+='        <select id="signup-gender" name="gender" placeholder="جنسیت" required class="form-control input-lg">'
+          temp+='          <option>زن</option>'
+          temp+='          <option>مرد</option>'
+          temp+='        </select>'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <label for="signup-email" class="sr-only"></label>'
+          temp+='        <input id="signup-email" type="email" name="email" placeholder="ایمیل" ng-maxlength="40" required class="form-control input-lg">'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <label for="signup-password" class="sr-only"></label>'
+          temp+='        <input id="signup-password" type="password" name="password" placeholder="رمز‌عبور" ng-maxlength="40" required class="form-control input-lg">'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <label for="signup-password-confirm" class="sr-only"></label>'
+          temp+='        <input id="signup-password-confirm" type="password" name="passwordConfirm" placeholder="رمز عبور را دوباره بنویسید" ng-maxlength="40" autocomplete="off" required   class="form-control input-lg">'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <button type="submit" class="btn btn-default btn-lg btn-block">ثبت</button>'
+          temp+='      </div>'
+          temp+='    </form>'
+          temp+='  </div>'
 
-block append css
-  link(rel='stylesheet', type='text/css', href='/static/css/index.css')
-  link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.core.css')
-  link(rel='stylesheet', type='text/css', href='/static/lib/alertify.js/themes/alertify.default.css')
+        }
+        else{
 
-block body
-  .row
-    .col-md-4.col-md-offset-4
-      br
-      p.text-info(style="text-align:center; font-size: 5em;margin-top: -120px") هورین 
-      if message
-        .alert.alert-danger= message
-      legend.
-        برای یافتن فردی جهت چت تصادفی، وارد شوید!
-      p
-        small
-          اگر عضو هستید، با ایمیل و رمز عبور خود وارد شوید.
-      .login-form
-        form(method='post', action='/login', name='login-form', role='form')
-          .form-group
-            label.sr-only(for='login-email')
-            input#login-email.form-control(type='email', name='email',
-              placeholder='ایمیل', ng-maxlength='40', required)
-          .form-group(style='margin-right: .1em;')
-            label.sr-only(for='login-password')
-            input#login-passord.form-control(type='password', name='password',
-              placeholder='رمز عبور', ng-maxlength='40', required)
-          //-
-            .checkbox(disabled)
-              input#login-remember-me(type='checkbox', name='rememberMe')
-              label(for='login-remember-me')
-                مرا به خاطر بسپار
-          button.btn.btn-primary(type='submit', style='float: left;')
-            ورود
-        small
-        br
-      legend#register.
-        عضویت در هورین
-      .signup-form
-        form(method='post', action='/signup', name='signup-form', onsubmit='javascript: return validateSignup();' role='form')
-          .row
-            .col-md-6.col-md-push-6
-              .form-group
-                label.sr-only(for='signup-firstname')
-                input#signup-firstname.form-control.input-lg(type='text', name='firstname',
-                  placeholder='نام', ng-maxlength='40', required)
-            .col-md-6.col-md-pull-6
-              .form-group
-                label.sr-only(for='signup-lastname')
-                input#signup-lastname.form-control.input-lg(type='text', name='lastname',
-                  placeholder='نام خانوادگی', ng-maxlength='40', required)
+          temp+='  <div class="login-form">'
+          temp+='    <form method="post" action="/login" name="login-form" role="form" class="form-horizontal" dir="rtl">'
+          temp+='      <div class="form-group">'
+          temp+='        <label for="login-email" class="sr-only"></label>'
+          temp+='        <input id="login-email" type="text" name="email" placeholder="ایمیل" ng-maxlength="40" required class="form-control input-lg">'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <label for="login-password" class="sr-only"></label>'
+          temp+='        <input id="login-passord" type="password" name="password" placeholder="رمز عبور" ng-maxlength="40" required class="form-control input-lg">'
+          temp+='      </div>'
+          temp+='      <div class="form-group">'
+          temp+='        <button type="submit" style="float: left;font-size:1.7em;width:30%;" class="btn btn-primary">ورود</button>'
+          temp+='      </div>'
+          temp+='    </form>'
+          temp+='    <small style="color:#ffffff;font-size:1.5em;width:100%;position:absolute;" dir="rtl">در صورتی که قبلا عضو بوده‌اید،‌لطفا دوباره ثبت نام کنید. ضمن پوزش!</small><br/>'
+          temp+='  </div>'
+        }
+        document.getElementById('footerLogin').innerHTML=temp;
+        document.getElementById('loginNav').setAttribute("class", "row abnormalPanel");
+      }
+      function goBottom()
+      {
+        document.getElementById('loginNav').setAttribute("class", "row normalPanel");
+      }
+  body#bd
+    #head.row-fluid
+      .col-xs-4.col-xs-offset-8(dir='rtl')
+        span.col-xs-3.col-xs-offset-4(style='font-size: 4em; color: #79afd7; font-family: bmitra,Arial; top: 1.7em;')
+          | هورین
+        img.col-xs-5(src='/static/img/logo.png', style='position: absolute;')
+    #main.row-fluid
+      .row(style='height: 100%;')
+        .col-xs-5(style='height: 100%;')
+          .row(style='height: 100%;')
+            #loginPlate.col-xs-9.col-xs-offset-1
+              #loginNav.row.normalPanel.abs(style="width:100%;")
+                #mainLogin
+                  div.abs(style='width: 100%; height: 70%; top: 0%;')
+                    div.abs(style='width: 100%; height: 30%; top: 0%; background-color: #2c3e50;')
+                      span.signUpText(align='right', dir='rtl', style='right: 2%; color: #D9D9D9;')
+                        | ورود با استفاده از :
+                    div(style='position: absolute; width: 100%; height: 70%; top: 30%; background-color: #000000;')
+                      div(style='position: absolute; width: 100%; height: 50%; top: 0%;')
+                        #google.conn.abs
+                          .innerSignUp
+                            img.signUpLogo(src='/static/img/google.png')
+                            span.signUpText(align='right')
+                              | گوگل
+                        #facebook.conn.abs
+                          .innerSignUp
+                            img.signUpLogo(src='/static/img/facebook.png')
+                            span.signUpText(align='right')
+                              | فیسبوک
+                      div(style='position: absolute; width: 100%; height: 50%; top: 50%;')
+                        #twitter.conn.abs
+                          .innerSignUp
+                            img.signUpLogo(src='/static/img/twitter.png')
+                            span.signUpText(align='right')
+                              | توییتر
+                        #email.conn.abs(onclick='goTop("email")')
+                          .innerSignUp
+                            img.signUpLogo(src='/static/img/email.png')
+                            span.signUpText(align='right')
+                              | ایمیل
+                  #signUp.conn.abs(onclick='goTop("signUp")')
+                    span.signUpText(align='center', style='font-size: 4.5em; width: 100%; height: 100%;')
+                      | ثبت نام
+                #loginField.abs
+                  #backBtn.conn.abs(onclick='goBottom()')
+                    span.signUpText(align='center', style='width: 100%; top: -0.6em;')
+                      | بازگشت
+                  div#fieldPlate.abs(style="width:100%;margin:0px;lef:0px;")
+                    .row(style="width:100%;margin:0px;")
+                      #footerLogin.col-xs-10.col-xs-offset-1
 
-          .form-group
-            label.sr-only(for='signup-gender')
-            select#signup-gender.form-control.input-lg(name='gender',
-              placeholder='جنسیت', required)
-              option زن
-              option مرد
-          .form-group
-            label.sr-only(for='signup-email')
-            input#signup-email.form-control.input-lg(type='email', name='email',
-              placeholder='ایمیل', ng-maxlength='40', required)
-          .form-group
-            label.sr-only(for='signup-password')
-            input#signup-password.form-control.input-lg(type='password', name='password',
-              placeholder='رمز‌عبور', ng-maxlength='40', required)
-          .form-group
-            label.sr-only(for='signup-password-confirm')
-            input#signup-password-confirm.form-control.input-lg(type='password', name='passwordConfirm',
-              placeholder='رمز عبور را دوباره بنویسید', ng-maxlength='40', autocomplete='off', required)
-          button.btn.btn-default.btn-lg.btn-block(type='submit')
-            ثبت
-
-  .row
-    .col-md-4.col-md-offset-4
-      hr
-      nav
-        ul.list-inline.pull-right
-          li 
-            a(href="http://blog.horin.ir", target="_blank")
-              small بلاگ&nbsp
-          |
-          li 
-            a(href="/rules")
-              small قوانین&nbsp
-          |
-          li
-            a(href="/about#contact")
-              small تماس&nbsp
-          |
-          li
-            a(href="/about#FAQs")
-              small سوالات متداول&nbsp
-          |
-          li
-            a(href="/about")
-              small درباره‌ی هورین
+        .col-xs-7(style='height: 90%; top: 5%;')
+          .row.abs(style='height: 20%; top: 0%;width:100%')
+            .col-xs-9.col-xs-offset-2(dir='rtl', style='top: 40%; height: 100%;')
+              span#bigTitle.col-xs-12(align='right')
+                | دوستای جدید پیدا کن!
+          .row.abs(style='height: 70%; top: 30%;width:50%;right:10%;')
+            .row(style="height:100%;" dir="rtl")
+              span#desc.abs
+                | لذت داشتن دوستای بیشتر رو حس کنید!
+    #footer.row-fluid
+      div#siteNav.abs
+        ul#navi.abs(dir='rtl')
+          a(href='http://blog.horin.ir', target='_blank')
+            span.toolbarText بلاگ
+          | |
+          a(href='/rules')
+            span.toolbarText قوانین
+          | |
+          a(href='/about#contact')
+            span.toolbarText تماس
+          | |
+          a(href='/about#FAQs')
+            span.toolbarText سوالات متداول
+          | |
+          a(href='/about')
+            span.toolbarText درباره هورین
+        span.toolbarText(style='position: absolute; right: 0%; bottom: 5%;', dir='rtl', align='right')
+          | تمام حقوق این سایت متعلق به هورین میباشد.
 
 block append bottom-js
   script(src='/static/lib/alertify.js/lib/alertify.min.js')
