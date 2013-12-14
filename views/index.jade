@@ -6,164 +6,206 @@ html
     meta(name='keywords', lang='fa', content='هورین,هورین چت,چت, چت رندم,چت تصادفی, چت ناشناس', charset='utf-8')
     meta(name='description', content='وبسایت چت تصادفی', charset='utf-8')
     meta(name='subject', content="با افراد جدید، در مورد موضوعات مختلف چت کن!");
+    meta(http-equiv='content-type', con='con', tent='text/html; charset=utf-8') 
+    link#topcoat-css(rel='stylesheet', href='/static/lib/topcoat/css/topcoat-mobile-dark.min.css', type='text/css', media='all')
     link#home-css(rel='stylesheet', href='/static/css/login.css', type='text/css', media='all')
-    link#bootstrp(rel='stylesheet', href='/static/css/bootstrap.min.css', type='text/css', media='all')
-    meta(http-equiv='content-type', con='con', tent='text/html; charset=utf-8')
     title هورین
     script(type='text/javascript')
       function goTop(esender){
          var temp='';
         if(esender=='signUp'){
-          temp+='  <div class="signup-form">'
-          temp+='    <form class="form-horizontal" method="post" dir="rtl" action="/signup" name="signup-form" onsubmit="javascript: return validateSignup();" role="form">'
-          temp+='      <div class="row" dir="rtl">'
-          temp+='        <div class="col-xs-5">'
-          temp+='          <div class="form-group" >'
-          temp+='            <label for="signup-lastname" class="sr-only"></label>'
-          temp+='            <input id="signup-lastname" type="text" name="lastname" placeholder="نام خانوادگی" ng-maxlength="40" required="" class="form-control input-lg">'
-          temp+='          </div>'
-          temp+='        </div>'
-          temp+='        <div class="col-xs-5 col-xs-offset-2">'
-          temp+='          <div class="form-group" >'
-          temp+='            <label for="signup-firstname" class="sr-only"></label>'
-          temp+='            <input id="signup-firstname" type="text" name="firstname" placeholder="نام" ng-maxlength="40" required="" class="form-control input-lg">'
-          temp+='          </div>'
-          temp+='        </div>'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <label for="signup-gender" class="sr-only"></label>'
-          temp+='        <select id="signup-gender" name="gender" placeholder="جنسیت" required class="form-control input-lg">'
-          temp+='          <option>زن</option>'
-          temp+='          <option>مرد</option>'
-          temp+='        </select>'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <label for="signup-email" class="sr-only"></label>'
-          temp+='        <input id="signup-email" type="email" name="email" placeholder="ایمیل" ng-maxlength="40" required class="form-control input-lg">'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <label for="signup-password" class="sr-only"></label>'
-          temp+='        <input id="signup-password" type="password" name="password" placeholder="رمز‌عبور" ng-maxlength="40" required class="form-control input-lg">'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <label for="signup-password-confirm" class="sr-only"></label>'
-          temp+='        <input id="signup-password-confirm" type="password" name="passwordConfirm" placeholder="رمز عبور را دوباره بنویسید" ng-maxlength="40" autocomplete="off" required   class="form-control input-lg">'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <button type="submit" class="btn btn-default btn-lg btn-block">ثبت</button>'
-          temp+='      </div>'
-          temp+='    </form>'
-          temp+='  </div>'
+          temp+='<input id="signup-first-name" type="text" placeholder="نام" dir="rtl" class="topcoat-text-input inputs"/>'
+          temp+='<input id="signup-last-name" type="text" placeholder="نام خانوادگی" dir="rtl" class="topcoat-text-input inputs"/>'
+          temp+='<label id="signup-male" dir="rtl" class="topcoat-radio-button inputs">'
+          temp+='<input name="sex" id="signup-male-radio" type="radio"/>'
+          temp+='<div class="topcoat-radio-button__checkmark"></div>  مرد  '
+          temp+='</label>'
+          temp+='<label id="signup-female" dir="rtl" class="topcoat-radio-button inputs">'
+          temp+='<input name="sex" id="signup-female-radio" type="radio"/>'
+          temp+='<div class="topcoat-radio-button__checkmark"></div>  زن  '
+          temp+='</label>'
+          temp+='<input id="signup-email" type="email" placeholder="ایمیل" dir="rtl" class="topcoat-text-input inputs"/>'
+          temp+='<input id="signup-password" type="password" placeholder="رمز عبور" dir="rtl" class="topcoat-text-input inputs"/>'
+          temp+='<input id="signup-password-confirm" type="password" placeholder="رمز عبور خود را دوباره بنویسید" dir="rtl" class="topcoat-text-input inputs"/>'
+          temp+='<button id="signup-submit" type="submit" class="topcoat-button--cta inputs"> ثبت</button>'
 
         }
         else{
-
-          temp+='  <div class="login-form">'
-          temp+='    <form method="post" action="/login" name="login-form" role="form" class="form-horizontal" dir="rtl">'
-          temp+='      <div class="form-group">'
-          temp+='        <label for="login-email" class="sr-only"></label>'
-          temp+='        <input id="login-email" type="text" name="email" placeholder="ایمیل" ng-maxlength="40" required class="form-control input-lg">'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <label for="login-password" class="sr-only"></label>'
-          temp+='        <input id="login-passord" type="password" name="password" placeholder="رمز عبور" ng-maxlength="40" required class="form-control input-lg">'
-          temp+='      </div>'
-          temp+='      <div class="form-group">'
-          temp+='        <button type="submit" style="float: left;font-size:1.7em;width:30%;" class="btn btn-primary">ورود</button>'
-          temp+='      </div>'
-          temp+='    </form>'
-          temp+='    <small style="color:#ffffff;font-size:1.5em;width:100%;position:absolute;" dir="rtl">در صورتی که قبلا عضو بوده‌اید،‌لطفا دوباره ثبت نام کنید. ضمن پوزش!</small><br/>'
-          temp+='  </div>'
+          temp+='<input id="login-user-email" type="email" placeholder="ایمیل" dir="rtl" class="topcoat-text-input"/>'
+          temp+='<input id="login-password" type="password" placeholder="رمز عبور" dir="rtl" class="topcoat-text-input"/>'
+          temp+='<button id="login-login" type="submit" class="topcoat-button--cta"> ورود</button>'
+          temp+='<button id="login-forget-password" type="submit" dir="rtl" align="right" class="topcoat-button--cta"> رمز عبور خود رو فراموش کرده ام!</button>'
         }
-        document.getElementById('footerLogin').innerHTML=temp;
-        document.getElementById('loginNav').setAttribute("class", "row abnormalPanel");
+        document.getElementById('login-field').innerHTML=temp;
+        feetScreen();
+        $('#login-nav').animate({'top':'-100%'},300);
       }
       function goBottom()
       {
-        document.getElementById('loginNav').setAttribute("class", "row normalPanel");
+        $('#login-nav').animate({'top':'0%'},300);
       }
-  body#bd
-    #head.row-fluid
-      .col-xs-4.col-xs-offset-8(dir='rtl')
-        span.col-xs-3.col-xs-offset-4(style='font-size: 4em; color: #79afd7; font-family: bmitra,Arial; top: 1.7em;')
-          | هورین
-        img.col-xs-5(src='/static/img/logo.png', style='position: absolute;')
-    #main.row-fluid
-      .row(style='height: 100%;')
-        .col-xs-5(style='height: 100%;')
-          .row(style='height: 100%;')
-            #loginPlate.col-xs-9.col-xs-offset-1
-              #loginNav.row.normalPanel.abs(style="width:100%;")
-                #mainLogin
-                  div.abs(style='width: 100%; height: 70%; top: 0%;')
-                    div.abs(style='width: 100%; height: 30%; top: 0%; background-color: #2c3e50;')
-                      span.signUpText(align='right', dir='rtl', style='right: 2%; color: #D9D9D9;text-align:right;')
-                        | ورود با استفاده از :
-                    div(style='position: absolute; width: 100%; height: 70%; top: 30%; background-color: #000000;')
-                      div(style='position: absolute; width: 100%; height: 50%; top: 0%;')
-                        #google.conn.abs
-                          .innerSignUp
-                            img.signUpLogo(src='/static/img/google.png')
-                            span.signUpText(align='right',style='text-align:right;')
-                              | گوگل
-                        #facebook.conn.abs
-                          .innerSignUp
-                            img.signUpLogo(src='/static/img/facebook.png')
-                            span.signUpText(align='right',style='text-align:right;')
-                              | فیسبوک
-                      div(style='position: absolute; width: 100%; height: 50%; top: 50%;')
-                        #twitter.conn.abs
-                          .innerSignUp
-                            img.signUpLogo(src='/static/img/twitter.png')
-                            span.signUpText(align='right',style='text-align:right;')
-                              | توییتر
-                        #email.conn.abs(onclick='goTop("email")')
-                          .innerSignUp
-                            img.signUpLogo(src='/static/img/email.png')
-                            span.signUpText(align='right',style='text-align:right;')
-                              | ایمیل
-                  #signUp.conn.abs(onclick='goTop("signUp")')
-                    span.signUpText(align='center', style='font-size: 4.5em; width: 100%; height: 100%;text-align:center;')
-                      | ثبت نام
-                #loginField.abs
-                  #backBtn.conn.abs(onclick='goBottom()')
-                    span.signUpText(align='center', style='width: 100%; top: -0.7em;text-align:center;')
-                      | بازگشت
-                  div#fieldPlate.abs(style="width:100%;margin:0px;lef:0px;")
-                    .row(style="width:100%;margin:0px;")
-                      #footerLogin.col-xs-10.col-xs-offset-1
+  body#bd(style="margin:0px")
+    #header
+      #header-logo-box
+        img#header-logo.responsive_Image(src="/static/img/logo.png")
+      #header-text(align:right)
+        | هورین
+    #main
+      #login-plate
+        #login-nav
+          #main-login
+            #login-des
+              span#login-des-text.middle-text(dir="rtl")
+                | ورود با استفاده از :
+            #login-option-plate
+              #google-box.conn
+                #google-image-box.login-item-image-box
+                  img#google-image.login-item-image.responsive_Image.middle-image(src="/static/img/googleW.png")
+                span#google-text.login-item-text.middle-text(align="left")
+                  | گوگل      
+              #facebook-box.conn
+                #facebook-image-box.login-item-image-box
+                  img#facebook-image.login-item-image.responsive_Image.middle-image(src="/static/img/facebookW.png")
+                span#facebook-text.login-item-text.middle-text(align="right",style="right:3%,left:auto;")
+                  | فیسبوک      
+              #twitter-box.conn
+                #twitter-image-box.login-item-image-box
+                  img#twitter-image.login-item-image.responsive_Image.middle-image(src="/static/img/twitterW.png")
+                span#twitter-text.login-item-text.middle-text(align="left")
+                  | توییتر
+              #email-box.conn
+                #email-image-box.login-item-image-box
+                  img#email-image.login-item-image.responsive_Image.middle-image(src="/static/img/emailW.png")
+                span#email-text.login-item-text.middle-text(align="right")
+                  | ایمیل
 
-        .col-xs-7(style='height: 90%; top: 5%;')
-          .row.abs(style='height: 20%; top: 0%;width:100%')
-            .col-xs-9.col-xs-offset-2(dir='rtl', style='top: 40%; height: 100%;')
-              span#bigTitle.col-xs-12(align='right' , style='text-align:right')
-                | دوستای جدید پیدا کن!
-          .row.abs(style='height: 70%; top: 30%;width:50%;right:10%;')
-            .row(style="height:100%;" dir="rtl")
-              span#desc.abs
-                | لذت داشتن دوستای بیشتر رو حس کنید!
-    #footer.row-fluid
-      div#siteNav.abs
-        ul#navi.abs(dir='rtl')
-          a(href='http://blog.horin.ir', target='_blank')
-            span.toolbarText بلاگ
-          | |
-          a(href='/rules')
-            span.toolbarText قوانین
-          | |
-          a(href='/about#contact')
-            span.toolbarText تماس
-          | |
-          a(href='/about#FAQs')
-            span.toolbarText سوالات متداول
-          | |
-          a(href='/about')
-            span.toolbarText درباره هورین
-        span.toolbarText(style='position: absolute; right: 0%; bottom: 5%;text-align:right;', dir='rtl', align='right')
-          | تمام حقوق این سایت متعلق به هورین میباشد.
+            #signup-button.conn
+              span#signup-button-text.middle-text
+                | ثبت نام
+          #footer-login
+            #back-button-box.conn
+              span#back-button-text.middle-text(align="center") 
+                | بازگشت
+            #login-field
 
+
+      span#big-title(align="right",dir="rtl")
+        | دوستای جدید پیدا کن!
+    #footer
+      span#navigation-box
+          a.navigation-text(href='http://blog.horin.ir', target='_blank')
+            | بلاگ
+          span.navigation-text
+            | |
+          a.navigation-text(href='/rules')
+            | قوانین 
+          span.navigation-text
+            | |
+          a.navigation-text(href='/about#contact')
+            | تماس
+          span.navigation-text
+            | |
+          a.navigation-text(href='/about#FAQs')
+            | سوالات متداول
+          span.navigation-text
+            | |
+          a.navigation-text(href='/about')
+            | درباره هورین
+      span#copyright(dir='rtl', align='right')
+        | تمام حقوق این سایت متعلق به هورین میباشد. 
 block append bottom-js
-  script(src='/static/lib/alertify.js/lib/alertify.min.js')
+
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')  
+  script(src='/static/lib/zepto/zepto.min.js')
+  script(type='text/javascript')
+    function feetScreen()
+    {
+      if($('#bd').width()/$('#bd').height()<(14/9) && !($('#bd').height()>$('#bd').width()))
+      {
+        $('#login-plate').css({'height':'90%','width':'50%','left':'5%','top':'5%'});
+        $('#big-title').css({'height':'20%','width':'40%','right':'2%','top':'15%','font-size':'1.7em','text-align':'right'});
+        $('#header-logo-box').css({'height':'80%','width':'15%','right':'0%','bottom':'10%'});
+        $('#header-text').css({'height':'20%','width':'30%','right':'15%','bottom':'15%'});
+        for(var i=0;i<document.getElementsByClassName('login-item-text').length;i++)
+        {
+          var slf='#'+document.getElementsByClassName('login-item-text')[i].getAttribute('id');
+          $(slf).css({'font-size':'1.5em'});
+        }
+        for(var i=0;i<document.getElementsByClassName('inputs').length;i++)
+        {
+          var slf='#'+document.getElementsByClassName('inputs')[i].getAttribute('id');
+          $(slf).css({'font-size':'0.7em'});
+        }
+        $('#login-des-text').css({'font-size':'1.5em'});
+        $('#signup-button-text').css({'font-size':'1.5em'});
+        $('#copyright').css({'height':'30%','width':'90%','right':'5%','bottom':'10%','text-align':'center'});
+        $('#navigation-box').css({'height':'30%','width':'90%','left':'5%','top':'10%','text-align':'center'});
+        $('#back-button-text').css({'font-size':'1em'});
+        $('#login-user-email').css({'top':'15%','height':'15%'});
+        $('#login-password').css({'top':'40%','height':'15%'});
+        $('#login-login').css({'top':'60%','height':'15%'});
+        $('#login-forget-password').css({'top':'60%','height':'15%','font-size':'0.6em','text-align':'center'});
+      }
+
+      else if($('#bd').height()>$('#bd').width())
+      {
+        $('#login-plate').css({'height':'70%','width':'80%','left':'10%','top':'25%'});
+        $('#big-title').css({'height':'20%','width':'80%','left':'10%','top':'5%','font-size':'2em','text-align':'center'});
+        $('#header-logo-box').css({'height':'80%','width':'30%','right':'0%','bottom':'10%'});
+        $('#header-text').css({'height':'20%','width':'30%','right':'30%','bottom':'15%'});
+        for(var i=0;i<document.getElementsByClassName('login-item-text').length;i++)
+        {
+          var slf='#'+document.getElementsByClassName('login-item-text')[i].getAttribute('id');
+          $(slf).css({'font-size':'1.2em'});
+        }
+        for(var i=0;i<document.getElementsByClassName('inputs').length;i++)
+        {
+          var slf='#'+document.getElementsByClassName('inputs')[i].getAttribute('id');
+          $(slf).css({'font-size':'0.7em'});
+        }
+        $('#login-des-text').css({'font-size':'1.5em'});
+        $('#signup-button-text').css({'font-size':'1.5em'});
+        $('#copyright').css({'height':'30%','width':'90%','right':'5%','bottom':'10%','text-align':'center'});
+        $('#navigation-box').css({'height':'30%','width':'90%','left':'5%','top':'10%','text-align':'center'});
+        $('#back-button-text').css({'font-size':'1em'});
+        $('#login-user-email').css({'top':'15%','height':'15%'});
+        $('#login-password').css({'top':'40%','height':'15%'});
+        $('#login-login').css({'top':'60%','height':'15%'});
+        $('#login-forget-password').css({'top':'60%','height':'15%','font-size':'0.5em','text-align':'center'});
+      }
+    }
+    feetScreen();
+    for(var i=0;i<document.getElementsByClassName('responsive_Image').length;i++)
+    {
+      var slf='#'+document.getElementsByClassName('responsive_Image')[i].getAttribute('id');
+      var prnt='#'+$(slf).parent().attr('id');
+      if($(prnt).height()<$(prnt).width())
+      {
+        $(slf).css({'height':'100%','width':'auto','top':'0%'});
+        $(slf).css({'left':((($(prnt).width()-$(prnt).height())*100/(2*$(prnt).width())).toString()+'%')});
+      }
+      else
+      {
+        $(slf).css({'width':'100%','height':'auto','left':'0%'});
+        $(slf).css({'top':'auto','bottom':'0%'});       
+      }
+    }
+    for(var i=0;i<document.getElementsByClassName('middle-image').length;i++)
+    {
+      var slf='#'+document.getElementsByClassName('middle-image')[i].getAttribute('id');
+      var prnt='#'+$(slf).parent().attr('id');
+      $(slf).css({'top':((($(prnt).height()-$(prnt).height())*100/(2*$(prnt).height())).toString()+'%')});
+    }
+
+    for(var i=0;i<document.getElementsByClassName('middle-text').length;i++)
+    {
+      var slf='#'+document.getElementsByClassName('middle-text')[i].getAttribute('id');
+      var prnt='#'+$(slf).parent().attr('id');
+      $(slf).css({'line-height':($(prnt).height().toString()+'px')});       
+    }
+    $('#back-button-box').click(goBottom);
+    $('#signup-button').click(function() { goTop('signUp');  });
+    $('#email-box').click(function() { goTop('email');  });
   script(type='text/javascript').
     document.getElementById('login-email').focus();
 
