@@ -19,7 +19,8 @@ module.exports = function (grunt) {
     uglify: {
       build: {
         files: {
-          'public/js/prod.min.js': ['public/js/*.js', '!public/js/prod.min.js', '!public/js/socket.js']
+          'public/js/prod.min.js': ['public/js/*.js', '!public/js/prod.min.js', '!public/js/socket.js'],
+          'public/js/zepto.min.js': ['public/js/zepto.js', 'public/js/fx.js']
         }
       }
     },

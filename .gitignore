@@ -26,5 +26,6 @@ public/lib
 !bootstap.min.css
 
 prod.min.js
+zepto.min.js
 public/js/angular-socket-io.js
 volatile-config.js

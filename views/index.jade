@@ -6,11 +6,11 @@ html
     meta(name='keywords', lang='fa', content='هورین,هورین چت,چت, چت رندم,چت تصادفی, چت ناشناس', charset='utf-8')
     meta(name='description', content='وبسایت چت تصادفی', charset='utf-8')
     meta(name='subject', content="با افراد جدید، در مورد موضوعات مختلف چت کن!");
-    meta(http-equiv='content-type', con='con', tent='text/html; charset=utf-8') 
-    link#topcoat-css(rel='stylesheet', href='/static/lib/topcoat/css/topcoat-mobile-dark.min.css', type='text/css', media='all')
+    meta(http-equiv='content-type', con='con', tent='text/html; charset=utf-8')
+    link#topcoat-css(rel='stylesheet', href='/static/css/topcoat-mobile-dark.min.css', type='text/css', media='all')
     link#home-css(rel='stylesheet', href='/static/css/login.css', type='text/css', media='all')
     title هورین
-    script(type='text/javascript')
+    script(type='text/javascript').
       function goTop(esender){
          var temp='';
         if(esender=='signUp'){
@@ -115,9 +115,9 @@ html
         | تمام حقوق این سایت متعلق به هورین میباشد. 
 block append bottom-js
 
-  script(src='/static/lib/alertify.js/lib/alertify.min.js')  
-  script(src='/static/lib/zepto/zepto.min.js')
-  script(type='text/javascript')
+  script(src='/static/lib/alertify.js/lib/alertify.min.js')
+  script(src='/static/js/zepto.min.js')
+  script(type='text/javascript').
     function feetScreen()
     {
       if($('#bd').width()/$('#bd').height()<(14/9) && !($('#bd').height()>$('#bd').width()))
